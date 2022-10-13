@@ -7,6 +7,8 @@ namespace Bumbodium.Data
 {
     public class Normeringen
     {
+        public int Id { get; set; }
+
         [StringLength(1048)]
         public string Beschrijving { get; set; }
 

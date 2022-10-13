@@ -7,6 +7,7 @@ namespace Bumbodium.Data
 {
     public class Afdeling
     {
+        [Key]
         [Required]
         public AfdelingType Naam { get; set; }
 

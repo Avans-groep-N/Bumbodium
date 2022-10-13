@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Bumbodium.Data
@@ -8,14 +9,14 @@ namespace Bumbodium.Data
     public class Beschikbaarheid
     {
         [Key]
+        public int Id { get; set; }
+
         [Required]
         public List<Werknemer> Werknemer { get; set; }
 
-        [Key]
         [Required]
         public DateTime BeginDatumTijd { get; set; }
 
-        [Key]
         [Required]
         public DateTime EindDatumTijd { get; set; }
 
