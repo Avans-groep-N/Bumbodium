@@ -6,19 +6,18 @@ using System.Text;
 
 namespace Bumbodium.Data
 {
-    public class Beschikbaarheid
+    public class Availability
     {
         [Key]
         public int Id { get; set; }
+        [Required]
+        public List<Employee> EmployeeID { get; set; }
 
         [Required]
-        public List<Werknemer> Werknemer { get; set; }
+        public DateTime StartDateTime { get; set; }
 
         [Required]
-        public DateTime BeginDatumTijd { get; set; }
-
-        [Required]
-        public DateTime EindDatumTijd { get; set; }
+        public DateTime EndDateTime { get; set; }
 
         [Required]
         public BeschikbaarheidType Type { get; set; }

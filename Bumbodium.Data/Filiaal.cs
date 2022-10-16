@@ -8,19 +8,22 @@ namespace Bumbodium.Data
     public class Filiaal
     {
         [Key]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         [Required]
         [StringLength(64)]
-        public string Stad { get; set; }
+        public string City { get; set; }
         [Required]
         [StringLength(64)]
-        public string Straat { get; set; }
+        public string Streed { get; set; }
         [Required]
         [StringLength(64)]
-        public string Huisnummer { get; set; }
+        public string PostalCode { get; set; }
         [Required]
         [StringLength(64)]
-        public string Land { get; set; }
+        public string HomeNumber { get; set; }
+        [Required]
+        [StringLength(64)]
+        public string Country { get; set; }
     }
 }

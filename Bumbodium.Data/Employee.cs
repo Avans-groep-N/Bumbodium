@@ -5,39 +5,39 @@ using System.Text;
 
 namespace Bumbodium.Data
 {
-    public class Werknemer
+    public class Employee
     {
         [Key]
-        public int WerknemerId { get; set; }
+        public int EmployeeID { get; set; }
 
         [Required]
         [StringLength(64)]
-        public string Voornaam { get; set; }
+        public string FirstName { get; set; }
 
         [StringLength(16)]
-        public string TussenVoegsel { get; set; }
+        public string ExtraName { get; set; }
 
         [Required]
         [StringLength(64)]
-        public string Achternaam { get; set; }
+        public string LastName { get; set; }
 
         [Required]
-        public DateTime Geboortedatum { get; set; }
+        public DateTime Birthdate { get; set; }
 
         [Required]
         [StringLength(16)]
-        public string Telefoonnummer { get; set; }
+        public string PhoneNumber { get; set; }
 
         [Required]
         [StringLength(64)]
         public string Email { get; set; }
 
         [Required]
-        public DateTime DatumInDienst { get; set; }
+        public DateTime DateInService{ get; set; }
 
-        public DateTime DatumUitDienst { get; set; }
+        public DateTime DateOutService { get; set; }
 
         [StringLength(64)]
-        public string Functie { get; set; }
+        public string Function { get; set; }
     }
 }

@@ -5,14 +5,14 @@ using System.Text;
 
 namespace Bumbodium.Data
 {
-    public class Afdeling
+    public class Department
     {
         [Key]
         [Required]
-        public AfdelingType Naam { get; set; }
+        public AfdelingType Name { get; set; }
 
         [StringLength(256)]
-        public string Beschrijving { get; set; }
+        public string Description { get; set; }
     }
 
     public enum AfdelingType

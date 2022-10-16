@@ -5,13 +5,13 @@ using System.Text;
 
 namespace Bumbodium.Data
 {
-    public class Normeringen
+    public class Standards
     {
-        public int Id { get; set; }
-
+        [Key]   
         [StringLength(1048)]
-        public string Beschrijving { get; set; }
+        public string Description { get; set; }
 
-        public int Waarde { get; set; }
+        [Required]
+        public int Value { get; set; }
     }
 }

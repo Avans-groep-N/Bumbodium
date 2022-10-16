@@ -13,7 +13,7 @@ namespace Bumbodium.Data
         public string Email { get; set; }
 
         [StringLength(64)]
-        public string Wachtwoord { get; set; }
+        public string Password { get; set; }
         
         [Required]
         public TypeMedeweker Type { get; set; }

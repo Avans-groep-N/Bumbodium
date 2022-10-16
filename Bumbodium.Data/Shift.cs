@@ -6,17 +6,17 @@ using System.Text;
 
 namespace Bumbodium.Data
 {
-    public class Diensten
+    public class Shift
     {
         [Key]
-        public int Id { get; set; }
+        public int ShiftId { get; set; }
         [Required]
-        public List<Werknemer> Werknemer { get; set; }
+        public List<Employee> EmploeeID{ get; set; }
         [Required]
-        public List<Afdeling> AfdelingNaam { get; set; }
+        public List<Department> DepartmentName { get; set; }
         [Required]
-        public DateTime DienstBeginDatumTijd { get; set; }
+        public DateTime ShiftStartDateTime { get; set; }
         [Required]
-        public DateTime DienstEindDatumTijd { get; set; }
+        public DateTime ShiftEndDateTime { get; set; }
     }
 }
