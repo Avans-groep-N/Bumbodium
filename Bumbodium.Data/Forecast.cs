@@ -19,5 +19,7 @@ namespace Bumbodium.Data
         [Required]
         public List<Department> Afdelingen { get; set; }
 
+        public List<Standards> Standards { get; set; }
+
     }
 }

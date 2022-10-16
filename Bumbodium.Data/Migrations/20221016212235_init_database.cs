@@ -23,7 +23,7 @@ namespace Bumbodium.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Beschikbaarheids",
+                name: "Availability",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -34,25 +34,11 @@ namespace Bumbodium.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Beschikbaarheids", x => x.Id);
+                    table.PrimaryKey("PK_Availability", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Dienstens",
-                columns: table => new
-                {
-                    ShiftId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ShiftStartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ShiftEndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Dienstens", x => x.ShiftId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Filiaals",
+                name: "Filiaal",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
@@ -65,19 +51,20 @@ namespace Bumbodium.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Filiaals", x => x.ID);
+                    table.PrimaryKey("PK_Filiaal", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Normeringens",
+                name: "Forecast",
                 columns: table => new
                 {
-                    Description = table.Column<string>(type: "nvarchar(1048)", maxLength: 1048, nullable: false),
-                    Value = table.Column<int>(type: "int", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AmountExpectedEmployees = table.Column<int>(type: "int", nullable: false),
+                    AmountExpectedCustomers = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Normeringens", x => x.Description);
+                    table.PrimaryKey("PK_Forecast", x => x.Date);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,20 +82,57 @@ namespace Bumbodium.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Prognoses",
+                name: "Shift",
                 columns: table => new
                 {
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AmountExpectedEmployees = table.Column<int>(type: "int", nullable: false),
-                    AmountExpectedCustomers = table.Column<int>(type: "int", nullable: false)
+                    ShiftId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ShiftStartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ShiftEndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Prognoses", x => x.Date);
+                    table.PrimaryKey("PK_Shift", x => x.ShiftId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Werknemers",
+                name: "Standards",
+                columns: table => new
+                {
+                    Description = table.Column<string>(type: "nvarchar(1048)", maxLength: 1048, nullable: false),
+                    Value = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Standards", x => x.Description);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Department",
+                columns: table => new
+                {
+                    Name = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    ForecastDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ShiftId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Department", x => x.Name);
+                    table.ForeignKey(
+                        name: "FK_Department_Forecast_ForecastDate",
+                        column: x => x.ForecastDate,
+                        principalTable: "Forecast",
+                        principalColumn: "Date");
+                    table.ForeignKey(
+                        name: "FK_Department_Shift_ShiftId",
+                        column: x => x.ShiftId,
+                        principalTable: "Shift",
+                        principalColumn: "ShiftId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Employee",
                 columns: table => new
                 {
                     EmployeeID = table.Column<int>(type: "int", nullable: false)
@@ -128,71 +152,47 @@ namespace Bumbodium.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Werknemers", x => x.EmployeeID);
+                    table.PrimaryKey("PK_Employee", x => x.EmployeeID);
                     table.ForeignKey(
-                        name: "FK_Werknemers_Beschikbaarheids_AvailabilityId",
+                        name: "FK_Employee_Availability_AvailabilityId",
                         column: x => x.AvailabilityId,
-                        principalTable: "Beschikbaarheids",
+                        principalTable: "Availability",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Werknemers_Dienstens_ShiftId",
-                        column: x => x.ShiftId,
-                        principalTable: "Dienstens",
-                        principalColumn: "ShiftId");
-                    table.ForeignKey(
-                        name: "FK_Werknemers_Presence_PresenceClockInDateTime",
+                        name: "FK_Employee_Presence_PresenceClockInDateTime",
                         column: x => x.PresenceClockInDateTime,
                         principalTable: "Presence",
                         principalColumn: "ClockInDateTime");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Afdelings",
-                columns: table => new
-                {
-                    Name = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    ForecastDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ShiftId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Afdelings", x => x.Name);
                     table.ForeignKey(
-                        name: "FK_Afdelings_Dienstens_ShiftId",
+                        name: "FK_Employee_Shift_ShiftId",
                         column: x => x.ShiftId,
-                        principalTable: "Dienstens",
+                        principalTable: "Shift",
                         principalColumn: "ShiftId");
-                    table.ForeignKey(
-                        name: "FK_Afdelings_Prognoses_ForecastDate",
-                        column: x => x.ForecastDate,
-                        principalTable: "Prognoses",
-                        principalColumn: "Date");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Afdelings_ForecastDate",
-                table: "Afdelings",
+                name: "IX_Department_ForecastDate",
+                table: "Department",
                 column: "ForecastDate");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Afdelings_ShiftId",
-                table: "Afdelings",
+                name: "IX_Department_ShiftId",
+                table: "Department",
                 column: "ShiftId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Werknemers_AvailabilityId",
-                table: "Werknemers",
+                name: "IX_Employee_AvailabilityId",
+                table: "Employee",
                 column: "AvailabilityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Werknemers_PresenceClockInDateTime",
-                table: "Werknemers",
+                name: "IX_Employee_PresenceClockInDateTime",
+                table: "Employee",
                 column: "PresenceClockInDateTime");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Werknemers_ShiftId",
-                table: "Werknemers",
+                name: "IX_Employee_ShiftId",
+                table: "Employee",
                 column: "ShiftId");
         }
 
@@ -202,28 +202,28 @@ namespace Bumbodium.Data.Migrations
                 name: "Accounts");
 
             migrationBuilder.DropTable(
-                name: "Afdelings");
+                name: "Department");
 
             migrationBuilder.DropTable(
-                name: "Filiaals");
+                name: "Employee");
 
             migrationBuilder.DropTable(
-                name: "Normeringens");
+                name: "Filiaal");
 
             migrationBuilder.DropTable(
-                name: "Werknemers");
+                name: "Standards");
 
             migrationBuilder.DropTable(
-                name: "Prognoses");
+                name: "Forecast");
 
             migrationBuilder.DropTable(
-                name: "Beschikbaarheids");
-
-            migrationBuilder.DropTable(
-                name: "Dienstens");
+                name: "Availability");
 
             migrationBuilder.DropTable(
                 name: "Presence");
+
+            migrationBuilder.DropTable(
+                name: "Shift");
         }
     }
 }

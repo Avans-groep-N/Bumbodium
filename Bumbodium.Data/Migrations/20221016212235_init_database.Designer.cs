@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bumbodium.Data.Migrations
 {
     [DbContext(typeof(BumbodiumContext))]
-    [Migration("20221016211630_init_database")]
+    [Migration("20221016212235_init_database")]
     partial class init_database
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,7 +62,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Beschikbaarheids");
+                    b.ToTable("Availability");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Department", b =>
@@ -87,7 +87,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.HasIndex("ShiftId");
 
-                    b.ToTable("Afdelings");
+                    b.ToTable("Department");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Employee", b =>
@@ -154,7 +154,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.HasIndex("ShiftId");
 
-                    b.ToTable("Werknemers");
+                    b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Filiaal", b =>
@@ -192,7 +192,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Filiaals");
+                    b.ToTable("Filiaal");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
@@ -208,7 +208,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.HasKey("Date");
 
-                    b.ToTable("Prognoses");
+                    b.ToTable("Forecast");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Presence", b =>
@@ -246,7 +246,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.HasKey("ShiftId");
 
-                    b.ToTable("Dienstens");
+                    b.ToTable("Shift");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Standards", b =>
@@ -260,7 +260,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.HasKey("Description");
 
-                    b.ToTable("Normeringens");
+                    b.ToTable("Standards");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Department", b =>

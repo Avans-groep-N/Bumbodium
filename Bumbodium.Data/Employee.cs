@@ -39,5 +39,10 @@ namespace Bumbodium.Data
 
         [StringLength(64)]
         public string Function { get; set; }
+
+
+        public Account Account { get; set; }
+        public virtual ICollection<FiliaalEmployee> PartOFFiliaal { get; set; }
+        public virtual ICollection<DepartmentEmployee> PartOFDepartment { get; set; }
     }
 }

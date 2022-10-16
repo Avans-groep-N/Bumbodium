@@ -25,5 +25,7 @@ namespace Bumbodium.Data
         [Required]
         [StringLength(64)]
         public string Country { get; set; }
+
+        public virtual ICollection<FiliaalEmployee> PartOFEmployee { get; set; }
     }
 }

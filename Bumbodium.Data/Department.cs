@@ -13,6 +13,9 @@ namespace Bumbodium.Data
 
         [StringLength(256)]
         public string Description { get; set; }
+
+
+        public virtual ICollection<DepartmentEmployee> PartOFEmployee { get; set; }
     }
 
     public enum AfdelingType
