@@ -12,6 +12,9 @@ namespace Bumbodium.Data
         public string Description { get; set; }
 
         [Required]
+        public List<Forecast> ForecastId { get; set; }
+
+        [Required]
         public int Value { get; set; }
     }
 }

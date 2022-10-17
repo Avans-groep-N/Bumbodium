@@ -11,10 +11,6 @@ namespace Bumbodium.Data
         [Key]
         public int ShiftId { get; set; }
         [Required]
-        public List<Employee> EmploeeID{ get; set; }
-        [Required]
-        public List<Department> DepartmentName { get; set; }
-        [Required]
         public DateTime ShiftStartDateTime { get; set; }
         [Required]
         public DateTime ShiftEndDateTime { get; set; }

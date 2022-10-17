@@ -10,8 +10,6 @@ namespace Bumbodium.Data
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public List<Employee> EmployeeID { get; set; }
 
         [Required]
         public DateTime StartDateTime { get; set; }

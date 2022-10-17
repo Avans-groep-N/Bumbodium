@@ -14,6 +14,11 @@ namespace Bumbodium.Data
         [StringLength(256)]
         public string Description { get; set; }
 
+        [Required]
+        public List<Shift> ShiftId { get; set; }
+
+        [Required]
+        public List<Forecast> ForecastId { get; set; }
 
         public virtual ICollection<DepartmentEmployee> PartOFEmployee { get; set; }
     }

@@ -15,9 +15,6 @@ namespace Bumbodium.Data
         [Required]
         public DateTime ClockOutDateTime { get; set; }
 
-        [Required]
-        public List<Employee> EmployeeID { get; set; }
-
         public DateTime AlteredClockInDateTime { get; set; }
         public DateTime AlteredClockOutDateTime { get; set; }
     }

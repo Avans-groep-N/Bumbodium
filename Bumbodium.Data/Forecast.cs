@@ -16,10 +16,5 @@ namespace Bumbodium.Data
         [Required]
         public int AmountExpectedCustomers { get; set; }
 
-        [Required]
-        public List<Department> Afdelingen { get; set; }
-
-        public List<Standards> Standards { get; set; }
-
     }
 }
