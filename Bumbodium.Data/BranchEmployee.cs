@@ -6,12 +6,12 @@ using System.Text;
 
 namespace Bumbodium.Data
 {
-    public class FiliaalEmployee
+    public class BranchEmployee
     {
         public int EmployeeId { get; set; }
         public int FiliaalId { get; set; }
 
-        public Filiaal Filiaal { get; set; } 
+        public Branch Filiaal { get; set; } 
         public Employee Employee { get; set; }
 
     }

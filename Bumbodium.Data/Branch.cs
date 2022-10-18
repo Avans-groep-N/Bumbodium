@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Bumbodium.Data
 {
-    public class Filiaal
+    public class Branch
     {
         [Key]
         public int ID { get; set; }
@@ -26,6 +26,6 @@ namespace Bumbodium.Data
         [StringLength(64)]
         public string Country { get; set; }
 
-        public virtual ICollection<FiliaalEmployee> PartOFEmployee { get; set; }
+        public virtual ICollection<BranchEmployee> PartOFEmployee { get; set; }
     }
 }

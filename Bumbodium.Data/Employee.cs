@@ -44,7 +44,7 @@ namespace Bumbodium.Data
         public List<Presence> Presence { get; set; }
         public List<Shift> ShiftId { get; set; }
         public Account Account { get; set; }
-        public virtual ICollection<FiliaalEmployee> PartOFFiliaal { get; set; }
+        public virtual ICollection<BranchEmployee> PartOFFiliaal { get; set; }
         public virtual ICollection<DepartmentEmployee> PartOFDepartment { get; set; }
     }
 }

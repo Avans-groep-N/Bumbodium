@@ -11,12 +11,12 @@ namespace Bumbodium.Data
         public DbSet<Department> Department { get; set; }
         public DbSet<Availability> Availability { get; set; }
         public DbSet<Shift> Shift { get; set; }
-        public DbSet<Filiaal> Filiaal { get; set; }
+        public DbSet<Branch> Branch { get; set; }
         public DbSet<Standards> Standards { get; set; }
         public DbSet<Forecast> Forecast { get; set; }
         public DbSet<Employee> Employee { get; set; }
         public DbSet<DepartmentEmployee> DepartmentEmployee { get; set; }
-        public DbSet<FiliaalEmployee> FiliaalEmployee { get; set; }
+        public DbSet<BranchEmployee> BranchEmployee { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -33,15 +33,15 @@ namespace Bumbodium.Data
             .WithOne(e => e.Employee)
             .HasForeignKey<Account>(a => a.EmployeeId);
 
-            modelBuilder.Entity<FiliaalEmployee>()
+            modelBuilder.Entity<BranchEmployee>()
                 .HasKey(t => new { t.FiliaalId, t.EmployeeId });
 
-            modelBuilder.Entity<FiliaalEmployee>()
+            modelBuilder.Entity<BranchEmployee>()
                 .HasOne(pt => pt.Filiaal)
                 .WithMany(p => p.PartOFEmployee)
                 .HasForeignKey(pt => pt.FiliaalId);
 
-            modelBuilder.Entity<FiliaalEmployee>()
+            modelBuilder.Entity<BranchEmployee>()
                 .HasOne(pt => pt.Employee)
                 .WithMany(t => t.PartOFFiliaal)
                 .HasForeignKey(pt => pt.EmployeeId);
@@ -64,8 +64,8 @@ namespace Bumbodium.Data
                 new Employee { }
                 );
 
-            modelBuilder.Entity<Filiaal>().HasData(
-                    new Filiaal { City = "'s-Hertogenbosch", Street = "Supermarktboulevard", PostalCode = "5220UL", HouseNumber = "5", Country = "Netherlands" }
+            modelBuilder.Entity<Branch>().HasData(
+                    new Branch { City = "'s-Hertogenbosch", Street = "Supermarktboulevard", PostalCode = "5220UL", HouseNumber = "5", Country = "Netherlands" }
                 );
 
             modelBuilder.Entity<Account>().HasData(
