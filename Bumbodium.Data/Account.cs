@@ -22,12 +22,12 @@ namespace Bumbodium.Data
         public string Password { get; set; }
         
         [Required]
-        public TypeMedeweker Type { get; set; }
+        public TypeStaff Type { get; set; }
     }
 
-    public enum TypeMedeweker
+    public enum TypeStaff
     {
         Manager,
-        Werknemer
+        Employee
     }
 }

@@ -15,13 +15,13 @@ namespace Bumbodium.Data
         public string City { get; set; }
         [Required]
         [StringLength(64)]
-        public string Streed { get; set; }
+        public string Street { get; set; }
         [Required]
         [StringLength(64)]
         public string PostalCode { get; set; }
         [Required]
         [StringLength(64)]
-        public string HomeNumber { get; set; }
+        public string HouseNumber { get; set; }
         [Required]
         [StringLength(64)]
         public string Country { get; set; }

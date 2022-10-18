@@ -38,7 +38,7 @@ namespace Bumbodium.Data
         public DateTime DateOutService { get; set; }
 
         [StringLength(64)]
-        public string Function { get; set; }
+        public string WorkFunction { get; set; }
 
         public List<Availability> Availability { get; set; }
         public List<Presence> Presence { get; set; }
