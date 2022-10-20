@@ -9,10 +9,15 @@ namespace Bumbodium.Data
     public class Shift
     {
         [Key]
-        public int ShiftId { get; set; }
+        public int ShiftID { get; set; }
+        public Department Department { get; set; }
+        public Employee Employee { get; set; }
+
         [Required]
         public DateTime ShiftStartDateTime { get; set; }
         [Required]
         public DateTime ShiftEndDateTime { get; set; }
+
+
     }
 }

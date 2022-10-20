@@ -1,4 +1,4 @@
-﻿@model Bumbodium.Data.Tasks
+﻿@model Bumbodium.Data.Shift
 @{
     ViewData["Title"] = "Index";
 }
@@ -12,12 +12,18 @@
 
         </div>
     </header>
-    <section>
+    <section class="schedule-times">
         <aside> <!--Times-->
-
+            @for(int i = 8; i < 23; i++)
+            {
+                <div class="time-div">@i:00</div>
+            }
         </aside>
-        <div> <!--Time blocks-->
-
+        <div class="schedule"> <!--Time blocks-->
+            @for(int i = 0; i < 105; i++)
+            {
+                <div class="time-block"></div>
+            }
         </div>
     </section>
 </body>

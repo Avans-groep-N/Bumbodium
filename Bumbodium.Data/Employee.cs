@@ -15,7 +15,7 @@ namespace Bumbodium.Data
         public string FirstName { get; set; }
 
         [StringLength(16)]
-        public string ExtraName { get; set; }
+        public string MiddleName { get; set; }
 
         [Required]
         [StringLength(64)]
@@ -42,7 +42,7 @@ namespace Bumbodium.Data
 
         public List<Availability> Availability { get; set; }
         public List<Presence> Presence { get; set; }
-        public List<Shift> ShiftId { get; set; }
+        public List<Shift> Shifts { get; set; }
         public Account Account { get; set; }
         public virtual ICollection<BranchEmployee> PartOFFiliaal { get; set; }
         public virtual ICollection<DepartmentEmployee> PartOFDepartment { get; set; }

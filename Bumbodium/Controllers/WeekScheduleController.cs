@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Bumbodium.Data;
 
 namespace Bumbodium.Controllers
 {
@@ -8,7 +9,8 @@ namespace Bumbodium.Controllers
         // GET: WeekRoosterController
         public ActionResult Index()
         {
-            return View();
+            List<Shift> shifts = new List<Shift>();
+            return View(shifts);
         }
 
         // GET: WeekRoosterController/Details/5

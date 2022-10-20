@@ -59,6 +59,16 @@ namespace Bumbodium.Data
                 .WithMany(t => t.PartOFDepartment)
                 .HasForeignKey(pt => pt.EmployeeId);
 
+            modelBuilder.Entity<Shift>()
+                .HasOne(pt => pt.Department)
+                .WithMany(t => t.Shifts)
+                .HasForeignKey(pt => pt.Department);
+
+            modelBuilder.Entity<Shift>()
+                .HasOne(pt => pt.Employee)
+                .WithMany(t => t.Shifts)
+                .HasForeignKey(pt => pt.Employee);
+
             /*modelBuilder.Entity<Employee>().HasData(
                 new Employee { EmployeeID = 1, FirstName = "Jan", ExtraName = "van", LastName = "Geest", Birthdate = new DateTime(1989, 10, 22), PhoneNumber = "+31 6 56927484", Email = "j.vangeest@bumbodium.nl", DateInService = new DateTime(2006, 05, 12), WorkFunction = "Manager" },
                 new Employee { }

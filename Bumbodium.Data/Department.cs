@@ -9,13 +9,13 @@ namespace Bumbodium.Data
     {
         [Key]
         [Required]
-        public AfdelingType Name { get; set; }
+        public DepartmentType Name { get; set; }
 
         [StringLength(256)]
         public string Description { get; set; }
 
         [Required]
-        public List<Shift> ShiftId { get; set; }
+        public List<Shift> Shifts { get; set; }
 
         [Required]
         public List<Forecast> ForecastId { get; set; }
@@ -23,7 +23,7 @@ namespace Bumbodium.Data
         public virtual ICollection<DepartmentEmployee> PartOFEmployee { get; set; }
     }
 
-    public enum AfdelingType
+    public enum DepartmentType
     {
         Vis,
         Groente

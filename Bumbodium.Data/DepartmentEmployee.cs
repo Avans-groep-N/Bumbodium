@@ -9,7 +9,7 @@ namespace Bumbodium.Data
     public class DepartmentEmployee
     {
         public int EmployeeId { get; set; }
-        public AfdelingType DepartmentId { get; set; }
+        public DepartmentType DepartmentId { get; set; }
 
         public Department Department { get; set; }
         public Employee Employee { get; set; }
