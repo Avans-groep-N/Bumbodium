@@ -15,11 +15,8 @@ namespace Bumbodium.Data
         public string Description { get; set; }
 
         [Required]
-        public List<Shift> Shifts { get; set; }
-
-        [Required]
         public List<Forecast> ForecastId { get; set; }
-
+        public virtual ICollection<Shift> Shifts { get; set; }
         public virtual ICollection<DepartmentEmployee> PartOFEmployee { get; set; }
     }
 

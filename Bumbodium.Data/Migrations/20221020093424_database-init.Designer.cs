@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bumbodium.Data.Migrations
 {
     [DbContext(typeof(BumbodiumContext))]
-    [Migration("20221018145612_db-init-2")]
-    partial class dbinit2
+    [Migration("20221020093424_database-init")]
+    partial class databaseinit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -74,6 +74,59 @@ namespace Bumbodium.Data.Migrations
                     b.ToTable("Availability");
                 });
 
+            modelBuilder.Entity("Bumbodium.Data.Branch", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("HouseNumber")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Branch");
+                });
+
+            modelBuilder.Entity("Bumbodium.Data.BranchEmployee", b =>
+                {
+                    b.Property<int>("FiliaalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FiliaalId", "EmployeeId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("BranchEmployee");
+                });
+
             modelBuilder.Entity("Bumbodium.Data.Department", b =>
                 {
                     b.Property<int>("Name")
@@ -126,11 +179,6 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("ExtraName")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -140,6 +188,11 @@ namespace Bumbodium.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -154,59 +207,6 @@ namespace Bumbodium.Data.Migrations
                     b.HasKey("EmployeeID");
 
                     b.ToTable("Employee");
-                });
-
-            modelBuilder.Entity("Bumbodium.Data.Filiaal", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("HouseNumber")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Filiaal");
-                });
-
-            modelBuilder.Entity("Bumbodium.Data.FiliaalEmployee", b =>
-                {
-                    b.Property<int>("FiliaalId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FiliaalId", "EmployeeId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("FiliaalEmployee");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
@@ -261,29 +261,24 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.Shift", b =>
                 {
-                    b.Property<int>("ShiftId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShiftId"), 1L, 1);
-
-                    b.Property<int?>("DepartmentName")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EmployeeID")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ShiftEndDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ShiftId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ShiftStartDateTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ShiftId");
+                    b.HasKey("DepartmentId", "EmployeeId");
 
-                    b.HasIndex("DepartmentName");
-
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Shift");
                 });
@@ -320,6 +315,25 @@ namespace Bumbodium.Data.Migrations
                         .HasForeignKey("EmployeeID");
                 });
 
+            modelBuilder.Entity("Bumbodium.Data.BranchEmployee", b =>
+                {
+                    b.HasOne("Bumbodium.Data.Employee", "Employee")
+                        .WithMany("PartOFFiliaal")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bumbodium.Data.Branch", "Filiaal")
+                        .WithMany("PartOFEmployee")
+                        .HasForeignKey("FiliaalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Filiaal");
+                });
+
             modelBuilder.Entity("Bumbodium.Data.DepartmentEmployee", b =>
                 {
                     b.HasOne("Bumbodium.Data.Department", "Department")
@@ -337,25 +351,6 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("Bumbodium.Data.FiliaalEmployee", b =>
-                {
-                    b.HasOne("Bumbodium.Data.Employee", "Employee")
-                        .WithMany("PartOFFiliaal")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Bumbodium.Data.Filiaal", "Filiaal")
-                        .WithMany("PartOFEmployee")
-                        .HasForeignKey("FiliaalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Filiaal");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
@@ -378,13 +373,26 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.Shift", b =>
                 {
-                    b.HasOne("Bumbodium.Data.Department", null)
-                        .WithMany("ShiftId")
-                        .HasForeignKey("DepartmentName");
+                    b.HasOne("Bumbodium.Data.Department", "Department")
+                        .WithMany("Shifts")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Bumbodium.Data.Employee", null)
-                        .WithMany("ShiftId")
-                        .HasForeignKey("EmployeeID");
+                    b.HasOne("Bumbodium.Data.Employee", "Employee")
+                        .WithMany("Shifts")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Bumbodium.Data.Branch", b =>
+                {
+                    b.Navigation("PartOFEmployee");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Department", b =>
@@ -393,7 +401,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.Navigation("PartOFEmployee");
 
-                    b.Navigation("ShiftId");
+                    b.Navigation("Shifts");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Employee", b =>
@@ -409,12 +417,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.Navigation("Presence");
 
-                    b.Navigation("ShiftId");
-                });
-
-            modelBuilder.Entity("Bumbodium.Data.Filiaal", b =>
-                {
-                    b.Navigation("PartOFEmployee");
+                    b.Navigation("Shifts");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Standards", b =>
