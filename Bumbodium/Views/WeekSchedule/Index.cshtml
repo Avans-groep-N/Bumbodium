@@ -1,29 +1,30 @@
-﻿@model Bumbodium.Data.Shift
+﻿@model Bumbodium.Data.Shift[]
 @{
     ViewData["Title"] = "Index";
+    //var shiftList = Model.ToArray();
+    //var len = shiftList.Length;
 }
 
-<body>
-    <header> 
-        <div> <!--Week selecting + departments-->
+<script>
 
-        </div>
-        <div> <!--Days + dates-->
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            timeZone: 'CET',
+        })
+        for (let i = 0; i < 3; i++) {
+            calendar.addEvent({
+                title: 'a',
+                start: '2022-10-21'
+            });
+        }
+        calendar.render();
+    });
 
-        </div>
-    </header>
-    <section class="schedule-times">
-        <aside> <!--Times-->
-            @for(int i = 8; i < 23; i++)
-            {
-                <div class="time-div">@i:00</div>
-            }
-        </aside>
-        <div class="schedule"> <!--Time blocks-->
-            @for(int i = 0; i < 105; i++)
-            {
-                <div class="time-block"></div>
-            }
-        </div>
-    </section>
-</body>
+</script>
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <div id="calendar"></div>
+</div>

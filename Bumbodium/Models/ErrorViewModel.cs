@@ -1,4 +1,4 @@
-namespace Bumbodium.Models
+namespace Bumbodium.WebApp.Models
 {
     public class ErrorViewModel
     {

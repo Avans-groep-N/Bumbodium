@@ -1,8 +1,8 @@
-﻿using Bumbodium.Models;
+﻿using Bumbodium.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace Bumbodium.Controllers
+namespace Bumbodium.WebApp.Controllers
 {
     public class HomeController : Controller
     {
