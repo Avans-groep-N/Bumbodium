@@ -9,6 +9,12 @@ namespace Bumbodium.Data
     public class Presence
     {
         [Key]
+        public int PresenceId { get; set; }
+
+        public int EmployeeId { get; set; }
+
+        public Employee Employee { get; set; }
+
         [Required]
         public DateTime ClockInDateTime { get; set; }
 

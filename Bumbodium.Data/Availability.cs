@@ -9,7 +9,10 @@ namespace Bumbodium.Data
     public class Availability
     {
         [Key]
-        public int Id { get; set; }
+        public int AvailabilityId { get; set; }
+        public int EmployeeId { get; set; }
+
+        public Employee Employee { get; set; }
 
         [Required]
         public DateTime StartDateTime { get; set; }

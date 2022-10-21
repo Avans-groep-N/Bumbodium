@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bumbodium.Data.Migrations
 {
-    public partial class databaseinit : Migration
+    public partial class Database_init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -95,21 +95,21 @@ namespace Bumbodium.Data.Migrations
                 name: "Availability",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AvailabilityId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    EmployeeID = table.Column<int>(type: "int", nullable: true)
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Availability", x => x.Id);
+                    table.PrimaryKey("PK_Availability", x => new { x.AvailabilityId, x.EmployeeId });
                     table.ForeignKey(
-                        name: "FK_Availability_Employee_EmployeeID",
-                        column: x => x.EmployeeID,
+                        name: "FK_Availability_Employee_EmployeeId",
+                        column: x => x.EmployeeId,
                         principalTable: "Employee",
-                        principalColumn: "EmployeeID");
+                        principalColumn: "EmployeeID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -164,35 +164,37 @@ namespace Bumbodium.Data.Migrations
                 name: "Presence",
                 columns: table => new
                 {
+                    PresenceId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     ClockInDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AlteredClockInDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AlteredClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EmployeeID = table.Column<int>(type: "int", nullable: true)
+                    AlteredClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Presence", x => x.ClockInDateTime);
+                    table.PrimaryKey("PK_Presence", x => new { x.PresenceId, x.EmployeeId });
                     table.ForeignKey(
-                        name: "FK_Presence_Employee_EmployeeID",
-                        column: x => x.EmployeeID,
+                        name: "FK_Presence_Employee_EmployeeId",
+                        column: x => x.EmployeeId,
                         principalTable: "Employee",
-                        principalColumn: "EmployeeID");
+                        principalColumn: "EmployeeID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Shift",
                 columns: table => new
                 {
+                    ShiftId = table.Column<int>(type: "int", nullable: false),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
-                    ShiftId = table.Column<int>(type: "int", nullable: false),
                     ShiftStartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ShiftEndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shift", x => new { x.DepartmentId, x.EmployeeId });
+                    table.PrimaryKey("PK_Shift", x => new { x.DepartmentId, x.EmployeeId, x.ShiftId });
                     table.ForeignKey(
                         name: "FK_Shift_Department_DepartmentId",
                         column: x => x.DepartmentId,
@@ -233,9 +235,9 @@ namespace Bumbodium.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Availability_EmployeeID",
+                name: "IX_Availability_EmployeeId",
                 table: "Availability",
-                column: "EmployeeID");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BranchEmployee_EmployeeId",
@@ -258,9 +260,9 @@ namespace Bumbodium.Data.Migrations
                 column: "StandardsDescription");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Presence_EmployeeID",
+                name: "IX_Presence_EmployeeId",
                 table: "Presence",
-                column: "EmployeeID");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shift_EmployeeId",
