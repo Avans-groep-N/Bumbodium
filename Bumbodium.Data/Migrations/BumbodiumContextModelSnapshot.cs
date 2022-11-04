@@ -47,13 +47,10 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.Availability", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("AvailabilityId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("EmployeeID")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EndDateTime")
@@ -65,9 +62,9 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("AvailabilityId", "EmployeeId");
 
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Availability");
                 });
@@ -177,11 +174,6 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("ExtraName")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -191,6 +183,11 @@ namespace Bumbodium.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -235,8 +232,11 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.Presence", b =>
                 {
-                    b.Property<DateTime>("ClockInDateTime")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("PresenceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("AlteredClockInDateTime")
                         .HasColumnType("datetime2");
@@ -244,31 +244,28 @@ namespace Bumbodium.Data.Migrations
                     b.Property<DateTime>("AlteredClockOutDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("ClockInDateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("ClockOutDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmployeeID")
-                        .HasColumnType("int");
+                    b.HasKey("PresenceId", "EmployeeId");
 
-                    b.HasKey("ClockInDateTime");
-
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Presence");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Shift", b =>
                 {
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ShiftId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShiftId"), 1L, 1);
-
-                    b.Property<int?>("DepartmentName")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EmployeeID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ShiftEndDateTime")
@@ -277,11 +274,9 @@ namespace Bumbodium.Data.Migrations
                     b.Property<DateTime>("ShiftStartDateTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ShiftId");
+                    b.HasKey("DepartmentId", "EmployeeId", "ShiftId");
 
-                    b.HasIndex("DepartmentName");
-
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Shift");
                 });
@@ -313,9 +308,13 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.Availability", b =>
                 {
-                    b.HasOne("Bumbodium.Data.Employee", null)
+                    b.HasOne("Bumbodium.Data.Employee", "Employee")
                         .WithMany("Availability")
-                        .HasForeignKey("EmployeeID");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.BranchEmployee", b =>
@@ -369,20 +368,32 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.Presence", b =>
                 {
-                    b.HasOne("Bumbodium.Data.Employee", null)
+                    b.HasOne("Bumbodium.Data.Employee", "Employee")
                         .WithMany("Presence")
-                        .HasForeignKey("EmployeeID");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Shift", b =>
                 {
-                    b.HasOne("Bumbodium.Data.Department", null)
-                        .WithMany("ShiftId")
-                        .HasForeignKey("DepartmentName");
+                    b.HasOne("Bumbodium.Data.Department", "Department")
+                        .WithMany("Shifts")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Bumbodium.Data.Employee", null)
-                        .WithMany("ShiftId")
-                        .HasForeignKey("EmployeeID");
+                    b.HasOne("Bumbodium.Data.Employee", "Employee")
+                        .WithMany("Shifts")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Branch", b =>
@@ -396,7 +407,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.Navigation("PartOFEmployee");
 
-                    b.Navigation("ShiftId");
+                    b.Navigation("Shifts");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Employee", b =>
@@ -412,7 +423,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.Navigation("Presence");
 
-                    b.Navigation("ShiftId");
+                    b.Navigation("Shifts");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Standards", b =>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Reflection.Metadata;
 
 
@@ -58,6 +59,25 @@ namespace Bumbodium.Data
                 .HasOne(pt => pt.Employee)
                 .WithMany(t => t.PartOFDepartment)
                 .HasForeignKey(pt => pt.EmployeeId);
+
+            modelBuilder.Entity<Shift>()
+                .HasKey(t => new { t.DepartmentId, t.EmployeeId, t.ShiftId });
+
+            modelBuilder.Entity<Shift>()
+                .HasOne(pt => pt.Department)
+                .WithMany(t => t.Shifts)
+                .HasForeignKey(pt => pt.DepartmentId);
+
+            modelBuilder.Entity<Shift>()
+                .HasOne(pt => pt.Employee)
+                .WithMany(t => t.Shifts)
+                .HasForeignKey(pt => pt.EmployeeId);
+
+            modelBuilder.Entity<Availability>()
+                .HasKey(t => new { t.AvailabilityId, t.EmployeeId});
+
+            modelBuilder.Entity<Presence>()
+                .HasKey(t => new { t.PresenceId, t.EmployeeId });
 
             /*modelBuilder.Entity<Employee>().HasData(
                 new Employee { EmployeeID = 1, FirstName = "Jan", ExtraName = "van", LastName = "Geest", Birthdate = new DateTime(1989, 10, 22), PhoneNumber = "+31 6 56927484", Email = "j.vangeest@bumbodium.nl", DateInService = new DateTime(2006, 05, 12), WorkFunction = "Manager" },
