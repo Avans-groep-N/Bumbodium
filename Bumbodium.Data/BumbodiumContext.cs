@@ -21,9 +21,10 @@ namespace Bumbodium.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            string your_password = "BumboAdmin!";
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer($"Server=tcp:bumbodium.database.windows.net,1433;Initial Catalog=BumbodiumDB;Persist Security Info=False;User ID=CloudSAc92745b1;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 

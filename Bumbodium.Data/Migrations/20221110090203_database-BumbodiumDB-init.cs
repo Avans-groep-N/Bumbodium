@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bumbodium.Data.Migrations
 {
-    public partial class Database_init : Migration
+    public partial class databaseBumbodiumDBinit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
