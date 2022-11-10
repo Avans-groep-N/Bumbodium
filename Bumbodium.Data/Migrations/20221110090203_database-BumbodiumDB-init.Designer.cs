@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bumbodium.Data.Migrations
 {
     [DbContext(typeof(BumbodiumContext))]
-    [Migration("20221021141713_Database_init")]
-    partial class Database_init
+    [Migration("20221110090203_database-BumbodiumDB-init")]
+    partial class databaseBumbodiumDBinit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
