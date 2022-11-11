@@ -5,7 +5,7 @@
     //var len = shiftList.Length;
 }
 
-
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
+    @(await Html.RenderComponentAsync<Bumbodium.WebApp.Views.Shared.Components.Scheduler>(RenderMode.ServerPrerendered))
 </div>

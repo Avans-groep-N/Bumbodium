@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bumbodium.WebApp", "Bumbodium\Bumbodium.WebApp.csproj", "{7D50FDBA-1798-4436-9420-170ECF7D75E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bumbodium.Data", "Bumbodium.Data\Bumbodium.Data.csproj", "{B9080F82-C3D5-44CD-8C32-680BE96F8154}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bumbodium.Data", "Bumbodium.Data\Bumbodium.Data.csproj", "{B9080F82-C3D5-44CD-8C32-680BE96F8154}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
