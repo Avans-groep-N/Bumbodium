@@ -1,9 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Components
 <RadzenScheduler @ref=@scheduler Data="@Data" TItem="DataItem" StartProperty="Start" EndProperty="End" TextProperty="Text"
-                 SlotRender=@OnSlotRender style="height: 768px;"
-                 Culture="System.Globalization.CultureInfo.InvariantCulture"
-                 SlotSelect=@OnSlotSelect>
+                 style="height: 926px;"
+                 SlotRender=@OnSlotRender SlotSelect=@OnSlotSelect
+                 AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender>
     <RadzenWeekView TimeFormat="hh:mm" StartTime="@TimeSpan.FromHours(2)" />
+    <RadzenSelectBar @bind-Value=@SelectedType TValue="Bumbodium.Data.BeschikbaarheidType">
+        <Items>
+            <RadzenSelectBarItem Text="School uren" Value="Bumbodium.Data.BeschikbaarheidType.Schoolhours" Style="color: red;" />
+            <RadzenSelectBarItem Text="Verlof" Value="Bumbodium.Data.BeschikbaarheidType.Leave" Style="color: blue;" />
+        </Items>
+    </RadzenSelectBar>
 </RadzenScheduler>
 @code {
     RadzenScheduler<DataItem> scheduler;
@@ -11,10 +17,15 @@
     public Bumbodium.Data.Availability[] Availabilities { get; set; }
     public List<DataItem> Data { get; set; } = new();
 
+    DateTime? SelectedStartTime;
+    DateTime? SelectedEndTime;
+    public Bumbodium.Data.BeschikbaarheidType SelectedType { get; set; }
+
     public class DataItem
     {
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+        public Bumbodium.Data.BeschikbaarheidType Type { get; set; }
         string Text
         {
             get
@@ -26,24 +37,24 @@
 
     protected override void OnInitialized()
     {
+        // Adds availability items from the controller to the scheduler list
         foreach (Bumbodium.Data.Availability avail in Availabilities)
         {
             Data.Add(new DataItem()
                 {
                     Start = avail.StartDateTime,
-                    End = avail.EndDateTime
+                    End = avail.EndDateTime,
+                    Type = avail.Type
                 });
         }
     }
 
-    DateTime? SelectedStartTime;
-    DateTime? SelectedEndTime;
-
     void OnSlotRender(SchedulerSlotRenderEventArgs args)
     {
+        // Hightlights the selected time slot
         if (args.Start == SelectedStartTime.GetValueOrDefault())
         {
-            args.Attributes["style"] = "background: lightblue;";
+            args.Attributes["class"] = "rz-background-color-info-light";
         }
     }
 
@@ -56,17 +67,22 @@
         }
         else
         {
-            if(SelectedStartTime<args.End) {
+            if (SelectedStartTime < args.End)
+            {
                 Data.Add(new DataItem()
                     {
                         Start = SelectedStartTime.GetValueOrDefault(),
-                        End = args.End
+                        End = args.End,
+                        Type = SelectedType
                     });
-            } else {
+            }
+            else
+            {
                 Data.Add(new DataItem()
                     {
                         Start = args.Start,
-                        End = SelectedEndTime.GetValueOrDefault()
+                        End = SelectedEndTime.GetValueOrDefault(),
+                        Type = SelectedType
                     });
             }
 
@@ -76,5 +92,24 @@
         }
 
 
+    }
+    async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<DataItem> args)
+    {
+        // TODO Update and delete
+        await scheduler.Reload();
+    }
+
+    void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<DataItem> args)
+    {
+        // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
+
+        if (args.Data.Type == Bumbodium.Data.BeschikbaarheidType.Schoolhours)
+        {
+            args.Attributes["style"] = "background: red";
+        }
+        if (args.Data.Type == Bumbodium.Data.BeschikbaarheidType.Leave)
+        {
+            args.Attributes["style"] = "background: blue";
+        }
     }
 }

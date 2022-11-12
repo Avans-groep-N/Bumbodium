@@ -27,6 +27,7 @@ namespace Bumbodium.Data
 
     public enum BeschikbaarheidType
     {
-        Schoolhours
+        Schoolhours,
+        Leave
     }
 }
