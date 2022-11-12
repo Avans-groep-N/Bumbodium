@@ -1,0 +1,80 @@
+﻿@using Microsoft.AspNetCore.Components
+<RadzenScheduler @ref=@scheduler Data="@Data" TItem="DataItem" StartProperty="Start" EndProperty="End" TextProperty="Text"
+                 SlotRender=@OnSlotRender style="height: 768px;"
+                 Culture="System.Globalization.CultureInfo.InvariantCulture"
+                 SlotSelect=@OnSlotSelect>
+    <RadzenWeekView TimeFormat="hh:mm" StartTime="@TimeSpan.FromHours(2)" />
+</RadzenScheduler>
+@code {
+    RadzenScheduler<DataItem> scheduler;
+    [Parameter]
+    public Bumbodium.Data.Availability[] Availabilities { get; set; }
+    public List<DataItem> Data { get; set; } = new();
+
+    public class DataItem
+    {
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        string Text
+        {
+            get
+            {
+                return Start.ToShortTimeString() + "-" + End.ToShortTimeString();
+            }
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        foreach (Bumbodium.Data.Availability avail in Availabilities)
+        {
+            Data.Add(new DataItem()
+                {
+                    Start = avail.StartDateTime,
+                    End = avail.EndDateTime
+                });
+        }
+    }
+
+    DateTime? SelectedStartTime;
+    DateTime? SelectedEndTime;
+
+    void OnSlotRender(SchedulerSlotRenderEventArgs args)
+    {
+        if (args.Start == SelectedStartTime.GetValueOrDefault())
+        {
+            args.Attributes["style"] = "background: lightblue;";
+        }
+    }
+
+    async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
+    {
+        if (SelectedStartTime == null && SelectedEndTime == null)
+        {
+            SelectedStartTime = args.Start;
+            SelectedEndTime = args.End;
+        }
+        else
+        {
+            if(SelectedStartTime<args.End) {
+                Data.Add(new DataItem()
+                    {
+                        Start = SelectedStartTime.GetValueOrDefault(),
+                        End = args.End
+                    });
+            } else {
+                Data.Add(new DataItem()
+                    {
+                        Start = args.Start,
+                        End = SelectedEndTime.GetValueOrDefault()
+                    });
+            }
+
+            SelectedStartTime = null;
+            SelectedEndTime = null;
+            await scheduler.Reload();
+        }
+
+
+    }
+}
