@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Components
+@inject DialogService DialogService
+
+<RadzenTemplateForm TItem="Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent.DataItem" Data="@model" Submit=@OnSubmit>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Start" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker @bind-Value="@model.Start" Name="Start" ShowTime="true"/>
+            <RadzenRequiredValidator Text="Start is verplicht" Component="Start" />
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Eind" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker Name="End" @bind-Value="@model.End" ShowTime="true"/>
+            <RadzenRequiredValidator Component="End" Text="End is verplicht" />
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Type" />
+        </div>
+        <div class="col">
+            <RadzenDropDown Name="Type" @bind-Value="@model.Type" Data=@(Enum.GetValues<Bumbodium.Data.BeschikbaarheidType>())/>
+            <RadzenRequiredValidator Component="End" Text="End is verplicht" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Opslaan" />
+        </div>
+    </div>
+</RadzenTemplateForm>
+@code {
+    [Parameter]
+    public Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent.DataItem DataItem { get; set; }
+
+    Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent.DataItem model = new();
+
+    protected override void OnParametersSet()
+    {
+        model = DataItem;
+    }
+
+    void OnSubmit(Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent.DataItem model)
+    {
+        DialogService.Close(model);
+    }
+}

@@ -1,16 +1,34 @@
 ﻿@using Microsoft.AspNetCore.Components
-<RadzenScheduler @ref=@scheduler Data="@Data" TItem="DataItem" StartProperty="Start" EndProperty="End" TextProperty="Text"
-                 style="height: 926px;"
-                 SlotRender=@OnSlotRender SlotSelect=@OnSlotSelect
-                 AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender>
-    <RadzenWeekView TimeFormat="hh:mm" StartTime="@TimeSpan.FromHours(2)" />
-    <RadzenSelectBar @bind-Value=@SelectedType TValue="Bumbodium.Data.BeschikbaarheidType">
-        <Items>
-            <RadzenSelectBarItem Text="School uren" Value="Bumbodium.Data.BeschikbaarheidType.Schoolhours" Style="color: red;" />
-            <RadzenSelectBarItem Text="Verlof" Value="Bumbodium.Data.BeschikbaarheidType.Leave" Style="color: blue;" />
-        </Items>
-    </RadzenSelectBar>
+@inject DialogService DialogService
+
+<!-- TODO add on click events-->
+<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="Done">Veranderingen opslaan</RadzenButton>
+<RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="Delete">Veranderingen wissen</RadzenButton>
+<RadzenDialog />
+<br />
+<br />
+<RadzenSelectBar @bind-Value=@SelectedType TValue="Bumbodium.Data.BeschikbaarheidType">
+    <Items>
+        <RadzenSelectBarItem Text="School uren" Value="Bumbodium.Data.BeschikbaarheidType.Schoolhours" Style="color: red;" />
+        <RadzenSelectBarItem Text="Verlof" Value="Bumbodium.Data.BeschikbaarheidType.Leave" Style="color: blue;" />
+    </Items>
+</RadzenSelectBar>
+<RadzenScheduler @ref=@scheduler Data="@Data" TItem="DataItem"
+                 StartProperty="Start" EndProperty="End" TextProperty="Text"
+                 style="height: 1100px;"
+                 SlotRender=@OnSlotRender SlotSelect=@OnSlotSelect AppointmentRender=@OnAppointmentRender>
+    <Template Context="data">
+        <p>
+            @data.Text
+            <RadzenButton Click=@(args => EditItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="edit" />
+            <RadzenButton Click=@(args => DeleteItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="delete" />
+        </p>
+    </Template>
+    <ChildContent>
+        <RadzenWeekView TimeFormat="hh:mm" StartTime="@TimeSpan.FromHours(5)" />
+    </ChildContent>
 </RadzenScheduler>
+
 @code {
     RadzenScheduler<DataItem> scheduler;
     [Parameter]
@@ -26,7 +44,7 @@
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public Bumbodium.Data.BeschikbaarheidType Type { get; set; }
-        string Text
+        public string Text
         {
             get
             {
@@ -49,17 +67,9 @@
         }
     }
 
-    void OnSlotRender(SchedulerSlotRenderEventArgs args)
-    {
-        // Hightlights the selected time slot
-        if (args.Start == SelectedStartTime.GetValueOrDefault())
-        {
-            args.Attributes["class"] = "rz-background-color-info-light";
-        }
-    }
-
     async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
     {
+        //TODO single abscence per time constraint, somehow
         if (SelectedStartTime == null && SelectedEndTime == null)
         {
             SelectedStartTime = args.Start;
@@ -85,24 +95,28 @@
                         Type = SelectedType
                     });
             }
-
             SelectedStartTime = null;
             SelectedEndTime = null;
             await scheduler.Reload();
         }
-
-
     }
-    async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<DataItem> args)
+
+    async Task EditItem(DataItem item)
     {
-        // TODO Update and delete
+        await DialogService.OpenAsync<EditAvailabilityPage>("Aanpassen",
+            new Dictionary<string, object>() { { "DataItem", item } },
+            new DialogOptions() { Width = "400px", Height = "300px" });
+        await scheduler.Reload();
+    }
+    async Task DeleteItem(DataItem item)
+    {
+        Data.Remove(item);
         await scheduler.Reload();
     }
 
     void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<DataItem> args)
     {
-        // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
-
+        // Changes the color of the appointments depending on their type
         if (args.Data.Type == Bumbodium.Data.BeschikbaarheidType.Schoolhours)
         {
             args.Attributes["style"] = "background: red";
@@ -110,6 +124,14 @@
         if (args.Data.Type == Bumbodium.Data.BeschikbaarheidType.Leave)
         {
             args.Attributes["style"] = "background: blue";
+        }
+    }
+    void OnSlotRender(SchedulerSlotRenderEventArgs args)
+    {
+        // Hightlights the selected time slot
+        if (args.Start == SelectedStartTime.GetValueOrDefault())
+        {
+            args.Attributes["class"] = "rz-background-color-info-light";
         }
     }
 }
