@@ -14,7 +14,7 @@ namespace Bumbodium.WebApp.Controllers
         }
 
         public IActionResult Index()
-        {
+        {   
             return View();
         }
 
