@@ -15,19 +15,10 @@ namespace Bumbodium.Data
         public Employee Employee { get; set; }
 
         [StringLength(64)]
-        public string Email { get; set; }
+        public string Username { get; set; }
 
         [Required]
         [StringLength(64)]
         public string Password { get; set; }
-        
-        [Required]
-        public TypeStaff Type { get; set; }
-    }
-
-    public enum TypeStaff
-    {
-        Manager,
-        Employee
     }
 }

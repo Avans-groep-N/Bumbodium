@@ -22,8 +22,14 @@ namespace Bumbodium.Data
 
     public enum DepartmentType
     {
-        Vis,
-        Groente
-        //TODO
+        Vegetables_Fruit,
+        Meat,
+        Fish,
+        Cheese_Milk,
+        Bread,
+        Cosmetics,
+        Checkout,
+        Stockroom,
+        InformationDesk
     }
 }
