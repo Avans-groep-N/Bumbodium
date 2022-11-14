@@ -7,7 +7,7 @@
             <RadzenLabel Text="Start" />
         </div>
         <div class="col">
-            <RadzenDatePicker @bind-Value="@model.Start" Name="Start" ShowTime="true"/>
+            <RadzenDatePicker @bind-Value="@model.Start" Name="Start" ShowTime="true" />
             <RadzenRequiredValidator Text="Start is verplicht" Component="Start" />
         </div>
     </div>
@@ -16,7 +16,7 @@
             <RadzenLabel Text="Eind" />
         </div>
         <div class="col">
-            <RadzenDatePicker Name="End" @bind-Value="@model.End" ShowTime="true"/>
+            <RadzenDatePicker Name="End" @bind-Value="@model.End" ShowTime="true" />
             <RadzenRequiredValidator Component="End" Text="End is verplicht" />
         </div>
     </div>
@@ -25,8 +25,13 @@
             <RadzenLabel Text="Type" />
         </div>
         <div class="col">
-            <RadzenDropDown Name="Type" @bind-Value="@model.Type" Data=@(Enum.GetValues<Bumbodium.Data.BeschikbaarheidType>())/>
-            <RadzenRequiredValidator Component="End" Text="End is verplicht" />
+            <RadzenSelectBar @bind-Value=@model.Type TValue="Bumbodium.Data.BeschikbaarheidType">
+                <Items>
+                    <RadzenSelectBarItem Text="School uren" Value="Bumbodium.Data.BeschikbaarheidType.Schoolhours" Style="color: red;" />
+                    <RadzenSelectBarItem Text="Verlof" Value="Bumbodium.Data.BeschikbaarheidType.Leave" Style="color: blue;" />
+                    <RadzenSelectBarItem Text="Vakantie" Value="Bumbodium.Data.BeschikbaarheidType.Holidays" Style="color: green;" />
+                </Items>
+            </RadzenSelectBar>
         </div>
     </div>
     <div class="row">
