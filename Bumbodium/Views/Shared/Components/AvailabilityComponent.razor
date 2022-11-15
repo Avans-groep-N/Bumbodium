@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components
+@using Bumbodium.Data
 @inject DialogService DialogService
 
 <!-- TODO add on click events-->
@@ -26,9 +27,9 @@
         </p>
     </Template>
     <ChildContent>
-        <RadzenWeekView TimeFormat="HH:mm" StartTime="@TimeSpan.FromHours(5)" />
+        <RadzenWeekView TimeFormat="HH:mm" StartTime="@TimeSpan.FromHours(5)"/>
         <!--TODO: create a timespan of the exact month-->
-        <RadzenMonthView/>
+        <RadzenMonthView Text="Maand"/>
     </ChildContent>
 </RadzenScheduler>
 
@@ -36,6 +37,7 @@
     RadzenScheduler<DataItem> scheduler;
     [Parameter]
     public Bumbodium.Data.Availability[] Availabilities { get; set; }
+    public IEnumerable<DataItem> data;
     public List<DataItem> Data { get; set; } = new();
 
     DateTime? SelectedStartTime;
@@ -55,7 +57,10 @@
             }
         }
     }
-
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
     protected override void OnInitialized()
     {
         // Adds availability items from the controller to the scheduler list

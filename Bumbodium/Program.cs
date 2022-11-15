@@ -1,3 +1,4 @@
+using Bumbodium.Data;
 using Radzen;
 using System.Globalization;
 
@@ -10,6 +11,8 @@ builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
+builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+builder.Services.AddTransient<IAvailablityData, AvailablityData>();
 
 var app = builder.Build();
 
