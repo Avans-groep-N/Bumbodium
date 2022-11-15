@@ -27,6 +27,8 @@
     </Template>
     <ChildContent>
         <RadzenWeekView TimeFormat="HH:mm" StartTime="@TimeSpan.FromHours(5)" />
+        <!--TODO: create a timespan of the exact month-->
+        <RadzenMonthView/>
     </ChildContent>
 </RadzenScheduler>
 
@@ -113,6 +115,12 @@
     {
         Data.Remove(item);
         await scheduler.Reload();
+    }
+
+    async Task OnLoadData(SchedulerLoadDataEventArgs args)
+    {
+        //GET the appointments for between the Start and End
+        
     }
 
     void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<DataItem> args)

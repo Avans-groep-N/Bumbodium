@@ -5,13 +5,15 @@ namespace Bumbodium.WebApp.Controllers
 {
     public class AvailabilityController : Controller
     {
-        // GET: WeekRoosterController
+        // GET: AvailabilityController
         public ActionResult Index()
         {
-            var Availability = new Availability[] { new Availability() {
+            var Availability = new Availability[] { 
+                new Availability() {
                 StartDateTime = DateTime.Now,
                 EndDateTime = DateTime.Now.AddHours(1),
-                Type = BeschikbaarheidType.Schoolhours} };
+                Type = BeschikbaarheidType.Schoolhours} 
+            };
             return View(Availability);
         }
     }
