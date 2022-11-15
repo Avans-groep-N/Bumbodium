@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components
 @using Bumbodium.Data
 @inject DialogService DialogService
+@inject IAvailablityData _db
 
 <!-- TODO add on click events-->
 <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="Done">Veranderingen opslaan</RadzenButton>
@@ -37,7 +38,7 @@
     RadzenScheduler<DataItem> scheduler;
     [Parameter]
     public Bumbodium.Data.Availability[] Availabilities { get; set; }
-    public IEnumerable<DataItem> data;
+    //public IEnumerable<DataItem> data;
     public List<DataItem> Data { get; set; } = new();
 
     DateTime? SelectedStartTime;
@@ -57,14 +58,15 @@
             }
         }
     }
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+        //TODO Import the data from the database 
+        //Data = await _db.GetAvailabilities();
     }
     protected override void OnInitialized()
     {
         // Adds availability items from the controller to the scheduler list
-        foreach (Bumbodium.Data.Availability avail in Availabilities)
+        foreach (var avail in Availabilities)
         {
             Data.Add(new DataItem()
                 {
