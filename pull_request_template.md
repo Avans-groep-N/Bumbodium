@@ -12,16 +12,15 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 
 # Checklist:
 
-- [ ] Does the code run?
-- [ ] Does the new code break existing code?
-- [ ] Does the code follow coding guidelines?
-- [ ] Is the code rebased on the development branch?
-- [ ] Is the code understandable with comments?
-- [ ] Is commented out code removed?
-- [ ] Does the code correspond with what's in the documentation?
-- [ ] Has the documentation been updated?
+- [ ] My code runs
+- [ ] My code follows the coding guidelines
+- [ ] I rebased my branch on development
+- [ ] My code only has comments when necessary for understandability 
+- [ ] I removed commented out code
+- [ ] My code corresponds with the documentation
+- [ ] I have updated the documentation when changes were needed
+- [ ] All unit-tests succeeded (Except for not implemented exceptions)
 
 # Optional:
 
-- [ ] Did all relevant unit-tests succeed?
 - [ ] Is the branch linked to an issue?

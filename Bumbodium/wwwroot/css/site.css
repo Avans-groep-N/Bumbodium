@@ -16,3 +16,25 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.schedule {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.schedule-times {
+    display: flex;
+    flex-direction: row;
+}
+
+.time-div{
+    border: 1px solid black;
+    font-size: 32px;
+    padding: 5px;
+}
+
+.time-block{
+    width: 172px;
+    border: 1px solid black;
+}
