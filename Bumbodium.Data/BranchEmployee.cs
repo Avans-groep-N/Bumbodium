@@ -13,6 +13,5 @@ namespace Bumbodium.Data
 
         public Branch Filiaal { get; set; } 
         public Employee Employee { get; set; }
-
     }
 }

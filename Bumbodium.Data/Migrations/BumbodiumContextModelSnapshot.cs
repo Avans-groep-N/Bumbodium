@@ -27,18 +27,15 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.HasKey("EmployeeId");
 
@@ -145,6 +142,9 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
+                    b.Property<int>("WorkFunction")
+                        .HasColumnType("int");
+
                     b.HasKey("DepartmentId", "EmployeeId");
 
                     b.HasIndex("EmployeeId");
@@ -166,7 +166,7 @@ namespace Bumbodium.Data.Migrations
                     b.Property<DateTime>("DateInService")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateOutService")
+                    b.Property<DateTime?>("DateOutService")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -185,7 +185,6 @@ namespace Bumbodium.Data.Migrations
                         .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("MiddleName")
-                        .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
 
@@ -194,10 +193,8 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
 
-                    b.Property<string>("WorkFunction")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("EmployeeID");
 
@@ -238,10 +235,10 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("AlteredClockInDateTime")
+                    b.Property<DateTime?>("AlteredClockInDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("AlteredClockOutDateTime")
+                    b.Property<DateTime?>("AlteredClockOutDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("ClockInDateTime")
