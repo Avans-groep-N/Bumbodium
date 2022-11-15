@@ -36,12 +36,12 @@ namespace Bumbodium.Data
             .HasForeignKey<Account>(a => a.EmployeeId);
 
             modelBuilder.Entity<BranchEmployee>()
-                .HasKey(t => new { t.FiliaalId, t.EmployeeId });
+                .HasKey(t => new { t.BranchId, t.EmployeeId });
 
             modelBuilder.Entity<BranchEmployee>()
-                .HasOne(pt => pt.Filiaal)
+                .HasOne(pt => pt.Branch)
                 .WithMany(p => p.PartOFEmployee)
-                .HasForeignKey(pt => pt.FiliaalId);
+                .HasForeignKey(pt => pt.BranchId);
 
             modelBuilder.Entity<BranchEmployee>()
                 .HasOne(pt => pt.Employee)

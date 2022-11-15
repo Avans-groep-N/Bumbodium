@@ -8,7 +8,7 @@ namespace Bumbodium.Data
     public class Branch
     {
         [Key]
-        public int ID { get; set; }
+        public int BranchId { get; set; }
 
         [Required]
         [StringLength(64)]

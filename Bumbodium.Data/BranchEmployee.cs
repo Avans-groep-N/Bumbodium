@@ -9,9 +9,9 @@ namespace Bumbodium.Data
     public class BranchEmployee
     {
         public int EmployeeId { get; set; }
-        public int FiliaalId { get; set; }
+        public int BranchId { get; set; }
 
-        public Branch Filiaal { get; set; } 
+        public Branch Branch { get; set; } 
         public Employee Employee { get; set; }
     }
 }
