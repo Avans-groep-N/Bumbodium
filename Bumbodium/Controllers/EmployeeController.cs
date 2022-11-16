@@ -69,9 +69,9 @@ namespace Bumbodium.WebApp.Controllers
             {
                 using (var ctx = new BumbodiumContext())
                 {
-                    ctx.Employee.Find(id);
+                    return View(ctx.Employee.Find(id));
                 }
-                return View();
+              
             }
             catch (Exception)
             {
