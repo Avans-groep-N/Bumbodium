@@ -1,0 +1,15 @@
+﻿@page "/login"
+@model Bumbodium.WebApp.Models.Account
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<RadzenCard class="p-5 w-100">
+    <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" Class="mb-4">
+        Login
+    </RadzenText>
+    <RadzenTemplateForm Data=@("SimpleLogin") Action="http://www.google.com">
+        <RadzenLogin AllowRegister="false" AllowResetPassword="false" Login=@(args => OnLogin(args)) />
+    </RadzenTemplateForm>
+</RadzenCard>

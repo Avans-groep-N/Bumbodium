@@ -6,11 +6,10 @@ namespace Bumbodium.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private Data.BumboRepo _repo = new Data.BumboRepo();
 
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger;
         }
 
         public IActionResult Index()
@@ -18,8 +17,16 @@ namespace Bumbodium.WebApp.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Login()
         {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Login(Account account)
+        {
+            Data.Account dbAccount = new Data.Account() { Email = account.Email, Password = account.Password };
+            if (_repo.ValidateAccount(dbAccount))
+                return RedirectToAction("Index");
             return View();
         }
 
