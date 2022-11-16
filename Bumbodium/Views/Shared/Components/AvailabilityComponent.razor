@@ -16,8 +16,9 @@
         <RadzenSelectBarItem Text="Vakantie" Value="Bumbodium.Data.BeschikbaarheidType.Holidays" Style="color: green;" />
     </Items>
 </RadzenSelectBar>
-<RadzenScheduler @ref=@scheduler Data="@Data" TItem="DataItem"
-                 StartProperty="Start" EndProperty="End" TextProperty="Text"
+<RadzenScheduler @ref=@scheduler Data="@Data" TItem="Availability"
+                 StartProperty="StartDateTime" EndProperty="EndDateTime" TextProperty="Text"
+                 LoadData=@OnLoadData
                  style="height: 1010px;" TodayText="Vandaag"
                  SlotRender=@OnSlotRender SlotSelect=@OnSlotSelect AppointmentRender=@OnAppointmentRender>
     <Template Context="data">
@@ -28,54 +29,21 @@
         </p>
     </Template>
     <ChildContent>
-        <RadzenWeekView TimeFormat="HH:mm" StartTime="@TimeSpan.FromHours(5)"/>
+        <RadzenWeekView TimeFormat="HH:mm" StartTime="@TimeSpan.FromHours(5)" />
         <!--TODO: create a timespan of the exact month-->
-        <RadzenMonthView Text="Maand"/>
+        <RadzenMonthView Text="Maand" />
     </ChildContent>
 </RadzenScheduler>
 
 @code {
-    RadzenScheduler<DataItem> scheduler;
-    [Parameter]
-    public Bumbodium.Data.Availability[] Availabilities { get; set; }
-    //public IEnumerable<DataItem> data;
-    public List<DataItem> Data { get; set; } = new();
+    RadzenScheduler<Availability> scheduler;
+    //public IEnumerable<Availability> data;
+    public IEnumerable<Availability> Data { get; set; }
 
     DateTime? SelectedStartTime;
     DateTime? SelectedEndTime;
     public Bumbodium.Data.BeschikbaarheidType SelectedType { get; set; }
 
-    public class DataItem
-    {
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
-        public Bumbodium.Data.BeschikbaarheidType Type { get; set; }
-        public string Text
-        {
-            get
-            {
-                return Start.ToShortTimeString() + "-" + End.ToShortTimeString();
-            }
-        }
-    }
-    protected override async Task OnInitializedAsync()
-    {
-        //TODO Import the data from the database 
-        //Data = await _db.GetAvailabilities();
-    }
-    protected override void OnInitialized()
-    {
-        // Adds availability items from the controller to the scheduler list
-        foreach (var avail in Availabilities)
-        {
-            Data.Add(new DataItem()
-                {
-                    Start = avail.StartDateTime,
-                    End = avail.EndDateTime,
-                    Type = avail.Type
-                });
-        }
-    }
 
     async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
     {
@@ -89,20 +57,24 @@
         {
             if (SelectedStartTime < args.End)
             {
-                Data.Add(new DataItem()
+                await _db.InsertAvailability(new Availability()
                     {
-                        Start = SelectedStartTime.GetValueOrDefault(),
-                        End = args.End,
-                        Type = SelectedType
+                        StartDateTime = SelectedStartTime.GetValueOrDefault(),
+                        EndDateTime = args.End,
+                        Type = SelectedType,
+                        // TODO replace with actual id
+                        EmployeeId = 6
                     });
             }
             else
             {
-                Data.Add(new DataItem()
+                await _db.InsertAvailability(new Availability()
                     {
-                        Start = args.Start,
-                        End = SelectedEndTime.GetValueOrDefault(),
-                        Type = SelectedType
+                        StartDateTime = args.Start,
+                        EndDateTime = SelectedEndTime.GetValueOrDefault(),
+                        Type = SelectedType,
+                        // TODO replace with actual id
+                        EmployeeId = 6
                     });
             }
             SelectedStartTime = null;
@@ -111,29 +83,30 @@
         }
     }
 
-    async Task EditItem(DataItem item)
+    async Task EditItem(Availability item)
     {
         await DialogService.OpenAsync<EditAvailabilityPage>("Aanpassen",
-            new Dictionary<string, object>() { { "DataItem", item } },
+            new Dictionary<string, object>() { { "Availability", item } },
             new DialogOptions() { });
+        await _db.UpdateAvailability(item);
         await scheduler.Reload();
     }
-    async Task DeleteItem(DataItem item)
+    async Task DeleteItem(Availability item)
     {
-        Data.Remove(item);
+        await _db.DeleteAvailability(item);
         await scheduler.Reload();
     }
 
     async Task OnLoadData(SchedulerLoadDataEventArgs args)
     {
         //GET the appointments for between the Start and End
-        
+        Data = await _db.GetAvailabilitiesInRange(args.Start, args.End);
     }
 
-    void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<DataItem> args)
+    void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Availability> args)
     {
         // Changes the color of the appointments depending on their type
-        switch(args.Data.Type)
+        switch (args.Data.Type)
         {
             case Bumbodium.Data.BeschikbaarheidType.Schoolhours:
                 args.Attributes["style"] = "background: red";
@@ -148,7 +121,7 @@
     }
     void OnSlotRender(SchedulerSlotRenderEventArgs args)
     {
-        // Hightlights the selected time slot
+        // Highlights the selected time slot
         if (args.Start == SelectedStartTime.GetValueOrDefault())
         {
             args.Attributes["class"] = "rz-background-color-info-light";

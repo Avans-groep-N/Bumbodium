@@ -1,13 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Components
 @inject DialogService DialogService
 
-<RadzenTemplateForm TItem="Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent.DataItem" Data="@model" Submit=@OnSubmit>
+<RadzenTemplateForm TItem="Bumbodium.Data.Availability" Data="@model" Submit=@OnSubmit>
     <div class="row" style="margin-bottom: 16px">
         <div class="col-md-3">
             <RadzenLabel Text="Start" />
         </div>
         <div class="col">
-            <RadzenDatePicker @bind-Value="@model.Start" Name="Start" ShowTime="true" />
+            <RadzenDatePicker @bind-Value="@model.StartDateTime" Name="Start" ShowTime="true" />
             <RadzenRequiredValidator Text="Start is verplicht" Component="Start" />
         </div>
     </div>
@@ -16,7 +16,7 @@
             <RadzenLabel Text="Eind" />
         </div>
         <div class="col">
-            <RadzenDatePicker Name="End" @bind-Value="@model.End" ShowTime="true" />
+            <RadzenDatePicker Name="End" @bind-Value="@model.EndDateTime" ShowTime="true" />
             <RadzenRequiredValidator Component="End" Text="End is verplicht" />
         </div>
     </div>
@@ -43,16 +43,16 @@
 </RadzenTemplateForm>
 @code {
     [Parameter]
-    public Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent.DataItem DataItem { get; set; }
+    public Bumbodium.Data.Availability Availability { get; set; }
 
-    Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent.DataItem model = new();
+    Bumbodium.Data.Availability model = new();
 
     protected override void OnParametersSet()
     {
-        model = DataItem;
+        model = Availability;
     }
 
-    void OnSubmit(Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent.DataItem model)
+    void OnSubmit(Bumbodium.Data.Availability model)
     {
         DialogService.Close(model);
     }
