@@ -14,7 +14,7 @@ namespace Bumbodium.Data
         {
             foreach(Account dbAccount in _context.Accounts)
             {
-                if(dbAccount.Email == account.Email)
+                if(dbAccount.Username == account.Username)
                 {
                     if (dbAccount.Password == account.Password)
                         return true;
