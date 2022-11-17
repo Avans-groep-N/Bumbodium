@@ -1,15 +1,16 @@
-﻿@page "/login"
-@model Bumbodium.WebApp.Models.Account
+﻿@model Bumbodium.WebApp.Models.Account
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<RadzenCard class="p-5 w-100">
-    <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" Class="mb-4">
-        Login
-    </RadzenText>
-    <RadzenTemplateForm Data=@("SimpleLogin") Action="http://www.google.com">
-        <RadzenLogin AllowRegister="false" AllowResetPassword="false" Login=@(args => OnLogin(args)) />
-    </RadzenTemplateForm>
-</RadzenCard>
+<div class="container-fluid">
+    <div class="col-md-4 p-3">
+        <h2>Login</h2>
+        <form asp-action="Login" class="col-md-4 p-3">
+            <label asp-for="Email" ></label>
+            <input asp-for="Email" placeholder="E-mail" />
+            <label asp-for="Password"></label>
+            <input asp-for="Password" type="password" placeholder="Wachtwoord" />
+            <br />
+            <input type="submit" class="btn" />
+        </form>
+    </div>
+</div>

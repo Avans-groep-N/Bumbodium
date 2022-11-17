@@ -17,14 +17,17 @@ namespace Bumbodium.WebApp.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Login()
         {
-            return View();
+            return View(new Account());
         }
         [HttpPost]
         public IActionResult Login(Account account)
         {
             Data.Account dbAccount = new Data.Account() { Email = account.Email, Password = account.Password };
+
+            //If account matches account in db, return to homepage, otherwise do nothing
             if (_repo.ValidateAccount(dbAccount))
                 return RedirectToAction("Index");
             return View();
