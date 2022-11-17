@@ -1,5 +1,4 @@
-﻿@using Bumbodium.Data
-@model Bumbodium.Data.Employee
+﻿@model Bumbodium.Data.Employee
 
 @{
     ViewData["Title"] = "Create";
@@ -31,7 +30,7 @@
             <div class="form-group">
                 <label asp-for="Birthdate" class="control-label"></label>
                 <input asp-for="Birthdate" class="form-control" />
-                <span asp-validation-for="Birthdate" class="text-danger" DataFormatString="{0:dd/MM/yyyy}"></span>
+                <span asp-validation-for="Birthdate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PhoneNumber" class="control-label"></label>
@@ -46,14 +45,14 @@
             <div class="form-group">
                 <label asp-for="DateInService" class="control-label"></label>
                 <input asp-for="DateInService" class="form-control" />
-                <span asp-validation-for="DateInService" class="text-danger" DataFormatString="{0:dd/MM/yyyy}"></span>
+                <span asp-validation-for="DateInService" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateOutService" class="control-label"></label>
                 <input asp-for="DateOutService" class="form-control" />
-                <span asp-validation-for="DateOutService" class="text-danger" DataFormatString="{0:dd/MM/yyyy}"></span>
+                <span asp-validation-for="DateOutService" class="text-danger"></span>
             </div>
-            <div class="form-group">
+             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
                 <select asp-for="Type"
                         class="form-control"

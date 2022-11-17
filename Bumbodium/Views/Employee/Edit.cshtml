@@ -1,5 +1,4 @@
 ﻿@model Bumbodium.Data.Employee
-@using Bumbodium.Data
 
 @{
     ViewData["Title"] = "Edit";
@@ -54,7 +53,7 @@
                 <input asp-for="DateOutService" class="form-control" />
                 <span asp-validation-for="DateOutService" class="text-danger"></span>
             </div>
-           <div class="form-group">
+             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
                 <select asp-for="Type"
                         class="form-control"
