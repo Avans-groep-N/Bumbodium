@@ -21,12 +21,14 @@ namespace Bumbodium.Data
         public DateTime EndDateTime { get; set; }
 
         [Required]
-        public BeschikbaarheidType Type { get; set; }
+        public AvailabilityType Type { get; set; }
 
     }
 
-    public enum BeschikbaarheidType
+    public enum AvailabilityType
     {
-        Schoolhours
+        Schoolhours,
+        Leave,
+        Holidays
     }
 }

@@ -21,7 +21,7 @@ namespace Bumbodium.Data
         [Required]
         public DateTime ClockOutDateTime { get; set; }
 
-        public DateTime AlteredClockInDateTime { get; set; }
-        public DateTime AlteredClockOutDateTime { get; set; }
+        public DateTime? AlteredClockInDateTime { get; set; }
+        public DateTime? AlteredClockOutDateTime { get; set; }
     }
 }
