@@ -8,9 +8,9 @@ namespace Bumbodium.Data
 {
     public class Presence
     {
-        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PresenceId { get; set; }
-
+        [Key]
         public int EmployeeId { get; set; }
 
         public Employee Employee { get; set; }
