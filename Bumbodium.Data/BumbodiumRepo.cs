@@ -48,11 +48,45 @@ namespace Bumbodium.Data
             return _context.Employee.Where(e => e.EmployeeID == id).FirstOrDefault();
         }
 
-        public void createAccount(Employee employee)
+        public string RandomString(int size, bool lowerCase)
         {
-            Account _account = new Account();
-            _account.Employee = employee;
-            _account.Username = employee.FirstName.Substring(0, 1) + employee.LastName + employee.EmployeeID.ToString();
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            if (lowerCase)
+                return builder.ToString().ToLower();
+            return builder.ToString();
+        }
+
+        public string RandomPassword(int size)
+        {
+            Random random = new Random();
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append(RandomString(4, true));
+            builder.Append(random.Next(1000, 9999));
+            builder.Append(RandomString(2, false));
+            return builder.ToString();
+        }
+
+        public void CreateAccount(Employee employee)
+        {
+            Account account = new Account();
+            account.EmployeeId = employee.EmployeeID;
+            account.Employee = employee;
+            account.Username = employee.FirstName.Substring(0, 1) + employee.LastName + employee.EmployeeID.ToString();
+            account.Password = RandomPassword(12);
+
+            if (account != null)
+            {
+                _context.Accounts.Add(account);
+                _context.SaveChanges();
+            }
         }
 
     }

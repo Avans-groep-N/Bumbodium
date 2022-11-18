@@ -45,6 +45,7 @@ namespace Bumbodium.WebApp.Controllers
                 if (ValidateAccount(employee))
                 {
                     _repo.CreateEmployee(employee);
+                    _repo.CreateAccount(employee);
 
                     return RedirectToAction(nameof(Index));
                 }
