@@ -99,10 +99,12 @@ namespace Bumbodium.Data
 
         public void CreateAccount(Employee employee)
         {
+            Random random = new Random();
+
             Account account = new Account();
             account.EmployeeId = employee.EmployeeID;
             account.Employee = employee;
-            account.Username = employee.FirstName.Substring(0, 1).ToLower() + employee.LastName.ToLower() + employee.EmployeeID.ToString();
+            account.Username = employee.FirstName.Substring(0, 1).ToLower().Replace(" ", "") + employee.LastName.ToLower().Replace(" ", "") + random.Next(9).ToString()[0] + random.Next(9).ToString()[0];
             account.Password = RandomPassword(10);
 
             if (account != null)
