@@ -47,5 +47,13 @@ namespace Bumbodium.Data
         {
             return _context.Employee.Where(e => e.EmployeeID == id).FirstOrDefault();
         }
+
+        public void createAccount(Employee employee)
+        {
+            Account _account = new Account();
+            _account.Employee = employee;
+            _account.Username = employee.FirstName.Substring(0, 1) + employee.LastName + employee.EmployeeID.ToString();
+        }
+
     }
 }
