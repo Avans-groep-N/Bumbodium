@@ -26,7 +26,6 @@ namespace Bumbodium.Data
                 _context.SaveChanges();
             }
 
-            _context.SaveChanges();
         }
 
         public void DeleteEmployee(Employee employee)
