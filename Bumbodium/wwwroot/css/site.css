@@ -38,3 +38,11 @@ body {
     width: 172px;
     border: 1px solid black;
 }
+
+.login-bg{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
