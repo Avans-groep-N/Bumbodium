@@ -63,15 +63,41 @@ namespace Bumbodium.Data
             return builder.ToString();
         }
 
-        public string RandomPassword(int size)
+        public string RandomPassword()
         {
             Random random = new Random();
-
             StringBuilder builder = new StringBuilder();
-            builder.Append(RandomString(4, true));
-            builder.Append(random.Next(1000, 9999));
-            builder.Append(RandomString(2, false));
-            return builder.ToString();
+
+            for (int i = 0; i < 10; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    builder.Append(RandomString(1, true));
+                }
+                else
+                {
+                    builder.Append(RandomString(1, false));
+                }
+            }
+
+            string tempPassword = builder.ToString();
+
+            int pos1 = random.Next(0, tempPassword.Length);
+            int pos2 = random.Next(0, tempPassword.Length);
+
+            while (pos1 == pos2)
+            {
+                pos2 = random.Next(0, tempPassword.Length);
+            }
+
+            char[] charTempPassword = tempPassword.ToCharArray();
+
+            charTempPassword[pos1] = random.Next(9).ToString()[0];
+            charTempPassword[pos2] = random.Next(9).ToString()[0];
+
+            string finalPassword = new string(charTempPassword);
+
+            return finalPassword;
         }
 
         public void CreateAccount(Employee employee)
@@ -80,7 +106,7 @@ namespace Bumbodium.Data
             account.EmployeeId = employee.EmployeeID;
             account.Employee = employee;
             account.Username = employee.FirstName.Substring(0, 1).ToLower() + employee.LastName.ToLower() + employee.EmployeeID.ToString();
-            account.Password = RandomPassword(12);
+            account.Password = RandomPassword();
 
             if (account != null)
             {
