@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Bumbodium.Data
 {
-    public class AvailablityData : IAvailablityData
+    public class AvailabilityData : IAvailablityData
     {
         private readonly ISqlDataAccess _db;
-        public AvailablityData(ISqlDataAccess db)
+        public AvailabilityData(ISqlDataAccess db)
         {
             _db = db;
         }

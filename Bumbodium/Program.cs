@@ -12,7 +12,7 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
-builder.Services.AddTransient<IAvailablityData, AvailablityData>();
+builder.Services.AddTransient<IAvailablityData, AvailabilityData>();
 
 var app = builder.Build();
 
