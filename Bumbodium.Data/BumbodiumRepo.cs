@@ -11,7 +11,7 @@ namespace Bumbodium.Data
     {
         BumbodiumContext _context = new BumbodiumContext();
 
-        public void createNewEmployee(Employee employee)
+        public void CreateEmployee(Employee employee)
         {
             _context.Employee.Add(employee);
             _context.SaveChanges();
@@ -21,7 +21,9 @@ namespace Bumbodium.Data
         {
             if (_context.Employee.Contains(employee))
             {
+                _context.Attach(employee);
                 _context.Employee.Update(employee);
+                _context.SaveChanges();
             }
 
             _context.SaveChanges();
@@ -36,5 +38,14 @@ namespace Bumbodium.Data
             }
         }
 
+        public List<Employee> GetEmployees()
+        {
+            return _context.Employee.ToList();
+        }
+
+        public Employee GetEmployee(int id)
+        {
+            return _context.Employee.Where(e => e.EmployeeID == id).FirstOrDefault();
+        }
     }
 }

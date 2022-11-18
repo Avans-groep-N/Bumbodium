@@ -7,13 +7,13 @@ namespace Bumbodium.WebApp.Controllers
 {
     public class EmployeeController : Controller
     {
+
+        BumbodiumRepo _repo = new BumbodiumRepo();
+
         // GET: EmployeeController
         public ActionResult Index()
         {
-            using (var ctx = new BumbodiumContext())
-            {
-                return View(ctx.Employee.ToList());
-            }
+            return View(_repo.GetEmployees());
         }
 
         // GET: EmployeeController/Details/5
@@ -21,10 +21,7 @@ namespace Bumbodium.WebApp.Controllers
         {
             try
             {
-                using (var ctx = new BumbodiumContext())
-                {
-                    return View(ctx.Employee.Find(id));
-                }
+                return View(_repo.GetEmployee(id));
             }
             catch (Exception)
             {
@@ -45,17 +42,16 @@ namespace Bumbodium.WebApp.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (ValidateAccount(employee))
                 {
-                    using (var ctx = new BumbodiumContext())
-                    {
-                        ctx.Employee.Add(employee);
-                        ctx.SaveChanges();
-                    }
-                    return RedirectToAction(nameof(Index));
+                    _repo.CreateEmployee(employee);
 
+                    return RedirectToAction(nameof(Index));
                 }
-                return View(employee);
+                else
+                {
+                    return View();
+                }
             }
             catch
             {
@@ -68,11 +64,8 @@ namespace Bumbodium.WebApp.Controllers
         {
             try
             {
-                using (var ctx = new BumbodiumContext())
-                {
-                    return View(ctx.Employee.Find(id));
-                }
-              
+                return View(_repo.GetEmployee(id));
+
             }
             catch (Exception)
             {
@@ -87,18 +80,17 @@ namespace Bumbodium.WebApp.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    using (var ctx = new BumbodiumContext())
-                    {
-                        ctx.Attach(employee);
-                        ctx.Employee.Update(employee);
-                        ctx.SaveChanges();
-                    }
-                    return RedirectToAction(nameof(Index));
 
+                if (ValidateAccount(employee))
+                {
+                    _repo.EditEmployee(employee);
+                    return RedirectToAction(nameof(Index));
                 }
-                return View(employee);
+                else
+                {
+                    return View();
+                }
+
             }
             catch
             {
@@ -111,8 +103,7 @@ namespace Bumbodium.WebApp.Controllers
         {
             try
             {
-                using var ctx = new BumbodiumContext();
-                return View(ctx.Employee.Find(id));
+                return View(_repo.GetEmployee(id));
             }
             catch (Exception)
             {
@@ -127,19 +118,36 @@ namespace Bumbodium.WebApp.Controllers
         {
             try
             {
-
-                using (var ctx = new BumbodiumContext())
-                {
-                    ctx.Employee.Attach(employee);
-                    ctx.Employee.Remove(employee);
-                    ctx.SaveChanges();
-                }
+                _repo.DeleteEmployee(employee);
                 return RedirectToAction(nameof(Index)); return View(employee);
             }
+
             catch
             {
                 return View();
             }
+
+        }
+
+        public bool ValidateAccount(Employee employee)
+        {
+            int now = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
+            int dob = int.Parse(employee.Birthdate.ToString("yyyyMMdd"));
+            int age = (now - dob) / 10000;
+
+            if (age < 15)
+            {
+                return false;
+            }
+
+            int result = DateTime.Compare(employee.DateInService, DateTime.Now);
+
+            if (result > 0)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
