@@ -12,7 +12,7 @@ namespace Bumbodium.WebApp.Controllers
                 new Availability() {
                 StartDateTime = DateTime.Now,
                 EndDateTime = DateTime.Now.AddHours(1),
-                Type = BeschikbaarheidType.Schoolhours} 
+                Type = AvailabilityType.Schoolhours} 
             };
             return View(Availability);
         }

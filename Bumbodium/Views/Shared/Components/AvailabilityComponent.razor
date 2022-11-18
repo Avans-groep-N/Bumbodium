@@ -9,11 +9,11 @@
 <RadzenDialog />
 <br />
 <br />
-<RadzenSelectBar @bind-Value=@SelectedType TValue="Bumbodium.Data.BeschikbaarheidType">
+<RadzenSelectBar @bind-Value=@SelectedType TValue="Bumbodium.Data.AvailabilityType">
     <Items>
-        <RadzenSelectBarItem Text="School uren" Value="Bumbodium.Data.BeschikbaarheidType.Schoolhours" Style="color: red;" />
-        <RadzenSelectBarItem Text="Verlof" Value="Bumbodium.Data.BeschikbaarheidType.Leave" Style="color: blue;" />
-        <RadzenSelectBarItem Text="Vakantie" Value="Bumbodium.Data.BeschikbaarheidType.Holidays" Style="color: green;" />
+        <RadzenSelectBarItem Text="School uren" Value="Bumbodium.Data.AvailabilityType.Schoolhours" Style="color: red;" />
+        <RadzenSelectBarItem Text="Verlof" Value="Bumbodium.Data.AvailabilityType.Leave" Style="color: blue;" />
+        <RadzenSelectBarItem Text="Vakantie" Value="Bumbodium.Data.AvailabilityType.Holidays" Style="color: green;" />
     </Items>
 </RadzenSelectBar>
 <RadzenScheduler @ref=@scheduler Data="@Data" TItem="Availability"
@@ -42,7 +42,7 @@
 
     DateTime? SelectedStartTime;
     DateTime? SelectedEndTime;
-    public Bumbodium.Data.BeschikbaarheidType SelectedType { get; set; }
+    public Bumbodium.Data.AvailabilityType SelectedType { get; set; }
 
 
     async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
@@ -108,13 +108,13 @@
         // Changes the color of the appointments depending on their type
         switch (args.Data.Type)
         {
-            case Bumbodium.Data.BeschikbaarheidType.Schoolhours:
+            case Bumbodium.Data.AvailabilityType.Schoolhours:
                 args.Attributes["style"] = "background: red";
                 break;
-            case Bumbodium.Data.BeschikbaarheidType.Leave:
+            case Bumbodium.Data.AvailabilityType.Leave:
                 args.Attributes["style"] = "background: blue";
                 break;
-            case Bumbodium.Data.BeschikbaarheidType.Holidays:
+            case Bumbodium.Data.AvailabilityType.Holidays:
                 args.Attributes["style"] = "background: green";
                 break;
         }
