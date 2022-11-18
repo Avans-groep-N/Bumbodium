@@ -79,7 +79,7 @@ namespace Bumbodium.Data
             Account account = new Account();
             account.EmployeeId = employee.EmployeeID;
             account.Employee = employee;
-            account.Username = employee.FirstName.Substring(0, 1) + employee.LastName + employee.EmployeeID.ToString();
+            account.Username = employee.FirstName.Substring(0, 1).ToLower() + employee.LastName.ToLower() + employee.EmployeeID.ToString();
             account.Password = RandomPassword(12);
 
             if (account != null)
