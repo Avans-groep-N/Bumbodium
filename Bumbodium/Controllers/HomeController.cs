@@ -6,20 +6,30 @@ namespace Bumbodium.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private Data.BumboRepo _repo = new Data.BumboRepo();
 
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger;
         }
 
         public IActionResult Index()
-        {
+        {   
             return View();
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult Login()
         {
+            return View(new Account());
+        }
+        [HttpPost]
+        public IActionResult Login(Account account)
+        {
+            Data.Account dbAccount = new Data.Account() { Username = account.Username, Password = account.Password };
+
+            //If account matches account in db, return to homepage, otherwise do nothing
+            if (_repo.ValidateAccount(dbAccount))
+                return RedirectToAction("Index");
             return View();
         }
 

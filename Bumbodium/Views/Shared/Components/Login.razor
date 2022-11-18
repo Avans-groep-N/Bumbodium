@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Components
+
+<RadzenTemplateForm Data=@("SimpleLogin") Action="http://www.google.com">
+    <RadzenLogin AllowRegister="true" AllowResetPassword="true"
+                 Login=@OnLogin />
+</RadzenTemplateForm>
+
+@code {
+    string userName = "admin";
+    string password = "admin";
+
+    void OnLogin(LoginArgs args)
+    {
+        Console.WriteLine($"Username: {args.Username} and password: {args.Password}");
+        
+    }
+
+    void OnRegister(string name)
+    {
+        Console.WriteLine($"{name} -> Register");
+    }
+
+    void OnResetPassword(string value, string name)
+    {
+        Console.WriteLine($"{name} -> ResetPassword for user: {value}");
+    }
+}
