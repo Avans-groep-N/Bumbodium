@@ -120,7 +120,7 @@ namespace Bumbodium.WebApp.Controllers
             try
             {
                 _repo.DeleteEmployee(employee);
-                return RedirectToAction(nameof(Index)); return View(employee);
+                return RedirectToAction(nameof(Index));
             }
 
             catch

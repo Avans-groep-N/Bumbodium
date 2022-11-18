@@ -63,41 +63,38 @@ namespace Bumbodium.Data
             return builder.ToString();
         }
 
-        public string RandomPassword()
+        public string RandomPassword(int passWordLength)
         {
             Random random = new Random();
             StringBuilder builder = new StringBuilder();
 
-            for (int i = 0; i < 10; i++)
+            int pos1 = random.Next(0, passWordLength);
+            int pos2 = random.Next(0, passWordLength);
+
+            while (pos1 == pos2)
             {
-                if (i % 2 == 0)
+                pos2 = random.Next(0, passWordLength);
+            }
+
+            for (int i = 0; i < passWordLength; i++)
+            {
+                if (i == pos1 || i == pos2)
+                {
+                    builder.Append(random.Next(9).ToString()[0]);
+                }
+                else if (i % 2 == 0)
                 {
                     builder.Append(RandomString(1, true));
                 }
                 else
                 {
                     builder.Append(RandomString(1, false));
+
                 }
             }
 
-            string tempPassword = builder.ToString();
+            return builder.ToString();
 
-            int pos1 = random.Next(0, tempPassword.Length);
-            int pos2 = random.Next(0, tempPassword.Length);
-
-            while (pos1 == pos2)
-            {
-                pos2 = random.Next(0, tempPassword.Length);
-            }
-
-            char[] charTempPassword = tempPassword.ToCharArray();
-
-            charTempPassword[pos1] = random.Next(9).ToString()[0];
-            charTempPassword[pos2] = random.Next(9).ToString()[0];
-
-            string finalPassword = new string(charTempPassword);
-
-            return finalPassword;
         }
 
         public void CreateAccount(Employee employee)
@@ -106,7 +103,7 @@ namespace Bumbodium.Data
             account.EmployeeId = employee.EmployeeID;
             account.Employee = employee;
             account.Username = employee.FirstName.Substring(0, 1).ToLower() + employee.LastName.ToLower() + employee.EmployeeID.ToString();
-            account.Password = RandomPassword();
+            account.Password = RandomPassword(10);
 
             if (account != null)
             {
