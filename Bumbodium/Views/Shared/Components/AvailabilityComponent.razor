@@ -4,11 +4,7 @@
 @inject IAvailablityData _db
 
 <!-- TODO add on click events-->
-<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="Done">Veranderingen opslaan</RadzenButton>
-<RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="Delete">Veranderingen wissen</RadzenButton>
 <RadzenDialog />
-<br />
-<br />
 <RadzenSelectBar @bind-Value=@SelectedType TValue="Bumbodium.Data.AvailabilityType">
     <Items>
         <RadzenSelectBarItem Text="School uren" Value="Bumbodium.Data.AvailabilityType.Schoolhours" Style="color: red;" />
