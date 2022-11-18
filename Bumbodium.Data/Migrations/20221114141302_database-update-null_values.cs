@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bumbodium.Data.Migrations
 {
-    public partial class databaseBumbodiumDBinit : Migration
+    public partial class databaseupdatenull_values : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,14 +45,14 @@ namespace Bumbodium.Data.Migrations
                     EmployeeID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    MiddleName = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     Birthdate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     DateInService = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateOutService = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    WorkFunction = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false)
+                    DateOutService = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,9 +76,8 @@ namespace Bumbodium.Data.Migrations
                 columns: table => new
                 {
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false)
+                    Username = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,7 +140,8 @@ namespace Bumbodium.Data.Migrations
                 columns: table => new
                 {
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false)
+                    DepartmentId = table.Column<int>(type: "int", nullable: false),
+                    WorkFunction = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -168,8 +168,8 @@ namespace Bumbodium.Data.Migrations
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     ClockInDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AlteredClockInDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AlteredClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    AlteredClockInDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AlteredClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {

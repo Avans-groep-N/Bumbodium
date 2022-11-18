@@ -9,8 +9,9 @@ namespace Bumbodium.Data
 {
     public class Availability
     {
-        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AvailabilityId { get; set; }
+        [Key]
         public int EmployeeId { get; set; }
 
         public Employee Employee { get; set; }
@@ -22,7 +23,7 @@ namespace Bumbodium.Data
         public DateTime EndDateTime { get; set; }
 
         [Required]
-        public BeschikbaarheidType Type { get; set; }
+        public AvailabilityType Type { get; set; }
 
         [NotMapped]
         public string Text
@@ -34,7 +35,7 @@ namespace Bumbodium.Data
         }
     }
 
-    public enum BeschikbaarheidType
+    public enum AvailabilityType
     {
         Schoolhours,
         Leave,

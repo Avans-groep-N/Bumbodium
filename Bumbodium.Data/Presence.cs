@@ -8,9 +8,9 @@ namespace Bumbodium.Data
 {
     public class Presence
     {
-        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PresenceId { get; set; }
-
+        [Key]
         public int EmployeeId { get; set; }
 
         public Employee Employee { get; set; }
@@ -21,7 +21,7 @@ namespace Bumbodium.Data
         [Required]
         public DateTime ClockOutDateTime { get; set; }
 
-        public DateTime AlteredClockInDateTime { get; set; }
-        public DateTime AlteredClockOutDateTime { get; set; }
+        public DateTime? AlteredClockInDateTime { get; set; }
+        public DateTime? AlteredClockOutDateTime { get; set; }
     }
 }

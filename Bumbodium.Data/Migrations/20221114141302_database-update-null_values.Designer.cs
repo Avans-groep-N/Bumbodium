@@ -4,6 +4,7 @@ using Bumbodium.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bumbodium.Data.Migrations
 {
     [DbContext(typeof(BumbodiumContext))]
-    partial class BumbodiumContextModelSnapshot : ModelSnapshot
+    [Migration("20221114141302_database-update-null_values")]
+    partial class databaseupdatenull_values
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,10 +47,7 @@ namespace Bumbodium.Data.Migrations
             modelBuilder.Entity("Bumbodium.Data.Availability", b =>
                 {
                     b.Property<int>("AvailabilityId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvailabilityId"), 1L, 1);
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -233,10 +232,7 @@ namespace Bumbodium.Data.Migrations
             modelBuilder.Entity("Bumbodium.Data.Presence", b =>
                 {
                     b.Property<int>("PresenceId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PresenceId"), 1L, 1);
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");

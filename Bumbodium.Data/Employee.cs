@@ -15,7 +15,7 @@ namespace Bumbodium.Data
         public string FirstName { get; set; }
 
         [StringLength(16)]
-        public string MiddleName { get; set; }
+        public string? MiddleName { get; set; }
 
         [Required]
         [StringLength(64)]
@@ -35,10 +35,10 @@ namespace Bumbodium.Data
         [Required]
         public DateTime DateInService { get; set; }
 
-        public DateTime DateOutService { get; set; }
+        public DateTime? DateOutService { get; set; }
 
-        [StringLength(64)]
-        public string WorkFunction { get; set; }
+        [Required]
+        public TypeStaff Type { get; set; }
 
         public List<Availability> Availability { get; set; }
         public List<Presence> Presence { get; set; }
@@ -46,5 +46,11 @@ namespace Bumbodium.Data
         public virtual ICollection<Shift> Shifts { get; set; }
         public virtual ICollection<BranchEmployee> PartOFFiliaal { get; set; }
         public virtual ICollection<DepartmentEmployee> PartOFDepartment { get; set; }
+    }
+
+    public enum TypeStaff
+    {
+        Manager,
+        Employee
     }
 }
