@@ -4,14 +4,21 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Bumbodium.Data
+namespace Bumbodium.Data.DBModels
 {
-    public class BranchEmployee
+    public class Account
     {
+        [Key]
         public int EmployeeId { get; set; }
-        public int FiliaalId { get; set; }
 
-        public Branch Filiaal { get; set; } 
+        [Required]
         public Employee Employee { get; set; }
+
+        [StringLength(64)]
+        public string Username { get; set; }
+
+        [Required]
+        [StringLength(64)]
+        public string Password { get; set; }
     }
 }

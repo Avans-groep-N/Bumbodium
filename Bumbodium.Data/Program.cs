@@ -1,4 +1,4 @@
-﻿namespace Bumbodium.Data
+﻿namespace Bumbodium.Data.DBModels
 {
     internal class Program
     {

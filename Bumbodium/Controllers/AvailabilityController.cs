@@ -1,4 +1,4 @@
-﻿using Bumbodium.Data;
+﻿using Bumbodium.Data.DBModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbodium.WebApp.Controllers

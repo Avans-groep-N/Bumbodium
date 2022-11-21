@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Dapper;
 using System.Threading.Tasks;
+using Bumbodium.Data.Interfaces;
 
 namespace Bumbodium.Data
 {
