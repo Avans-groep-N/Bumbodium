@@ -1,5 +1,4 @@
-﻿using Bumbodium.Data.Repositories;
-using Bumbodium.Data.DBModels;
+﻿using Bumbodium.Data.DBModels;
 using Bumbodium.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -8,8 +7,6 @@ namespace Bumbodium.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private BumbodiumRepo _repo = new BumbodiumRepo();
-
         public HomeController(ILogger<HomeController> logger)
         {
         }
@@ -24,14 +21,11 @@ namespace Bumbodium.WebApp.Controllers
         {
             return View(new Account());
         }
+
         [HttpPost]
         public IActionResult Login(Account account)
         {
             Account dbAccount = new Account() { Username = account.Username, Password = account.Password };
-
-            //If account matches account in db, return to homepage, otherwise do nothing
-            if (_repo.ValidateAccount(dbAccount))
-                return RedirectToAction("Index");
             return View();
         }
 
