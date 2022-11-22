@@ -16,5 +16,8 @@ namespace Bumbodium.Data.DBModels
 
         [Required]
         public int Value { get; set; }
+
+        [Required]
+        public string Country { get; set; }
     }
 }
