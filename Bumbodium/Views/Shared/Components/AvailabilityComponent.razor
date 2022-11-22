@@ -1,14 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Components
-@using Bumbodium.Data
+@using Bumbodium.Data.DBModels
+@using Bumbodium.Data.Interfaces
 @inject DialogService DialogService
-@inject IAvailablityData _db
+@inject IAvailablityRepo _db
 
 <RadzenDialog />
-<RadzenSelectBar @bind-Value=@SelectedType TValue="Bumbodium.Data.AvailabilityType">
+<RadzenSelectBar @bind-Value=@SelectedType TValue="AvailabilityType">
     <Items>
-        <RadzenSelectBarItem Text="School uren" Value="Bumbodium.Data.AvailabilityType.Schoolhours" Style="color: red;" />
-        <RadzenSelectBarItem Text="Verlof" Value="Bumbodium.Data.AvailabilityType.Leave" Style="color: blue;" />
-        <RadzenSelectBarItem Text="Vakantie" Value="Bumbodium.Data.AvailabilityType.Holidays" Style="color: green;" />
+        <RadzenSelectBarItem Text="School uren" Value="AvailabilityType.Schoolhours" Style="color: red;" />
+        <RadzenSelectBarItem Text="Verlof" Value="AvailabilityType.Leave" Style="color: blue;" />
+        <RadzenSelectBarItem Text="Vakantie" Value="AvailabilityType.Holidays" Style="color: green;" />
     </Items>
 </RadzenSelectBar>
 <RadzenScheduler @ref=@scheduler Data="@Data" TItem="Availability"
@@ -36,7 +37,7 @@
 
     DateTime? SelectedStartTime;
     DateTime? SelectedEndTime;
-    public Bumbodium.Data.AvailabilityType SelectedType { get; set; }
+    public AvailabilityType SelectedType { get; set; }
 
 
     async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
@@ -57,7 +58,7 @@
                         EndDateTime = args.End,
                         Type = SelectedType,
                         // TODO replace with actual id
-                        EmployeeId = 4
+                        EmployeeId = 1
                     });
             }
             else
@@ -68,7 +69,7 @@
                         EndDateTime = SelectedEndTime.GetValueOrDefault(),
                         Type = SelectedType,
                         // TODO replace with actual id
-                        EmployeeId = 4
+                        EmployeeId = 1
                     });
             }
             SelectedStartTime = null;
@@ -102,13 +103,13 @@
         // Changes the color of the appointments depending on their type
         switch (args.Data.Type)
         {
-            case Bumbodium.Data.AvailabilityType.Schoolhours:
+            case AvailabilityType.Schoolhours:
                 args.Attributes["style"] = "background: red";
                 break;
-            case Bumbodium.Data.AvailabilityType.Leave:
+            case AvailabilityType.Leave:
                 args.Attributes["style"] = "background: blue";
                 break;
-            case Bumbodium.Data.AvailabilityType.Holidays:
+            case AvailabilityType.Holidays:
                 args.Attributes["style"] = "background: green";
                 break;
         }

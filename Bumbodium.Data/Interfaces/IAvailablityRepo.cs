@@ -1,6 +1,8 @@
-﻿namespace Bumbodium.Data
+﻿using Bumbodium.Data.DBModels;
+
+namespace Bumbodium.Data.Interfaces
 {
-    public interface IAvailablityData
+    public interface IAvailablityRepo
     {
         Task<List<Availability>> GetAvailabilities();
         Task<List<Availability>> GetAvailabilitiesInRange(DateTime start, DateTime end);

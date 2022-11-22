@@ -1,4 +1,4 @@
-﻿@model Bumbodium.Data.Availability[]
+﻿@model Bumbodium.Data.DBModels.Availability[]
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,4 +6,4 @@
 <div class="text-center">
     <h1>Beschikbaarheid</h1>
     @(await Html.RenderComponentAsync<Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent>(RenderMode.ServerPrerendered))
-</div>
+</div> 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bumbodium.Data.Migrations
 {
-    public partial class databaseupdatenull_values : Migration
+    public partial class Bumbodiumdatabaseinit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -94,7 +94,8 @@ namespace Bumbodium.Data.Migrations
                 name: "Availability",
                 columns: table => new
                 {
-                    AvailabilityId = table.Column<int>(type: "int", nullable: false),
+                    AvailabilityId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -164,7 +165,8 @@ namespace Bumbodium.Data.Migrations
                 name: "Presence",
                 columns: table => new
                 {
-                    PresenceId = table.Column<int>(type: "int", nullable: false),
+                    PresenceId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     ClockInDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),

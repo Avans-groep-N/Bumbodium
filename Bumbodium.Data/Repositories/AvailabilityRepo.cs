@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bumbodium.Data.DBModels;
+using Bumbodium.Data.Interfaces;
 
 namespace Bumbodium.Data
 {
-    public class AvailabilityData : IAvailablityData
+    public class AvailabilityRepo : IAvailablityRepo
     {
         private readonly ISqlDataAccess _db;
-        public AvailabilityData(ISqlDataAccess db)
+        public AvailabilityRepo(ISqlDataAccess db)
         {
             _db = db;
         }

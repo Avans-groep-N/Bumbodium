@@ -1,4 +1,4 @@
-﻿namespace Bumbodium.Data
+﻿namespace Bumbodium.Data.Interfaces
 {
     public interface ISqlDataAccess
     {

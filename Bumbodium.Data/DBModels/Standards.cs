@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Bumbodium.Data
+namespace Bumbodium.Data.DBModels
 {
     public class Standards
     {
-        [Key]   
+        [Key]
         [StringLength(1048)]
         public string Description { get; set; }
 

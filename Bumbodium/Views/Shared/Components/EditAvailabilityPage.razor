@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Components
+@using Bumbodium.Data.DBModels
 @inject DialogService DialogService
 
-<RadzenTemplateForm TItem="Bumbodium.Data.Availability" Data="@model" Submit=@OnSubmit>
+<RadzenTemplateForm TItem="Availability" Data="@model" Submit=@OnSubmit>
     <div class="row" style="margin-bottom: 16px">
         <div class="col-md-3">
             <RadzenLabel Text="Start" />
@@ -25,11 +26,11 @@
             <RadzenLabel Text="Type" />
         </div>
         <div class="col">
-            <RadzenSelectBar @bind-Value=@model.Type TValue="Bumbodium.Data.AvailabilityType">
+            <RadzenSelectBar @bind-Value=@model.Type TValue="AvailabilityType">
                 <Items>
-                    <RadzenSelectBarItem Text="School uren" Value="Bumbodium.Data.AvailabilityType.Schoolhours" Style="color: red;" />
-                    <RadzenSelectBarItem Text="Verlof" Value="Bumbodium.Data.AvailabilityType.Leave" Style="color: blue;" />
-                    <RadzenSelectBarItem Text="Vakantie" Value="Bumbodium.Data.AvailabilityType.Holidays" Style="color: green;" />
+                    <RadzenSelectBarItem Text="School uren" Value="AvailabilityType.Schoolhours" Style="color: red;" />
+                    <RadzenSelectBarItem Text="Verlof" Value="AvailabilityType.Leave" Style="color: blue;" />
+                    <RadzenSelectBarItem Text="Vakantie" Value="AvailabilityType.Holidays" Style="color: green;" />
                 </Items>
             </RadzenSelectBar>
         </div>
@@ -43,16 +44,16 @@
 </RadzenTemplateForm>
 @code {
     [Parameter]
-    public Bumbodium.Data.Availability Availability { get; set; }
+    public Availability Availability { get; set; }
 
-    Bumbodium.Data.Availability model = new();
+    Availability model = new();
 
     protected override void OnParametersSet()
     {
         model = Availability;
     }
 
-    void OnSubmit(Bumbodium.Data.Availability model)
+    void OnSubmit(Availability model)
     {
         DialogService.Close(model);
     }
