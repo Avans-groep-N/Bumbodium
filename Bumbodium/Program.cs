@@ -14,6 +14,7 @@ builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddTransient<IAvailablityRepo, AvailabilityRepo>();
+builder.Services.AddTransient<IShiftRepo, ShiftRepo>();
 
 var app = builder.Build();
 

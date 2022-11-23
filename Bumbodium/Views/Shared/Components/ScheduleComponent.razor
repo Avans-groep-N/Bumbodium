@@ -1,0 +1,106 @@
+﻿@using Microsoft.AspNetCore.Components
+@using Bumbodium.Data.DBModels
+@using Bumbodium.Data.Interfaces
+@inject DialogService DialogService
+@inject IShiftRepo _db
+
+<RadzenDialog />
+<RadzenDropDownDataGrid @bind-Value="@SelectedDepartmentId" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" AllowClear="true"
+                        Data=@(customers.Select(c => c.CompanyName).Distinct().AsQueryable())
+                        Change=@(args => OnChange(args, "DropDownDataGrid")) Style="width: 100%" />
+<RadzenScheduler @ref=@scheduler Data="@Data" TItem="Shift"
+                 StartProperty="ShiftStartDateTime" EndProperty="ShiftEndDateTime" TextProperty="Employee.FullName"
+                 LoadData=@OnLoadData
+                 style="height: 1010px;" TodayText="Vandaag"
+                 SlotRender=@OnSlotRender SlotSelect=@OnSlotSelect AppointmentRender=@OnAppointmentRender>
+    <Template Context="data">
+        <p>
+            @data.Employee.FullName
+            <RadzenButton Click=@(args => EditItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="edit" />
+            <RadzenButton Click=@(args => DeleteItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="delete" />
+        </p>
+    </Template>
+    <ChildContent>
+        <RadzenWeekView TimeFormat="HH:mm" StartTime="@TimeSpan.FromHours(5)" />
+        <!--TODO: create a timespan of the exact month-->
+        <RadzenMonthView Text="Maand" />
+    </ChildContent>
+</RadzenScheduler>
+
+@code {
+    RadzenScheduler<Shift> scheduler;
+    public IEnumerable<Shift> Data { get; set; }
+
+    DateTime? SelectedStartTime;
+    DateTime? SelectedEndTime;
+    int SelectedEmployeeId;
+    int SelectedDepartmentId;
+
+
+    async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
+    {
+        //TODO single abscence per time constraint, somehow
+        if (SelectedStartTime == null && SelectedEndTime == null)
+        {
+            SelectedStartTime = args.Start;
+            SelectedEndTime = args.End;
+        }
+        else
+        {
+            if (SelectedStartTime < args.End)
+            {
+                await _db.InsertShift(new Shift()
+                    {
+                        ShiftStartDateTime = SelectedStartTime.GetValueOrDefault(),
+                        ShiftEndDateTime = args.End,
+                        EmployeeId = SelectedEmployeeId
+                    });
+            }
+            else
+            {
+                await _db.InsertShift(new Shift()
+                    {
+                        ShiftStartDateTime = args.Start,
+                        ShiftEndDateTime = SelectedEndTime.GetValueOrDefault(),
+                        EmployeeId = SelectedEmployeeId
+                    });
+            }
+            SelectedStartTime = null;
+            SelectedEndTime = null;
+            await scheduler.Reload();
+        }
+    }
+
+    async Task EditItem(Shift item)
+    {
+        await DialogService.OpenAsync<EditShiftPage>("Aanpassen",
+            new Dictionary<string, object>() { { "Shift", item } },
+            new DialogOptions() { });
+        await _db.UpdateShift(item);
+        await scheduler.Reload();
+    }
+    async Task DeleteItem(Shift item)
+    {
+        await _db.DeleteShift(item);
+        await scheduler.Reload();
+    }
+
+    async Task OnLoadData(SchedulerLoadDataEventArgs args)
+    {
+        //GET the appointments for between the Start and End
+        Data = await _db.GetShiftsInRange(args.Start, args.End);
+    }
+
+    void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Shift> args)
+    {
+        
+    }
+    void OnSlotRender(SchedulerSlotRenderEventArgs args)
+    {
+        // Highlights the selected time slot
+        if (args.Start == SelectedStartTime.GetValueOrDefault())
+        {
+            args.Attributes["class"] = "rz-background-color-info-light";
+        }
+    }
+}

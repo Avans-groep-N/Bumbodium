@@ -46,6 +46,14 @@ namespace Bumbodium.Data.DBModels
         public virtual ICollection<Shift> Shifts { get; set; }
         public virtual ICollection<BranchEmployee> PartOFFiliaal { get; set; }
         public virtual ICollection<DepartmentEmployee> PartOFDepartment { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + MiddleName + " " + LastName;
+            }
+        }
     }
 
     public enum TypeStaff
