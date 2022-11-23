@@ -1,4 +1,6 @@
 ﻿using Bumbodium.Data.DBModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Reflection.Metadata;
@@ -6,7 +8,7 @@ using System.Reflection.Metadata;
 
 namespace Bumbodium.Data
 {
-    public class BumbodiumContext : DbContext
+    public class BumbodiumContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public DbSet<Presence> Presence { get; set; }
         public DbSet<Account> Accounts { get; set; }
@@ -19,6 +21,7 @@ namespace Bumbodium.Data
         public DbSet<Employee> Employee { get; set; }
         public DbSet<DepartmentEmployee> DepartmentEmployee { get; set; }
         public DbSet<BranchEmployee> BranchEmployee { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
