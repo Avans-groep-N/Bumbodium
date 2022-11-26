@@ -4,6 +4,7 @@ using Bumbodium.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bumbodium.Data.Migrations
 {
     [DbContext(typeof(BumbodiumContext))]
-    partial class BumbodiumContextModelSnapshot : ModelSnapshot
+    [Migration("20221126183450_db_init")]
+    partial class db_init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -286,9 +288,6 @@ namespace Bumbodium.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("AmountExpectedColis")
                         .HasColumnType("int");
 
@@ -298,10 +297,15 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("AmountExpectedEmployees")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DepartmentName")
+                        .HasColumnType("int");
+
                     b.Property<string>("StandardsId")
                         .HasColumnType("nvarchar(32)");
 
-                    b.HasKey("Date", "DepartmentId");
+                    b.HasKey("Date");
+
+                    b.HasIndex("DepartmentName");
 
                     b.HasIndex("StandardsId");
 
@@ -400,6 +404,10 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
                 {
+                    b.HasOne("Bumbodium.Data.DBModels.Department", null)
+                        .WithMany("ForecastId")
+                        .HasForeignKey("DepartmentName");
+
                     b.HasOne("Bumbodium.Data.DBModels.Standards", null)
                         .WithMany("ForecastId")
                         .HasForeignKey("StandardsId");
@@ -412,6 +420,8 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
                 {
+                    b.Navigation("ForecastId");
+
                     b.Navigation("PartOFEmployee");
 
                     b.Navigation("Shifts");

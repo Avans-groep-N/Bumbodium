@@ -8,14 +8,17 @@ namespace Bumbodium.Data.DBModels
     public class Standards
     {
         [Key]
-        [StringLength(1048)]
-        public string Description { get; set; }
+        [StringLength(32)]
+        public string Id { get; set; }
 
         [Required]
         public List<Forecast> ForecastId { get; set; }
 
         [Required]
         public int Value { get; set; }
+        
+        [StringLength(1048)]
+        public string Description { get; set; }
 
         [Required]
         public string Country { get; set; }

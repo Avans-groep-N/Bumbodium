@@ -1,14 +1,26 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Bumbodium.WebApp.Models;
+using Bumbodium.Data.DBModels;
+using Bumbodium.Data.Repositories;
+using Bumbodium.Data;
 
 namespace Bumbodium.WebApp.Controllers
 {
     public class ForecastController : Controller
     {
+        private readonly ForecastRepo _forecastRepo;
+
+        public ForecastController(ForecastRepo forecastRepo)
+        {
+            _forecastRepo = forecastRepo;
+        }
+
         // GET: ForecastController
         public ActionResult Index()
         {
-            return View();
+            
+            return View(_forecastRepo.GetAll());
         }
 
         // GET: ForecastController/Details/5
@@ -20,21 +32,23 @@ namespace Bumbodium.WebApp.Controllers
         // GET: ForecastController/Create
         public ActionResult Create()
         {
-            return View();
+            //return View(new ForecastWeekViewModel());
+            return CreateNewForcast(new ForecastWeekViewModel());
         }
 
         // POST: ForecastController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult CreateNewForcast(ForecastWeekViewModel forecast)
         {
             try
             {
+                _forecastRepo.CreateForecast(forecast.DaysOfTheWeek);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
 

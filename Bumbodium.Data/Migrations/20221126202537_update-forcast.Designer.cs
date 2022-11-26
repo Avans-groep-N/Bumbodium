@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bumbodium.Data.Migrations
 {
     [DbContext(typeof(BumbodiumContext))]
-    [Migration("20221121172105_Bumbodium-database-init")]
-    partial class Bumbodiumdatabaseinit
+    [Migration("20221126202537_update-forcast")]
+    partial class updateforcast
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -262,14 +262,23 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Standards", b =>
                 {
+                    b.Property<string>("Id")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(1048)
                         .HasColumnType("nvarchar(1048)");
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
 
-                    b.HasKey("Description");
+                    b.HasKey("Id");
 
                     b.ToTable("Standards");
                 });
@@ -279,23 +288,26 @@ namespace Bumbodium.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmountExpectedColis")
+                        .HasColumnType("int");
+
                     b.Property<int>("AmountExpectedCustomers")
                         .HasColumnType("int");
 
                     b.Property<int>("AmountExpectedEmployees")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DepartmentName")
-                        .HasColumnType("int");
+                    b.Property<string>("StandardsId")
+                        .HasColumnType("nvarchar(32)");
 
-                    b.Property<string>("StandardsDescription")
-                        .HasColumnType("nvarchar(1048)");
+                    b.HasKey("Date", "DepartmentId");
 
-                    b.HasKey("Date");
+                    b.HasIndex("DepartmentId");
 
-                    b.HasIndex("DepartmentName");
-
-                    b.HasIndex("StandardsDescription");
+                    b.HasIndex("StandardsId");
 
                     b.ToTable("Forecast");
                 });
@@ -392,13 +404,17 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
                 {
-                    b.HasOne("Bumbodium.Data.DBModels.Department", null)
-                        .WithMany("ForecastId")
-                        .HasForeignKey("DepartmentName");
+                    b.HasOne("Bumbodium.Data.DBModels.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Bumbodium.Data.DBModels.Standards", null)
                         .WithMany("ForecastId")
-                        .HasForeignKey("StandardsDescription");
+                        .HasForeignKey("StandardsId");
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Branch", b =>
@@ -408,8 +424,6 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
                 {
-                    b.Navigation("ForecastId");
-
                     b.Navigation("PartOFEmployee");
 
                     b.Navigation("Shifts");

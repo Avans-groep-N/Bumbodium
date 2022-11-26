@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bumbodium.Data.Migrations
 {
-    public partial class Bumbodiumdatabaseinit : Migration
+    public partial class db_init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -63,12 +63,14 @@ namespace Bumbodium.Data.Migrations
                 name: "Standards",
                 columns: table => new
                 {
+                    Id = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    Value = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1048)", maxLength: 1048, nullable: false),
-                    Value = table.Column<int>(type: "int", nullable: false)
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Standards", x => x.Description);
+                    table.PrimaryKey("PK_Standards", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -218,8 +220,9 @@ namespace Bumbodium.Data.Migrations
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AmountExpectedEmployees = table.Column<int>(type: "int", nullable: false),
                     AmountExpectedCustomers = table.Column<int>(type: "int", nullable: false),
+                    AmountExpectedColis = table.Column<int>(type: "int", nullable: false),
                     DepartmentName = table.Column<int>(type: "int", nullable: true),
-                    StandardsDescription = table.Column<string>(type: "nvarchar(1048)", nullable: true)
+                    StandardsId = table.Column<string>(type: "nvarchar(32)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -230,10 +233,10 @@ namespace Bumbodium.Data.Migrations
                         principalTable: "Department",
                         principalColumn: "Name");
                     table.ForeignKey(
-                        name: "FK_Forecast_Standards_StandardsDescription",
-                        column: x => x.StandardsDescription,
+                        name: "FK_Forecast_Standards_StandardsId",
+                        column: x => x.StandardsId,
                         principalTable: "Standards",
-                        principalColumn: "Description");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -257,9 +260,9 @@ namespace Bumbodium.Data.Migrations
                 column: "DepartmentName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Forecast_StandardsDescription",
+                name: "IX_Forecast_StandardsId",
                 table: "Forecast",
-                column: "StandardsDescription");
+                column: "StandardsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Presence_EmployeeId",

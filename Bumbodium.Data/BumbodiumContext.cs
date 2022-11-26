@@ -25,7 +25,8 @@ namespace Bumbodium.Data
             string your_password = "BumboAdmin!";
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer($"Server=tcp:bumbodium.database.windows.net,1433;Initial Catalog=BumbodiumDB;Persist Security Info=False;User ID=CloudSAc92745b1;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                //optionsBuilder.UseSqlServer($"Server=tcp:bumbodium.database.windows.net,1433;Initial Catalog=BumbodiumDB;Persist Security Info=False;User ID=CloudSAc92745b1;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                optionsBuilder.UseSqlServer("Server=.;Database=BumbodiumDB;Trusted_Connection=true");
             }
         }
 
@@ -37,12 +38,12 @@ namespace Bumbodium.Data
             .HasForeignKey<Account>(a => a.EmployeeId);
 
             modelBuilder.Entity<BranchEmployee>()
-                .HasKey(t => new { t.FiliaalId, t.EmployeeId });
+                .HasKey(bp => new { bp.FiliaalId, bp.EmployeeId });
 
             modelBuilder.Entity<BranchEmployee>()
-                .HasOne(pt => pt.Filiaal)
+                .HasOne(bp => bp.Filiaal)
                 .WithMany(p => p.PartOFEmployee)
-                .HasForeignKey(pt => pt.FiliaalId);
+                .HasForeignKey(bp => bp.FiliaalId);
 
             modelBuilder.Entity<BranchEmployee>()
                 .HasOne(pt => pt.Employee)
@@ -80,6 +81,9 @@ namespace Bumbodium.Data
 
             modelBuilder.Entity<Presence>()
                 .HasKey(t => new { t.PresenceId, t.EmployeeId });
+
+            modelBuilder.Entity<Forecast>()
+                .HasKey(t => new { t.Date, t.DepartmentId});
 
             /*modelBuilder.Entity<Employee>().HasData(
                 new Employee { EmployeeID = 1, FirstName = "Jan", ExtraName = "van", LastName = "Geest", Birthdate = new DateTime(1989, 10, 22), PhoneNumber = "+31 6 56927484", Email = "j.vangeest@bumbodium.nl", DateInService = new DateTime(2006, 05, 12), WorkFunction = "Manager" },
