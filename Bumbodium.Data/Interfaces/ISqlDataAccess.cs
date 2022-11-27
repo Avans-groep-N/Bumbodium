@@ -6,5 +6,6 @@
 
         Task<List<T>> LoadData<T, U>(string sql, U parameters);
         Task SaveData<T>(string sql, T parameters);
+        Task<T> LoadSingleRecord<T, U>(string sql, U parameters);
     }
 }

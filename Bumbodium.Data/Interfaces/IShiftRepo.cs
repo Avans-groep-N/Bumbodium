@@ -8,5 +8,7 @@ namespace Bumbodium.Data.Interfaces
         Task InsertShift(Shift Shift);
         Task DeleteShift(Shift Shift);
         Task UpdateShift(Shift Shift);
+        Task<List<Employee>> GetEmployeesInRange(int departmentId, string? filter, int offset, int top);
+        Task<int> GetEmployeeCount(int departmentId);
     }
 }

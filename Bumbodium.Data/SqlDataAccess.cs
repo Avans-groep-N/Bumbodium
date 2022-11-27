@@ -32,6 +32,17 @@ namespace Bumbodium.Data
             }
         }
 
+        public async Task<T> LoadSingleRecord<T, U>(string sql, U parameters)
+        {
+            string ConnectionString = _configuration.GetConnectionString(ConnectionStringName);
+            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            {
+                var data = await connection.QueryAsync<T>(sql, parameters);
+
+                return data.FirstOrDefault();
+            }
+        }
+
         public async Task SaveData<T>(string sql, T parameters)
         {
             string ConnectionString = _configuration.GetConnectionString(ConnectionStringName);

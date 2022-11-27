@@ -5,9 +5,19 @@
 @inject IShiftRepo _db
 
 <RadzenDialog />
-<RadzenDropDownDataGrid @bind-Value="@SelectedDepartmentId" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" AllowClear="true"
-                        Data=@(customers.Select(c => c.CompanyName).Distinct().AsQueryable())
-                        Change=@(args => OnChange(args, "DropDownDataGrid")) Style="width: 100%" />
+<RadzenDropDown TValue="DepartmentType" Class="w-100"
+                Data=@(Enum.GetValues<DepartmentType>())
+                Change=@(args => OnDepartmentChange(args)) />
+
+<RadzenDropDownDataGrid TValue="Employee" LoadData="@LoadEmployeeData" AllowFiltering="true" AllowVirtualization="true"
+                        Data=@EmployeeData Count="@EmployeeCount" TextProperty="FullName"
+                        Change=@(args => OnEmployeeChange((Employee)args)) Class="w-100">
+<Columns>
+    <RadzenDropDownDataGridColumn Property="FullName" Title="Naam" Width="200px" />
+    <RadzenDropDownDataGridColumn Property="Employee" Title="Id" Width="80px" />
+</Columns>
+</RadzenDropDownDataGrid>
+
 <RadzenScheduler @ref=@scheduler Data="@Data" TItem="Shift"
                  StartProperty="ShiftStartDateTime" EndProperty="ShiftEndDateTime" TextProperty="Employee.FullName"
                  LoadData=@OnLoadData
@@ -30,12 +40,13 @@
 @code {
     RadzenScheduler<Shift> scheduler;
     public IEnumerable<Shift> Data { get; set; }
+    public IEnumerable<Employee> EmployeeData { get; set; }
+    public int EmployeeCount { get; set; }
 
     DateTime? SelectedStartTime;
     DateTime? SelectedEndTime;
     int SelectedEmployeeId;
-    int SelectedDepartmentId;
-
+    DepartmentType SelectedDepartmentId;
 
     async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
     {
@@ -70,7 +81,6 @@
             await scheduler.Reload();
         }
     }
-
     async Task EditItem(Shift item)
     {
         await DialogService.OpenAsync<EditShiftPage>("Aanpassen",
@@ -84,16 +94,14 @@
         await _db.DeleteShift(item);
         await scheduler.Reload();
     }
-
     async Task OnLoadData(SchedulerLoadDataEventArgs args)
     {
         //GET the appointments for between the Start and End
         Data = await _db.GetShiftsInRange(args.Start, args.End);
     }
-
     void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Shift> args)
     {
-        
+
     }
     void OnSlotRender(SchedulerSlotRenderEventArgs args)
     {
@@ -102,5 +110,20 @@
         {
             args.Attributes["class"] = "rz-background-color-info-light";
         }
+    }
+
+    async Task OnDepartmentChange(object value)
+    {
+        SelectedDepartmentId = (DepartmentType)value;
+        EmployeeCount = await _db.GetEmployeeCount((int)SelectedDepartmentId);
+    }
+    void OnEmployeeChange(Employee value)
+    {
+        SelectedEmployeeId = value.EmployeeID;
+    }
+    async Task LoadEmployeeData(LoadDataArgs args)
+    {
+        EmployeeData = await _db.GetEmployeesInRange((int)SelectedDepartmentId, args.Filter, args.Skip.Value, args.Top.Value);
+        InvokeAsync(StateHasChanged);
     }
 }

@@ -15,7 +15,7 @@ namespace Bumbodium.Data
         {
             _db = db;
         }
-        
+
         public Task<List<Shift>> GetShiftsInRange(DateTime start, DateTime end)
         {
             string sql = "select * from dbo.Shift " +
@@ -49,6 +49,24 @@ namespace Bumbodium.Data
                         AND DepartmentId = @DepartmentId;";
 
             return _db.SaveData(sql, Shift);
+        }
+
+        public Task<List<Employee>> GetEmployeesInRange(int departmentId, string? filter, int offset, int top)
+        {
+            string sql = @"SELECT * FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId
+                        WHERE CONCAT(FirstName, MiddleName, LastName) LIKE '%" + filter + "%'" +
+                        " AND de.DepartmentId = " + departmentId +
+                        " ORDER BY FirstName" +
+                        " OFFSET " + offset +  " ROWS" +
+                        " FETCH NEXT " + top + " ROWS ONLY";
+            return _db.LoadData<Employee, dynamic>(sql, new { });
+        }
+
+        public Task<int> GetEmployeeCount(int departmentId)
+        {
+            string sql = @"SELECT COUNT(*) FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId" +
+                        " WHERE de.DepartmentId = " + departmentId;
+            return _db.LoadSingleRecord<int, dynamic>(sql, new { });
         }
     }
 }
