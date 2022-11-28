@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bumbodium.Data.Migrations
 {
-    public partial class db_init : Migration
+    public partial class update_relationships : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace Bumbodium.Data.Migrations
                 name: "Branch",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     City = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     Street = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
@@ -23,19 +23,7 @@ namespace Bumbodium.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Branch", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Department",
-                columns: table => new
-                {
-                    Name = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Department", x => x.Name);
+                    table.PrimaryKey("PK_Branch", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,6 +59,25 @@ namespace Bumbodium.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Standards", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Department",
+                columns: table => new
+                {
+                    Name = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    BranchId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Department", x => x.Name);
+                    table.ForeignKey(
+                        name: "FK_Department_Branch_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branch",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,10 +135,33 @@ namespace Bumbodium.Data.Migrations
                         name: "FK_BranchEmployee_Branch_FiliaalId",
                         column: x => x.FiliaalId,
                         principalTable: "Branch",
-                        principalColumn: "ID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BranchEmployee_Employee_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employee",
+                        principalColumn: "EmployeeID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Presence",
+                columns: table => new
+                {
+                    PresenceId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    ClockInDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AlteredClockInDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AlteredClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Presence", x => new { x.PresenceId, x.EmployeeId });
+                    table.ForeignKey(
+                        name: "FK_Presence_Employee_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employee",
                         principalColumn: "EmployeeID",
@@ -164,26 +194,30 @@ namespace Bumbodium.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Presence",
+                name: "Forecast",
                 columns: table => new
                 {
-                    PresenceId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    ClockInDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AlteredClockInDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AlteredClockOutDateTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DepartmentId = table.Column<int>(type: "int", nullable: false),
+                    AmountExpectedEmployees = table.Column<int>(type: "int", nullable: false),
+                    AmountExpectedCustomers = table.Column<int>(type: "int", nullable: false),
+                    AmountExpectedColis = table.Column<int>(type: "int", nullable: false),
+                    StandardsId = table.Column<string>(type: "nvarchar(32)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Presence", x => new { x.PresenceId, x.EmployeeId });
+                    table.PrimaryKey("PK_Forecast", x => new { x.Date, x.DepartmentId });
                     table.ForeignKey(
-                        name: "FK_Presence_Employee_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employee",
-                        principalColumn: "EmployeeID",
+                        name: "FK_Forecast_Department_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Department",
+                        principalColumn: "Name",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Forecast_Standards_StandardsId",
+                        column: x => x.StandardsId,
+                        principalTable: "Standards",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -213,32 +247,6 @@ namespace Bumbodium.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Forecast",
-                columns: table => new
-                {
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AmountExpectedEmployees = table.Column<int>(type: "int", nullable: false),
-                    AmountExpectedCustomers = table.Column<int>(type: "int", nullable: false),
-                    AmountExpectedColis = table.Column<int>(type: "int", nullable: false),
-                    DepartmentName = table.Column<int>(type: "int", nullable: true),
-                    StandardsId = table.Column<string>(type: "nvarchar(32)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Forecast", x => x.Date);
-                    table.ForeignKey(
-                        name: "FK_Forecast_Department_DepartmentName",
-                        column: x => x.DepartmentName,
-                        principalTable: "Department",
-                        principalColumn: "Name");
-                    table.ForeignKey(
-                        name: "FK_Forecast_Standards_StandardsId",
-                        column: x => x.StandardsId,
-                        principalTable: "Standards",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Availability_EmployeeId",
                 table: "Availability",
@@ -250,14 +258,19 @@ namespace Bumbodium.Data.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Department_BranchId",
+                table: "Department",
+                column: "BranchId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DepartmentEmployee_EmployeeId",
                 table: "DepartmentEmployee",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Forecast_DepartmentName",
+                name: "IX_Forecast_DepartmentId",
                 table: "Forecast",
-                column: "DepartmentName");
+                column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Forecast_StandardsId",
@@ -299,9 +312,6 @@ namespace Bumbodium.Data.Migrations
                 name: "Shift");
 
             migrationBuilder.DropTable(
-                name: "Branch");
-
-            migrationBuilder.DropTable(
                 name: "Standards");
 
             migrationBuilder.DropTable(
@@ -309,6 +319,9 @@ namespace Bumbodium.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Employee");
+
+            migrationBuilder.DropTable(
+                name: "Branch");
         }
     }
 }

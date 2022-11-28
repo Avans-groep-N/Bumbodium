@@ -21,6 +21,7 @@ namespace Bumbodium.Data.DBModels
         public string Description { get; set; }
 
         [Required]
-        public string Country { get; set; }
+        public virtual int CountryId { get; set; }
+        public virtual Country Country { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Bumbodium.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bumbodium.Data.Migrations
 {
     [DbContext(typeof(BumbodiumContext))]
-    partial class BumbodiumContextModelSnapshot : ModelSnapshot
+    [Migration("20221128164847_update_relationships")]
+    partial class update_relationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,9 +84,10 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<int>("CountryId")
+                    b.Property<string>("Country")
+                        .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("HouseNumber")
                         .IsRequired()
@@ -103,20 +106,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CountryId");
-
                     b.ToTable("Branch");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "Den Bosch",
-                            CountryId = 1,
-                            HouseNumber = "1",
-                            PostalCode = "0000 AA",
-                            Street = "01"
-                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.BranchEmployee", b =>
@@ -132,30 +122,6 @@ namespace Bumbodium.Data.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("BranchEmployee");
-                });
-
-            modelBuilder.Entity("Bumbodium.Data.DBModels.Country", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CountryName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Country");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CountryName = "Netherlands"
-                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
@@ -176,62 +142,6 @@ namespace Bumbodium.Data.Migrations
                     b.HasIndex("BranchId");
 
                     b.ToTable("Department");
-
-                    b.HasData(
-                        new
-                        {
-                            Name = 0,
-                            BranchId = 1,
-                            Description = "Vegetables_Fruit"
-                        },
-                        new
-                        {
-                            Name = 1,
-                            BranchId = 1,
-                            Description = "Meat"
-                        },
-                        new
-                        {
-                            Name = 2,
-                            BranchId = 1,
-                            Description = "Fish"
-                        },
-                        new
-                        {
-                            Name = 3,
-                            BranchId = 1,
-                            Description = "Cheese_Milk"
-                        },
-                        new
-                        {
-                            Name = 4,
-                            BranchId = 1,
-                            Description = "Bread"
-                        },
-                        new
-                        {
-                            Name = 5,
-                            BranchId = 1,
-                            Description = "Cosmetics"
-                        },
-                        new
-                        {
-                            Name = 6,
-                            BranchId = 1,
-                            Description = "Checkout"
-                        },
-                        new
-                        {
-                            Name = 7,
-                            BranchId = 1,
-                            Description = "Stockroom"
-                        },
-                        new
-                        {
-                            Name = 8,
-                            BranchId = 1,
-                            Description = "InformationDesk"
-                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.DepartmentEmployee", b =>
@@ -361,8 +271,9 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
 
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -374,46 +285,7 @@ namespace Bumbodium.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CountryId");
-
                     b.ToTable("Standards");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "Coli",
-                            CountryId = 1,
-                            Description = "aantal minuten per Coli uitladen.",
-                            Value = 5
-                        },
-                        new
-                        {
-                            Id = "VakkenVullen",
-                            CountryId = 1,
-                            Description = "aantal minuten Vakken vullen per Coli.",
-                            Value = 30
-                        },
-                        new
-                        {
-                            Id = "Kasiere",
-                            CountryId = 1,
-                            Description = "1 Kasiere per uur per aantal klanten.",
-                            Value = 30
-                        },
-                        new
-                        {
-                            Id = "Medewerker",
-                            CountryId = 1,
-                            Description = "1 medePerCustomer per uur per aantal klanten.",
-                            Value = 100
-                        },
-                        new
-                        {
-                            Id = "Spiegelen",
-                            CountryId = 1,
-                            Description = "aantal seconde voor medePerCustomer per meter.",
-                            Value = 30
-                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
@@ -465,17 +337,6 @@ namespace Bumbodium.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("Bumbodium.Data.DBModels.Branch", b =>
-                {
-                    b.HasOne("Bumbodium.Data.DBModels.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.BranchEmployee", b =>
@@ -555,17 +416,6 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("Bumbodium.Data.DBModels.Standards", b =>
-                {
-                    b.HasOne("Bumbodium.Data.DBModels.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.Forecast", b =>

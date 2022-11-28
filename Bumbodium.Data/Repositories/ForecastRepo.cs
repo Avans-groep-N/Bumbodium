@@ -12,12 +12,14 @@ namespace Bumbodium.Data.Repositories
     {
         //Dit hoort hier niet maar weet nog niet waar het moet staan dit is even tijdelijk!!!!!!!!
         //Dit mag nog niet naar dev worden gepulled!!
-        List<Standards> _standards = new List<Standards>() {
+
+        List<Standards> _standards;
+        /*List<Standards> _standards = new List<Standards>() {
                 new Standards() {
                     Id = "Coli",
                     Value = 5,
                     Description = "aantal minuten per Coli uitladen.",
-                    Country = "Netherlands" },
+                    Country = 1},
 
                 new Standards() {
                     Id= "VakkenVullen",
@@ -41,9 +43,9 @@ namespace Bumbodium.Data.Repositories
                     Id = "Spiegelen",
                     Value = 30,
                     Description = "aantal seconde voor medePerCustomer per meter.",
-                    Country = "Netherlands" },
+                    Country = "Netherlands" }
 
-            };
+            };*/
 
         //int[] _amountHoursOpen = new int[] { 14, 14, 14, 14, 14, 14, 8 };
         // werkelijk ^
@@ -62,21 +64,20 @@ namespace Bumbodium.Data.Repositories
 
         public void CreateForecast(Forecast[] forecasts)
         {
-            WeekCalEmployes(forecasts);
-            foreach (var forecast in forecasts)
+            List<Forecast> departmentforecasts = WeekCalEmployes(forecasts);
+            foreach (var dep_forecast in departmentforecasts)
             {
-                SaveInDb(forecast);
+                _ctx.Forecast.Add(dep_forecast);
             }
-
-        }
-        private void SaveInDb(Forecast forecast)
-        {
-            _ctx.Forecast.Add(forecast);
+            //context.AddRange(countries);
             _ctx.SaveChanges();
+
         }
 
-        private void WeekCalEmployes(Forecast[] forecast)
+        private List<Forecast> WeekCalEmployes(Forecast[] forecast)
         {
+            List<Forecast> allDepForecasts = new List<Forecast>();
+
             double percentOfGrantPerDep = 0.125;
             // ^ persentagevoordepartments = (1/ Enum.GetNames(typeof(DepartmentType)).Length -1)
 
@@ -95,14 +96,26 @@ namespace Bumbodium.Data.Repositories
                     if (department == DepartmentType.Checkout)
                         continue;
 
-                    forecast[i].AmountExpectedEmployees = (int)(amountEmployes * percentOfGrantPerDep + 1);
-                    forecast[i].DepartmentId = department;
+                    allDepForecasts.Add(new Forecast()
+                    {
+                        Date = forecast[i].Date,
+                        DepartmentId = department,
+                        AmountExpectedColis = forecast[i].AmountExpectedColis,
+                        AmountExpectedCustomers = forecast[i].AmountExpectedCustomers,
+                        AmountExpectedEmployees = (int)(amountEmployes * percentOfGrantPerDep + 1)
+                    }) ;
                 }
 
-                forecast[i].AmountExpectedEmployees = CalcuKasiere(forecast[i].AmountExpectedCustomers);
-                forecast[i].DepartmentId = DepartmentType.Checkout;
-
+                allDepForecasts.Add(new Forecast()
+                {
+                    Date = forecast[i].Date,
+                    DepartmentId = DepartmentType.Checkout,
+                    AmountExpectedColis = forecast[i].AmountExpectedColis,
+                    AmountExpectedCustomers = forecast[i].AmountExpectedCustomers,
+                    AmountExpectedEmployees = CalcuKasiere(forecast[i].AmountExpectedCustomers)
+                });
             }
+            return allDepForecasts;
         }
 
         //returns in secondes

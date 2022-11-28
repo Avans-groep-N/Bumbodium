@@ -8,7 +8,7 @@ namespace Bumbodium.Data.DBModels
     public class Branch
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(64)]
@@ -24,7 +24,9 @@ namespace Bumbodium.Data.DBModels
         public string HouseNumber { get; set; }
         [Required]
         [StringLength(64)]
-        public string Country { get; set; }
+        
+        public virtual int CountryId { get; set; }
+        public virtual Country Country { get; set; }
 
         public virtual ICollection<BranchEmployee> PartOFEmployee { get; set; }
     }

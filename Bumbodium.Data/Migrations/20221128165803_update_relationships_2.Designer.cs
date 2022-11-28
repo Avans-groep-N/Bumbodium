@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bumbodium.Data.Migrations
 {
     [DbContext(typeof(BumbodiumContext))]
-    [Migration("20221126215707_Forecast_change_4")]
-    partial class Forecast_change_4
+    [Migration("20221128165803_update_relationships_2")]
+    partial class update_relationships_2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -73,21 +73,20 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Branch", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("Country")
+                    b.Property<string>("CountryIdCountryName")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("HouseNumber")
                         .IsRequired()
@@ -104,7 +103,9 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryIdCountryName");
 
                     b.ToTable("Branch");
                 });
@@ -124,9 +125,22 @@ namespace Bumbodium.Data.Migrations
                     b.ToTable("BranchEmployee");
                 });
 
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Country", b =>
+                {
+                    b.Property<string>("CountryName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CountryName");
+
+                    b.ToTable("Country");
+                });
+
             modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
                 {
                     b.Property<int>("Name")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -135,6 +149,8 @@ namespace Bumbodium.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Name");
+
+                    b.HasIndex("BranchId");
 
                     b.ToTable("Department");
                 });
@@ -266,9 +282,9 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
 
-                    b.Property<string>("Country")
+                    b.Property<string>("CountryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -279,6 +295,8 @@ namespace Bumbodium.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CountryName");
 
                     b.ToTable("Standards");
                 });
@@ -304,6 +322,8 @@ namespace Bumbodium.Data.Migrations
                         .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Date", "DepartmentId");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("StandardsId");
 
@@ -332,6 +352,17 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Employee");
                 });
 
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Branch", b =>
+                {
+                    b.HasOne("Bumbodium.Data.DBModels.Country", "CountryId")
+                        .WithMany()
+                        .HasForeignKey("CountryIdCountryName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CountryId");
+                });
+
             modelBuilder.Entity("Bumbodium.Data.DBModels.BranchEmployee", b =>
                 {
                     b.HasOne("Bumbodium.Data.DBModels.Employee", "Employee")
@@ -349,6 +380,17 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("Filiaal");
+                });
+
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
+                {
+                    b.HasOne("Bumbodium.Data.DBModels.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.DepartmentEmployee", b =>
@@ -400,11 +442,30 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Employee");
                 });
 
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Standards", b =>
+                {
+                    b.HasOne("Bumbodium.Data.DBModels.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+                });
+
             modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
                 {
+                    b.HasOne("Bumbodium.Data.DBModels.Department", "Department")
+                        .WithMany("Forecast")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Bumbodium.Data.DBModels.Standards", null)
                         .WithMany("ForecastId")
                         .HasForeignKey("StandardsId");
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Branch", b =>
@@ -414,6 +475,8 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
                 {
+                    b.Navigation("Forecast");
+
                     b.Navigation("PartOFEmployee");
 
                     b.Navigation("Shifts");

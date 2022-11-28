@@ -12,7 +12,7 @@ namespace Bumbodium.Data
         public DateTime Date { get; set; }
 
         public DepartmentType DepartmentId { get; set; }
-        //public Department Department { get; set; }
+        public Department Department { get; set; }
 
         [Required]
         public int AmountExpectedEmployees { get; set; }
