@@ -87,12 +87,12 @@ namespace Bumbodium.Data
                 .HasKey(t => new { t.Date, t.DepartmentId });
 
             #region seedData
-            InsertCountyData(modelBuilder);
+            /*InsertCountyData(modelBuilder);
             InsertBranchData(modelBuilder);
             InsertDepartmentData(modelBuilder);
             //InsertEmployeeData(modelBuilder);
             //InsertAccountData(modelBuilder);
-            InsertStandardsData(modelBuilder);
+            InsertStandardsData(modelBuilder);*/
 
             #endregion
         }
@@ -128,7 +128,7 @@ namespace Bumbodium.Data
                 {
                     Id = "Medewerker",
                     Value = 100,
-                    Description = "1 medePerCustomer per uur per aantal klanten.",
+                    Description = "1 medewerker per customer per uur per aantal klanten.",
                     CountryId = 1
                 },
 
@@ -136,7 +136,7 @@ namespace Bumbodium.Data
                 {
                     Id = "Spiegelen",
                     Value = 30,
-                    Description = "aantal seconde voor medePerCustomer per meter.",
+                    Description = "aantal seconde voor medewerker per customer per meter.",
                     CountryId = 1
                 });
         }
