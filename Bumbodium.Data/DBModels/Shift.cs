@@ -11,7 +11,7 @@ namespace Bumbodium.Data.DBModels
         [Key]
         public int ShiftId { get; set; }
         public int EmployeeId { get; set; }
-        public DepartmentType DepartmentId { get; set; }
+        public int DepartmentId { get; set; }
 
         public Department Department { get; set; }
         public Employee Employee { get; set; }

@@ -19,7 +19,6 @@ namespace Bumbodium.Data
         public DbSet<Employee> Employee { get; set; }
         public DbSet<DepartmentEmployee> DepartmentEmployee { get; set; }
         public DbSet<BranchEmployee> BranchEmployee { get; set; }
-        public DbSet<Country> Country { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -50,6 +49,9 @@ namespace Bumbodium.Data
                 .HasOne(pt => pt.Employee)
                 .WithMany(t => t.PartOFFiliaal)
                 .HasForeignKey(pt => pt.EmployeeId);
+
+            /*modelBuilder.Entity<Department>()
+                .HasKey(d => new { d.Name, d.BranchId });*/
 
             modelBuilder.Entity<DepartmentEmployee>()
                 .HasKey(t => new { t.DepartmentId, t.EmployeeId });
@@ -87,13 +89,13 @@ namespace Bumbodium.Data
                 .HasKey(t => new { t.Date, t.DepartmentId });
 
             #region seedData
-            /*InsertCountyData(modelBuilder);
+            //InsertCountyData(modelBuilder);
             InsertBranchData(modelBuilder);
             InsertDepartmentData(modelBuilder);
+            InsertStandardsData(modelBuilder);
+
             //InsertEmployeeData(modelBuilder);
             //InsertAccountData(modelBuilder);
-            InsertStandardsData(modelBuilder);*/
-
             #endregion
         }
 
@@ -105,7 +107,7 @@ namespace Bumbodium.Data
                     Id = "Coli",
                     Value = 5,
                     Description = "aantal minuten per Coli uitladen.",
-                    CountryId = 1
+                    Country = Country.Netherlands
                 },
 
                 new Standards()
@@ -113,7 +115,7 @@ namespace Bumbodium.Data
                     Id = "VakkenVullen",
                     Value = 30,
                     Description = "aantal minuten Vakken vullen per Coli.",
-                    CountryId = 1
+                    Country = Country.Netherlands
                 },
 
                 new Standards()
@@ -121,7 +123,7 @@ namespace Bumbodium.Data
                     Id = "Kasiere",
                     Value = 30,
                     Description = "1 Kasiere per uur per aantal klanten.",
-                    CountryId = 1
+                    Country = Country.Netherlands
                 },
 
                 new Standards()
@@ -129,7 +131,7 @@ namespace Bumbodium.Data
                     Id = "Medewerker",
                     Value = 100,
                     Description = "1 medewerker per customer per uur per aantal klanten.",
-                    CountryId = 1
+                    Country = Country.Netherlands
                 },
 
                 new Standards()
@@ -137,7 +139,7 @@ namespace Bumbodium.Data
                     Id = "Spiegelen",
                     Value = 30,
                     Description = "aantal seconde voor medewerker per customer per meter.",
-                    CountryId = 1
+                    Country = Country.Netherlands
                 });
         }
 
@@ -158,27 +160,21 @@ namespace Bumbodium.Data
         private static void InsertDepartmentData(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Department>().HasData(
-                            new Department() { BranchId = 1, Name = DepartmentType.Vegetables_Fruit, Description = "Vegetables_Fruit" },
-                            new Department() { BranchId = 1, Name = DepartmentType.Meat, Description = "Meat" },
-                            new Department() { BranchId = 1, Name = DepartmentType.Fish, Description = "Fish" },
-                            new Department() { BranchId = 1, Name = DepartmentType.Cheese_Milk, Description = "Cheese_Milk" },
-                            new Department() { BranchId = 1, Name = DepartmentType.Bread, Description = "Bread" },
-                            new Department() { BranchId = 1, Name = DepartmentType.Cosmetics, Description = "Cosmetics" },
-                            new Department() { BranchId = 1, Name = DepartmentType.Checkout, Description = "Checkout" },
-                            new Department() { BranchId = 1, Name = DepartmentType.Stockroom, Description = "Stockroom" },
-                            new Department() { BranchId = 1, Name = DepartmentType.InformationDesk, Description = "InformationDesk" });
-        }
-
-        private static void InsertCountyData(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Country>().HasData(
-                new Country() { Id = 1, CountryName = "Netherlands" });
+                            new Department() { Id = 1, BranchId = 1, SurfaceAreaInM2 = 50, Name = DepartmentType.Vegetables_Fruit, Description = "Vegetables_Fruit" },
+                            new Department() { Id = 2, BranchId = 1, SurfaceAreaInM2 = 140, Name = DepartmentType.Meat, Description = "Meat" },
+                            new Department() { Id = 3, BranchId = 1, SurfaceAreaInM2 = 80, Name = DepartmentType.Fish, Description = "Fish" },
+                            new Department() { Id = 4, BranchId = 1, SurfaceAreaInM2 = 200, Name = DepartmentType.Cheese_Milk, Description = "Cheese_Milk" },
+                            new Department() { Id = 5, BranchId = 1, SurfaceAreaInM2 = 150, Name = DepartmentType.Bread, Description = "Bread" },
+                            new Department() { Id = 6, BranchId = 1, SurfaceAreaInM2 = 180, Name = DepartmentType.Cosmetics, Description = "Cosmetics" },
+                            new Department() { Id = 7, BranchId = 1, SurfaceAreaInM2 = 90, Name = DepartmentType.Checkout, Description = "Checkout" },
+                            new Department() { Id = 8, BranchId = 1, SurfaceAreaInM2 = 100, Name = DepartmentType.Stockroom, Description = "Stockroom" },
+                            new Department() { Id = 9, BranchId = 1, SurfaceAreaInM2 = 70, Name = DepartmentType.InformationDesk, Description = "InformationDesk" });
         }
 
         private static void InsertBranchData(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Branch>().HasData(
-                            new Branch() { Id = 1, City = "Den Bosch", Street = "01", HouseNumber = "1", PostalCode = "0000 AA", CountryId = 1 });
+                            new Branch() { Id = 1, City = "Den Bosch", Street = "01", HouseNumber = "1", PostalCode = "0000 AA", Country = Country.Netherlands });
         }
     }
 }

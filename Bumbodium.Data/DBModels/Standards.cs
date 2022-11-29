@@ -21,7 +21,11 @@ namespace Bumbodium.Data.DBModels
         public string Description { get; set; }
 
         [Required]
-        public virtual int CountryId { get; set; }
-        public virtual Country Country { get; set; }
+        public Country Country { get; set; }
+    }
+
+    public enum Country
+    {
+        Netherlands
     }
 }

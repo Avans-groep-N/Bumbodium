@@ -13,40 +13,8 @@ namespace Bumbodium.Data.Repositories
         //Dit hoort hier niet maar weet nog niet waar het moet staan dit is even tijdelijk!!!!!!!!
         //Dit mag nog niet naar dev worden gepulled!!
 
-        List<Standards> _standards;
-        /*List<Standards> _standards = new List<Standards>() {
-                new Standards() {
-                    Id = "Coli",
-                    Value = 5,
-                    Description = "aantal minuten per Coli uitladen.",
-                    Country = 1},
-
-                new Standards() {
-                    Id= "VakkenVullen",
-                    Value = 30,
-                    Description = "aantal minuten Vakken vullen per Coli.",
-                    Country= "Netherlands"},
-
-                new Standards() {
-                    Id = "Kasiere",
-                    Value = 30,
-                    Description = "1 Kasiere per uur per aantal klanten.",
-                    Country = "Netherlands" },
-
-                new Standards() {
-                    Id = "Medewerker",
-                    Value = 100,
-                    Description = "1 medePerCustomer per uur per aantal klanten.",
-                    Country = "Netherlands" },
-
-                new Standards() {
-                    Id = "Spiegelen",
-                    Value = 30,
-                    Description = "aantal seconde voor medePerCustomer per meter.",
-                    Country = "Netherlands" }
-
-            };*/
-
+        private List<Standards> _standards;
+        
         //int[] _amountHoursOpen = new int[] { 14, 14, 14, 14, 14, 14, 8 };
         // werkelijk ^
         int[] _amountHoursOpen = new int[] { 14, 8 };
@@ -64,12 +32,11 @@ namespace Bumbodium.Data.Repositories
 
         public void CreateForecast(Forecast[] forecasts)
         {
-            List<Forecast> departmentforecasts = WeekCalEmployes(forecasts);
-            foreach (var dep_forecast in departmentforecasts)
-            {
-                _ctx.Forecast.Add(dep_forecast);
-            }
-            //context.AddRange(countries);
+            _standards = _ctx.Standards.Where(s => s.Id == "Netherlands").ToList();
+
+            //List<Forecast> departmentforecasts = ;
+            
+            _ctx.AddRange(WeekCalEmployes(forecasts));
             _ctx.SaveChanges();
 
         }
@@ -99,17 +66,17 @@ namespace Bumbodium.Data.Repositories
                     allDepForecasts.Add(new Forecast()
                     {
                         Date = forecast[i].Date,
-                        DepartmentId = department,
+                        //DepartmentId = department,
                         AmountExpectedColis = forecast[i].AmountExpectedColis,
                         AmountExpectedCustomers = forecast[i].AmountExpectedCustomers,
                         AmountExpectedEmployees = (int)(amountEmployes * percentOfGrantPerDep + 1)
-                    }) ;
+                    });
                 }
 
                 allDepForecasts.Add(new Forecast()
                 {
                     Date = forecast[i].Date,
-                    DepartmentId = DepartmentType.Checkout,
+                    //DepartmentId = DepartmentType.Checkout,
                     AmountExpectedColis = forecast[i].AmountExpectedColis,
                     AmountExpectedCustomers = forecast[i].AmountExpectedCustomers,
                     AmountExpectedEmployees = CalcuKasiere(forecast[i].AmountExpectedCustomers)

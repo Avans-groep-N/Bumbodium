@@ -11,7 +11,7 @@ namespace Bumbodium.Data
         [Key]
         public DateTime Date { get; set; }
 
-        public DepartmentType DepartmentId { get; set; }
+        public int DepartmentId { get; set; }
         public Department Department { get; set; }
 
         [Required]

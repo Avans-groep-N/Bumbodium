@@ -22,11 +22,9 @@ namespace Bumbodium.Data.DBModels
         [Required]
         [StringLength(64)]
         public string HouseNumber { get; set; }
-        [Required]
-        [StringLength(64)]
         
-        public virtual int CountryId { get; set; }
-        public virtual Country Country { get; set; }
+        [Required]
+        public Country Country { get; set; }
 
         public virtual ICollection<BranchEmployee> PartOFEmployee { get; set; }
     }
