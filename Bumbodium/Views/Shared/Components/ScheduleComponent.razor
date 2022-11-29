@@ -9,16 +9,19 @@
                 Data=@(Enum.GetValues<DepartmentType>())
                 Change=@(args => OnDepartmentChange(args)) />
 
-<RadzenDropDownDataGrid TValue="Employee" LoadData="@LoadEmployeeData" AllowFiltering="true" AllowVirtualization="true"
+<RadzenDropDownDataGrid @ref=@dropdown TValue="Employee" LoadData="@LoadEmployeeData" AllowFiltering="true" AllowSorting="false" AllowVirtualization="false"
                         Data=@EmployeeData Count="@EmployeeCount" TextProperty="FullName"
                         Change=@(args => OnEmployeeChange((Employee)args)) Class="w-100">
-<Columns>
-    <RadzenDropDownDataGridColumn Property="FullName" Title="Naam" Width="200px" />
-    <RadzenDropDownDataGridColumn Property="Employee" Title="Id" Width="80px" />
-</Columns>
+    <EmptyTemplate>
+        <p>Geen werknemers gevonden, selecteer een andere afdeling</p>
+    </EmptyTemplate>
+    <Columns>
+        <RadzenDropDownDataGridColumn Property="FullName" Title="Naam" Width="200px" />
+        <RadzenDropDownDataGridColumn Property="EmployeeID" Title="Id" Width="80px" />
+    </Columns>
 </RadzenDropDownDataGrid>
 
-<RadzenScheduler @ref=@scheduler Data="@Data" TItem="Shift"
+<RadzenScheduler @ref=@scheduler Data="@ShiftsData" TItem="Shift"
                  StartProperty="ShiftStartDateTime" EndProperty="ShiftEndDateTime" TextProperty="Employee.FullName"
                  LoadData=@OnLoadData
                  style="height: 1010px;" TodayText="Vandaag"
@@ -39,7 +42,8 @@
 
 @code {
     RadzenScheduler<Shift> scheduler;
-    public IEnumerable<Shift> Data { get; set; }
+    RadzenDropDownDataGrid<Employee> dropdown = new();
+    public IEnumerable<Shift> ShiftsData { get; set; }
     public IEnumerable<Employee> EmployeeData { get; set; }
     public int EmployeeCount { get; set; }
 
@@ -64,7 +68,8 @@
                     {
                         ShiftStartDateTime = SelectedStartTime.GetValueOrDefault(),
                         ShiftEndDateTime = args.End,
-                        EmployeeId = SelectedEmployeeId
+                        EmployeeId = SelectedEmployeeId,
+                        DepartmentId = SelectedDepartmentId
                     });
             }
             else
@@ -73,7 +78,8 @@
                     {
                         ShiftStartDateTime = args.Start,
                         ShiftEndDateTime = SelectedEndTime.GetValueOrDefault(),
-                        EmployeeId = SelectedEmployeeId
+                        EmployeeId = SelectedEmployeeId,
+                        DepartmentId = SelectedDepartmentId
                     });
             }
             SelectedStartTime = null;
@@ -97,7 +103,7 @@
     async Task OnLoadData(SchedulerLoadDataEventArgs args)
     {
         //GET the appointments for between the Start and End
-        Data = await _db.GetShiftsInRange(args.Start, args.End);
+        ShiftsData = await _db.GetShiftsInRange(args.Start, args.End);
     }
     void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Shift> args)
     {
@@ -115,7 +121,9 @@
     async Task OnDepartmentChange(object value)
     {
         SelectedDepartmentId = (DepartmentType)value;
-        EmployeeCount = await _db.GetEmployeeCount((int)SelectedDepartmentId);
+        SelectedEmployeeId = 0;
+        await dropdown.Reload();
+        dropdown.Reset();
     }
     void OnEmployeeChange(Employee value)
     {
@@ -124,6 +132,7 @@
     async Task LoadEmployeeData(LoadDataArgs args)
     {
         EmployeeData = await _db.GetEmployeesInRange((int)SelectedDepartmentId, args.Filter, args.Skip.Value, args.Top.Value);
-        InvokeAsync(StateHasChanged);
+        EmployeeCount = await _db.GetEmployeeCount((int)SelectedDepartmentId, args.Filter);
+        await InvokeAsync(StateHasChanged);
     }
 }

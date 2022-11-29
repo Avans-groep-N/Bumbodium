@@ -53,8 +53,8 @@ namespace Bumbodium.Data
 
         public Task<List<Employee>> GetEmployeesInRange(int departmentId, string? filter, int offset, int top)
         {
-            string sql = @"SELECT * FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId
-                        WHERE CONCAT(FirstName, MiddleName, LastName) LIKE '%" + filter + "%'" +
+            string sql = @"SELECT * FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId" +
+                        " WHERE CONCAT(FirstName, MiddleName, LastName) LIKE '%" + filter + "%'" +
                         " AND de.DepartmentId = " + departmentId +
                         " ORDER BY FirstName" +
                         " OFFSET " + offset +  " ROWS" +
@@ -62,10 +62,11 @@ namespace Bumbodium.Data
             return _db.LoadData<Employee, dynamic>(sql, new { });
         }
 
-        public Task<int> GetEmployeeCount(int departmentId)
+        public Task<int> GetEmployeeCount(int departmentId, string? filter)
         {
             string sql = @"SELECT COUNT(*) FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId" +
-                        " WHERE de.DepartmentId = " + departmentId;
+                        " WHERE CONCAT(FirstName, MiddleName, LastName) LIKE '%" + filter + "%'" +
+                        " AND de.DepartmentId = " + departmentId;
             return _db.LoadSingleRecord<int, dynamic>(sql, new { });
         }
     }
