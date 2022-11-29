@@ -9,7 +9,9 @@
                 Data=@(Enum.GetValues<DepartmentType>())
                 Change=@(args => OnDepartmentChange(args)) />
 
-<RadzenDropDownDataGrid @ref=@dropdown TValue="Employee" LoadData="@LoadEmployeeData" AllowFiltering="true" AllowSorting="false" AllowVirtualization="false"
+<RadzenDropDownDataGrid @ref=@dropdown TValue="Employee" LoadData="@LoadEmployeeData" AllowFiltering="true" 
+                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.Contains"
+                        AllowSorting="false" AllowVirtualization="false"
                         Data=@EmployeeData Count="@EmployeeCount" TextProperty="FullName"
                         Change=@(args => OnEmployeeChange((Employee)args)) Class="w-100">
     <EmptyTemplate>
@@ -131,8 +133,13 @@
     }
     async Task LoadEmployeeData(LoadDataArgs args)
     {
-        EmployeeData = await _db.GetEmployeesInRange((int)SelectedDepartmentId, args.Filter, args.Skip.Value, args.Top.Value);
-        EmployeeCount = await _db.GetEmployeeCount((int)SelectedDepartmentId, args.Filter);
+        string newfilter = "";
+        if (!string.IsNullOrEmpty(args.Filter))
+        {
+            newfilter = new string(args.Filter.Where(c => !Char.IsWhiteSpace(c)).ToArray()).ToLower();
+        }
+        EmployeeData = await _db.GetEmployeesInRange((int)SelectedDepartmentId, newfilter, args.Skip.Value, args.Top.Value);
+        EmployeeCount = await _db.GetEmployeeCount((int)SelectedDepartmentId, newfilter);
         await InvokeAsync(StateHasChanged);
     }
 }
