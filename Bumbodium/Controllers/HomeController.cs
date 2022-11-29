@@ -1,4 +1,5 @@
-﻿using Bumbodium.WebApp.Models;
+﻿using Bumbodium.Data.DBModels;
+using Bumbodium.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,20 +7,25 @@ namespace Bumbodium.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger;
         }
 
         public IActionResult Index()
-        {
+        {   
             return View();
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult Login()
         {
+            return View(new Account());
+        }
+
+        [HttpPost]
+        public IActionResult Login(Account account)
+        {
+            Account dbAccount = new Account() { Username = account.Username, Password = account.Password };
             return View();
         }
 

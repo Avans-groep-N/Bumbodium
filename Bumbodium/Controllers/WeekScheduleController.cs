@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Bumbodium.Data;
+using Bumbodium.Data.DBModels;
 
 namespace Bumbodium.WebApp.Controllers
 {

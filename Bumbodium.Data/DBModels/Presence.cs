@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Bumbodium.Data
+namespace Bumbodium.Data.DBModels
 {
     public class Presence
     {
-        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PresenceId { get; set; }
-
+        [Key]
         public int EmployeeId { get; set; }
 
         public Employee Employee { get; set; }
