@@ -22,10 +22,7 @@ namespace Bumbodium.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<BumbodiumContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("BumbodiumContext")));
-
-            services.AddRazorPages();
+                options.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;")); //TODO: change back to azure db
         }
     }
 }

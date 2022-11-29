@@ -10,6 +10,11 @@ namespace Bumbodium.Data
 {
     public class BumbodiumContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
+        public BumbodiumContext(DbContextOptions<BumbodiumContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<Presence> Presence { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Department> Department { get; set; }
@@ -22,18 +27,10 @@ namespace Bumbodium.Data
         public DbSet<DepartmentEmployee> DepartmentEmployee { get; set; }
         public DbSet<BranchEmployee> BranchEmployee { get; set; }
 
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            string your_password = "BumboAdmin!";
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer($"Server=tcp:bumbodium.database.windows.net,1433;Initial Catalog=BumbodiumDB;Persist Security Info=False;User ID=CloudSAc92745b1;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Employee>()
             .HasOne(a => a.Account)
             .WithOne(e => e.Employee)
@@ -83,27 +80,6 @@ namespace Bumbodium.Data
 
             modelBuilder.Entity<Presence>()
                 .HasKey(t => new { t.PresenceId, t.EmployeeId });
-
-            /*modelBuilder.Entity<Employee>().HasData(
-                new Employee { EmployeeID = 1, FirstName = "Jan", ExtraName = "van", LastName = "Geest", Birthdate = new DateTime(1989, 10, 22), PhoneNumber = "+31 6 56927484", Email = "j.vangeest@bumbodium.nl", DateInService = new DateTime(2006, 05, 12), WorkFunction = "Manager" },
-                new Employee { }
-                );
-
-            modelBuilder.Entity<Branch>().HasData(
-                    new Branch { City = "'s-Hertogenbosch", Street = "Supermarktboulevard", PostalCode = "5220UL", HouseNumber = "5", Country = "Netherlands" }
-                );
-
-            modelBuilder.Entity<Account>().HasData(
-                    new Account { EmployeeId = 1, Email = "j.vangeest@bumbodium.nl", Password = "jan4ever", Type = TypeStaff.Manager }
-                );
-
-            modelBuilder.Entity<Department>().HasData(
-                    new Department { Name = AfdelingType.Groente, Description = "Vulrekken vers" }
-                );
-
-            modelBuilder.Entity<Availability>().HasData(
-                    new Availability { Id = 1, StartDateTime = new DateTime(2022, 10, 17, 08, 00, 00), EndDateTime = new DateTime(2022, 10, 17, 13, 00, 00), Type = BeschikbaarheidType.Schoolhours }
-                );*/
         }
     }
 }

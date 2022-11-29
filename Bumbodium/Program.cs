@@ -1,5 +1,7 @@
 using Bumbodium.Data;
 using Bumbodium.Data.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Radzen;
 using System.Globalization;
 
@@ -14,8 +16,14 @@ builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddTransient<IAvailablityRepo, AvailabilityRepo>();
+builder.Services.AddDbContext<BumbodiumContext>(options =>
+                options.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;")); //TODO: change back to azure db
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>{
+    options.SignIn.RequireConfirmedAccount = false;
+    }).AddEntityFrameworkStores<BumbodiumContext>();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
