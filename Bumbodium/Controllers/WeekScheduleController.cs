@@ -10,7 +10,7 @@ namespace Bumbodium.WebApp.Controllers
         public ActionResult Index()
         {
             var shifts = new Shift[] { new Shift() {
-                //DepartmentId = DepartmentType.Vegetables_Fruit,
+                //TODO: add departmentId
                 ShiftEndDateTime = DateTime.Now,
                 ShiftStartDateTime = DateTime.Today,
                 ShiftId = 1} };

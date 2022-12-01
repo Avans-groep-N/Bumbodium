@@ -42,13 +42,14 @@ namespace Bumbodium.Data.Repositories
         {
             List<Forecast> allDepForecasts = new List<Forecast>();
 
+            //percentage of departments has been abstracted for convenience. real equation is "= (1/ Enum.GetNames(typeof(DepartmentType)).Length -1)"
+            //TODO: add the correct equation for the percentage of departments
             double percentOfGrantPerDep = 0.125;
-            // ^ persentagevoordepartments = (1/ Enum.GetNames(typeof(DepartmentType)).Length -1)
 
             for (int i = 0; i < _amountHoursOpen.Length; i++)
             {
                 int amountEmployes = DayCalcuEmployes(time:
-                    //getal van aantal meters klopt niet
+                    //TODO: add the correct amount of metres
                     DayCalcuSpiegelen(amountMeters: 1000) +
                     DayCalcuColis(amountColis: forecast[i].AmountExpectedColis) +
                     DayCalcuVakkenVullen(amountColis: forecast[i].AmountExpectedColis),
