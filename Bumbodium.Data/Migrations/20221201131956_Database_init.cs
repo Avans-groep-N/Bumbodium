@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bumbodium.Data.Migrations
 {
-    public partial class db_init : Migration
+    public partial class Database_init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -69,6 +69,7 @@ namespace Bumbodium.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    SurfaceAreaInM2 = table.Column<int>(type: "int", nullable: false),
                     BranchId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -105,7 +106,7 @@ namespace Bumbodium.Data.Migrations
                 name: "Availability",
                 columns: table => new
                 {
-                    AvailabilityId = table.Column<int>(type: "int", nullable: false)
+                    AvailablityId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -114,7 +115,7 @@ namespace Bumbodium.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Availability", x => new { x.AvailabilityId, x.EmployeeId });
+                    table.PrimaryKey("PK_Availability", x => x.AvailablityId);
                     table.ForeignKey(
                         name: "FK_Availability_Employee_EmployeeId",
                         column: x => x.EmployeeId,
@@ -161,7 +162,7 @@ namespace Bumbodium.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Presence", x => new { x.PresenceId, x.EmployeeId });
+                    table.PrimaryKey("PK_Presence", x => x.PresenceId);
                     table.ForeignKey(
                         name: "FK_Presence_Employee_EmployeeId",
                         column: x => x.EmployeeId,
@@ -226,7 +227,8 @@ namespace Bumbodium.Data.Migrations
                 name: "Shift",
                 columns: table => new
                 {
-                    ShiftId = table.Column<int>(type: "int", nullable: false),
+                    ShiftId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
                     ShiftStartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -234,7 +236,7 @@ namespace Bumbodium.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shift", x => new { x.DepartmentId, x.EmployeeId, x.ShiftId });
+                    table.PrimaryKey("PK_Shift", x => x.ShiftId);
                     table.ForeignKey(
                         name: "FK_Shift_Department_DepartmentId",
                         column: x => x.DepartmentId,
@@ -255,6 +257,11 @@ namespace Bumbodium.Data.Migrations
                 values: new object[] { 1, "Den Bosch", 0, "1", "0000 AA", "01" });
 
             migrationBuilder.InsertData(
+                table: "Employee",
+                columns: new[] { "EmployeeID", "Birthdate", "DateInService", "DateOutService", "Email", "FirstName", "LastName", "MiddleName", "PhoneNumber", "Type" },
+                values: new object[] { 1, new DateTime(1989, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2006, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "j.vangeest@bumbodium.nl", "Jan", "Geest", "van", "+31 6 56927484", 0 });
+
+            migrationBuilder.InsertData(
                 table: "Standards",
                 columns: new[] { "Id", "Country", "Description", "Value" },
                 values: new object[,]
@@ -267,19 +274,24 @@ namespace Bumbodium.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Accounts",
+                columns: new[] { "EmployeeId", "Password", "Username" },
+                values: new object[] { 1, "jan4ever", "j.vangeest@bumbodium.nl" });
+
+            migrationBuilder.InsertData(
                 table: "Department",
-                columns: new[] { "Id", "BranchId", "Description", "Name" },
+                columns: new[] { "Id", "BranchId", "Description", "Name", "SurfaceAreaInM2" },
                 values: new object[,]
                 {
-                    { 1, 1, "Vegetables_Fruit", 0 },
-                    { 2, 1, "Meat", 1 },
-                    { 3, 1, "Fish", 2 },
-                    { 4, 1, "Cheese_Milk", 3 },
-                    { 5, 1, "Bread", 4 },
-                    { 6, 1, "Cosmetics", 5 },
-                    { 7, 1, "Checkout", 6 },
-                    { 8, 1, "Stockroom", 7 },
-                    { 9, 1, "InformationDesk", 8 }
+                    { 1, 1, "Vegetables_Fruit", 0, 50 },
+                    { 2, 1, "Meat", 1, 140 },
+                    { 3, 1, "Fish", 2, 80 },
+                    { 4, 1, "Cheese_Milk", 3, 200 },
+                    { 5, 1, "Bread", 4, 150 },
+                    { 6, 1, "Cosmetics", 5, 180 },
+                    { 7, 1, "Checkout", 6, 90 },
+                    { 8, 1, "Stockroom", 7, 100 },
+                    { 9, 1, "InformationDesk", 8, 70 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -316,6 +328,11 @@ namespace Bumbodium.Data.Migrations
                 name: "IX_Presence_EmployeeId",
                 table: "Presence",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shift_DepartmentId",
+                table: "Shift",
+                column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shift_EmployeeId",

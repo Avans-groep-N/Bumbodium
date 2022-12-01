@@ -22,10 +22,8 @@ namespace Bumbodium.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string your_password = "BumboAdmin!";
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer($"Server=tcp:bumbodium.database.windows.net,1433;Initial Catalog=BumbodiumDB;Persist Security Info=False;User ID=CloudSAc92745b1;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
                 optionsBuilder.UseSqlServer("Server=.;Database=BumbodiumDB;Trusted_Connection=true");
             }
         }
@@ -50,9 +48,6 @@ namespace Bumbodium.Data
                 .WithMany(t => t.PartOFFiliaal)
                 .HasForeignKey(pt => pt.EmployeeId);
 
-            /*modelBuilder.Entity<Department>()
-                .HasKey(d => new { d.Name, d.BranchId });*/
-
             modelBuilder.Entity<DepartmentEmployee>()
                 .HasKey(t => new { t.DepartmentId, t.EmployeeId });
 
@@ -67,9 +62,6 @@ namespace Bumbodium.Data
                 .HasForeignKey(pt => pt.EmployeeId);
 
             modelBuilder.Entity<Shift>()
-                .HasKey(t => new { t.DepartmentId, t.EmployeeId, t.ShiftId });
-
-            modelBuilder.Entity<Shift>()
                 .HasOne(pt => pt.Department)
                 .WithMany(t => t.Shifts)
                 .HasForeignKey(pt => pt.DepartmentId);
@@ -79,24 +71,16 @@ namespace Bumbodium.Data
                 .WithMany(t => t.Shifts)
                 .HasForeignKey(pt => pt.EmployeeId);
 
-            modelBuilder.Entity<Availability>()
-                .HasKey(t => new { t.AvailabilityId, t.EmployeeId });
-
-            modelBuilder.Entity<Presence>()
-                .HasKey(t => new { t.PresenceId, t.EmployeeId });
-
             modelBuilder.Entity<Forecast>()
                 .HasKey(t => new { t.Date, t.DepartmentId });
 
+
             #region seedData
-            //InsertCountyData(modelBuilder);
             InsertBranchData(modelBuilder);
             InsertDepartmentData(modelBuilder);
             InsertStandardsData(modelBuilder);
-
-            //InsertEmployeeData(modelBuilder);
-            //InsertAccountData(modelBuilder);
-            #endregion
+            InsertEmployeeData(modelBuilder);
+            InsertAccountData(modelBuilder);
         }
 
         private static void InsertStandardsData(ModelBuilder modelBuilder)
@@ -176,5 +160,6 @@ namespace Bumbodium.Data
             modelBuilder.Entity<Branch>().HasData(
                             new Branch() { Id = 1, City = "Den Bosch", Street = "01", HouseNumber = "1", PostalCode = "0000 AA", Country = Country.Netherlands });
         }
+        #endregion
     }
 }

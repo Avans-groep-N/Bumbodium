@@ -1,10 +1,6 @@
-﻿using Bumbodium.Data.DBModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Bumbodium.Data
+namespace Bumbodium.Data.DBModels
 {
     public class Forecast
     {
@@ -22,6 +18,5 @@ namespace Bumbodium.Data
         
         [Required]
         public int AmountExpectedColis { get; set; }
-
     }
 }

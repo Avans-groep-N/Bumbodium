@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Bumbodium.Data.DBModels
 {
     public class Availability
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AvailabilityId { get; set; }
         [Key]
+        public int AvailablityId { get; set; }
+
         public int EmployeeId { get; set; }
 
         public Employee Employee { get; set; }

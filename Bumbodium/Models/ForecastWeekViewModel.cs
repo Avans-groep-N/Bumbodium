@@ -1,4 +1,4 @@
-﻿using Bumbodium.Data;
+﻿using Bumbodium.Data.DBModels;
 
 namespace Bumbodium.WebApp.Models
 {
