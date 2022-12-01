@@ -12,10 +12,7 @@ namespace Bumbodium.Data.Repositories
     {
         private List<Standards> _standards;
         
-        //int[] _amountHoursOpen = new int[] { 14, 14, 14, 14, 14, 14, 8 };
-        // werkelijk ^
-        int[] _amountHoursOpen = new int[] { 14, 8 };
-        // test ^
+        int[] _amountHoursOpen = new int[] { 14, 14, 14, 14, 14, 14, 8 };
         public BumbodiumContext _ctx;
 
         private readonly int Minute = 60;
@@ -29,9 +26,7 @@ namespace Bumbodium.Data.Repositories
 
         public void CreateForecast(Forecast[] forecasts)
         {
-            //_standards = _ctx.Standards.Where(s => s.Id == "Netherlands").ToList();
-
-            //List<Forecast> departmentforecasts = ;
+            _standards = _ctx.Standards.Where(s => s.Country == Country.Netherlands).ToList(); 
             
             _ctx.AddRange(WeekCalEmployes(forecasts));
             _ctx.SaveChanges();
@@ -42,9 +37,7 @@ namespace Bumbodium.Data.Repositories
         {
             List<Forecast> allDepForecasts = new List<Forecast>();
 
-            //percentage of departments has been abstracted for convenience. real equation is "= (1/ Enum.GetNames(typeof(DepartmentType)).Length -1)"
-            //TODO: add the correct equation for the percentage of departments
-            double percentOfGrantPerDep = 0.125;
+            int percentOfGrantPerDep = (1 / Enum.GetNames(typeof(DepartmentType)).Length - 1);
 
             for (int i = 0; i < _amountHoursOpen.Length; i++)
             {
@@ -64,7 +57,7 @@ namespace Bumbodium.Data.Repositories
                     allDepForecasts.Add(new Forecast()
                     {
                         Date = forecast[i].Date,
-                        //DepartmentId = department,
+                        //TODO Department id inserten
                         AmountExpectedColis = forecast[i].AmountExpectedColis,
                         AmountExpectedCustomers = forecast[i].AmountExpectedCustomers,
                         AmountExpectedEmployees = (int)(amountEmployes * percentOfGrantPerDep + 1)
@@ -74,7 +67,7 @@ namespace Bumbodium.Data.Repositories
                 allDepForecasts.Add(new Forecast()
                 {
                     Date = forecast[i].Date,
-                    //DepartmentId = DepartmentType.Checkout,
+                    //TODO Department id inserten
                     AmountExpectedColis = forecast[i].AmountExpectedColis,
                     AmountExpectedCustomers = forecast[i].AmountExpectedCustomers,
                     AmountExpectedEmployees = CalcuKasiere(forecast[i].AmountExpectedCustomers)
@@ -83,11 +76,10 @@ namespace Bumbodium.Data.Repositories
             return allDepForecasts;
         }
 
-        //returns in secondes
-        private int DayCalcuColis(int amountColis) => _standards.Find(s => s.Id.Equals("Coli")).Value * amountColis * Minute;
-        private int DayCalcuVakkenVullen(int amountColis) => _standards.Find(s => s.Id.Equals("VakkenVullen")).Value * amountColis * Minute;
-        private int CalcuKasiere(int amountCustomers) => amountCustomers / _standards.Find(s => s.Id.Equals("Kasiere")).Value;
-        private int DayCalcuSpiegelen(int amountMeters) => _standards.Find(s => s.Id.Equals("Spiegelen")).Value * amountMeters;
-        private int DayCalcuEmployes(int time, int customers, int day) => customers / (_standards.Find(s => s.Id.Equals("Medewerker")).Value * _amountHoursOpen[day]);
+        private int DayCalcuColis(int amountColis) => _standards.Find(s => s.Id == 1).Value * amountColis * Minute;
+        private int DayCalcuVakkenVullen(int amountColis) => _standards.Find(s => s.Id == 2).Value * amountColis * Minute;
+        private int CalcuKasiere(int amountCustomers) => amountCustomers / _standards.Find(s => s.Id == 3).Value;
+        private int DayCalcuSpiegelen(int amountMeters) => _standards.Find(s => s.Id == 4).Value * amountMeters;
+        private int DayCalcuEmployes(int time, int customers, int day) => customers / (_standards.Find(s => s.Id == 5).Value * _amountHoursOpen[day]);
     }
 }

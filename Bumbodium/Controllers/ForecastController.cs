@@ -32,8 +32,7 @@ namespace Bumbodium.WebApp.Controllers
         // GET: ForecastController/Create
         public ActionResult Create()
         {
-            //return View(new ForecastWeekViewModel());
-            return CreateNewForcast(new ForecastWeekViewModel());
+            return View(new ForecastWeekViewModel());
         }
 
         // POST: ForecastController/Create
