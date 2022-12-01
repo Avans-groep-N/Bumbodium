@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Bumbodium.Data.DBModels.Forecast>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Department)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountExpectedEmployees)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountExpectedCustomers)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountExpectedColis)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.DepartmentId)
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountExpectedEmployees)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountExpectedCustomers)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountExpectedColis)
+            </td>
+            <td>
+                @*TODO: add primarykeys to actionlinks*@
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

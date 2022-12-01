@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Bumbodium.Data/Migrations/BumbodiumContextModelSnapshot.cs
+/Bumbodium.Data/Migrations/20221201134445_db_init.Designer.cs
+/Bumbodium.Data/Migrations/20221201134445_db_init.cs
