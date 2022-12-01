@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +10,6 @@ namespace Bumbodium.Data.Repositories
 {
     public class ForecastRepo
     {
-        //Dit hoort hier niet maar weet nog niet waar het moet staan dit is even tijdelijk!!!!!!!!
-        //Dit mag nog niet naar dev worden gepulled!!
-
         private List<Standards> _standards;
         
         //int[] _amountHoursOpen = new int[] { 14, 14, 14, 14, 14, 14, 8 };
