@@ -88,7 +88,8 @@ namespace Bumbodium.Data
             modelBuilder.Entity<Standards>().HasData(
                 new Standards()
                 {
-                    Id = "Coli",
+                    Id = 1,
+                    Subject = "Coli",
                     Value = 5,
                     Description = "aantal minuten per Coli uitladen.",
                     Country = Country.Netherlands
@@ -96,7 +97,8 @@ namespace Bumbodium.Data
 
                 new Standards()
                 {
-                    Id = "VakkenVullen",
+                    Id = 2,
+                    Subject = "VakkenVullen",
                     Value = 30,
                     Description = "aantal minuten Vakken vullen per Coli.",
                     Country = Country.Netherlands
@@ -104,7 +106,8 @@ namespace Bumbodium.Data
 
                 new Standards()
                 {
-                    Id = "Kasiere",
+                    Id = 3,
+                    Subject = "Kasiere",
                     Value = 30,
                     Description = "1 Kasiere per uur per aantal klanten.",
                     Country = Country.Netherlands
@@ -112,7 +115,8 @@ namespace Bumbodium.Data
 
                 new Standards()
                 {
-                    Id = "Medewerker",
+                    Id = 4,
+                    Subject = "Medewerker",
                     Value = 100,
                     Description = "1 medewerker per customer per uur per aantal klanten.",
                     Country = Country.Netherlands
@@ -120,7 +124,8 @@ namespace Bumbodium.Data
 
                 new Standards()
                 {
-                    Id = "Spiegelen",
+                    Id = 5,
+                    Subject = "Spiegelen",
                     Value = 30,
                     Description = "aantal seconde voor medewerker per customer per meter.",
                     Country = Country.Netherlands

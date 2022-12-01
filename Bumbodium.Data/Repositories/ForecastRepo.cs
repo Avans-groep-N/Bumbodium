@@ -32,7 +32,7 @@ namespace Bumbodium.Data.Repositories
 
         public void CreateForecast(Forecast[] forecasts)
         {
-            _standards = _ctx.Standards.Where(s => s.Id == "Netherlands").ToList();
+            //_standards = _ctx.Standards.Where(s => s.Id == "Netherlands").ToList();
 
             //List<Forecast> departmentforecasts = ;
             

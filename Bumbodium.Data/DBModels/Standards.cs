@@ -5,8 +5,9 @@ namespace Bumbodium.Data.DBModels
     public class Standards
     {
         [Key]
-        [StringLength(32)]
-        public string Id { get; set; }
+        public int Id { get; set; }
+
+        public string Subject { get; set; }
 
         [Required]
         public List<Forecast> ForecastId { get; set; }

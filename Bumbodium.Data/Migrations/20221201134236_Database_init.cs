@@ -51,7 +51,9 @@ namespace Bumbodium.Data.Migrations
                 name: "Standards",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Subject = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Value = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1048)", maxLength: 1048, nullable: false),
                     Country = table.Column<int>(type: "int", nullable: false)
@@ -205,7 +207,7 @@ namespace Bumbodium.Data.Migrations
                     AmountExpectedEmployees = table.Column<int>(type: "int", nullable: false),
                     AmountExpectedCustomers = table.Column<int>(type: "int", nullable: false),
                     AmountExpectedColis = table.Column<int>(type: "int", nullable: false),
-                    StandardsId = table.Column<string>(type: "nvarchar(32)", nullable: true)
+                    StandardsId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -263,14 +265,14 @@ namespace Bumbodium.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Standards",
-                columns: new[] { "Id", "Country", "Description", "Value" },
+                columns: new[] { "Id", "Country", "Description", "Subject", "Value" },
                 values: new object[,]
                 {
-                    { "Coli", 0, "aantal minuten per Coli uitladen.", 5 },
-                    { "Kasiere", 0, "1 Kasiere per uur per aantal klanten.", 30 },
-                    { "Medewerker", 0, "1 medewerker per customer per uur per aantal klanten.", 100 },
-                    { "Spiegelen", 0, "aantal seconde voor medewerker per customer per meter.", 30 },
-                    { "VakkenVullen", 0, "aantal minuten Vakken vullen per Coli.", 30 }
+                    { 1, 0, "aantal minuten per Coli uitladen.", "Coli", 5 },
+                    { 2, 0, "aantal minuten Vakken vullen per Coli.", "VakkenVullen", 30 },
+                    { 3, 0, "1 Kasiere per uur per aantal klanten.", "Kasiere", 30 },
+                    { 4, 0, "1 medewerker per customer per uur per aantal klanten.", "Medewerker", 100 },
+                    { 5, 0, "aantal seconde voor medewerker per customer per meter.", "Spiegelen", 30 }
                 });
 
             migrationBuilder.InsertData(

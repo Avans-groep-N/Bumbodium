@@ -16,6 +16,6 @@ namespace Bumbodium.Data.Repositories
             _ctx = ctx;
         }
 
-        public List<Standards> GetAll(string id) => _ctx.Standards.Where(s => s.Id == id).ToList();
+        public List<Standards> GetAll(int id) => _ctx.Standards.Where(s => s.Id == id).ToList();
     }
 }

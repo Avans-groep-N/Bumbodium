@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bumbodium.Data.Migrations
 {
     [DbContext(typeof(BumbodiumContext))]
-    [Migration("20221201131956_Database_init")]
+    [Migration("20221201134236_Database_init")]
     partial class Database_init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -342,8 +342,8 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("AmountExpectedEmployees")
                         .HasColumnType("int");
 
-                    b.Property<string>("StandardsId")
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<int?>("StandardsId")
+                        .HasColumnType("int");
 
                     b.HasKey("Date", "DepartmentId");
 
@@ -415,9 +415,11 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Standards", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("Country")
                         .HasColumnType("int");
@@ -426,6 +428,10 @@ namespace Bumbodium.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(1048)
                         .HasColumnType("nvarchar(1048)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
@@ -437,37 +443,42 @@ namespace Bumbodium.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "Coli",
+                            Id = 1,
                             Country = 0,
                             Description = "aantal minuten per Coli uitladen.",
+                            Subject = "Coli",
                             Value = 5
                         },
                         new
                         {
-                            Id = "VakkenVullen",
+                            Id = 2,
                             Country = 0,
                             Description = "aantal minuten Vakken vullen per Coli.",
+                            Subject = "VakkenVullen",
                             Value = 30
                         },
                         new
                         {
-                            Id = "Kasiere",
+                            Id = 3,
                             Country = 0,
                             Description = "1 Kasiere per uur per aantal klanten.",
+                            Subject = "Kasiere",
                             Value = 30
                         },
                         new
                         {
-                            Id = "Medewerker",
+                            Id = 4,
                             Country = 0,
                             Description = "1 medewerker per customer per uur per aantal klanten.",
+                            Subject = "Medewerker",
                             Value = 100
                         },
                         new
                         {
-                            Id = "Spiegelen",
+                            Id = 5,
                             Country = 0,
                             Description = "aantal seconde voor medewerker per customer per meter.",
+                            Subject = "Spiegelen",
                             Value = 30
                         });
                 });
