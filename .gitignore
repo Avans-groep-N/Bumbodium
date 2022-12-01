@@ -55,6 +55,12 @@ nunit-*.xml
 [Rr]eleasePS/
 dlldata.c
 
+#connection
+appsettings.json
+
+#migrations
+**/migrations/*
+
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
 
