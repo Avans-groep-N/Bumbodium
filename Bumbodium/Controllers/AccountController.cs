@@ -1,6 +1,11 @@
-﻿using Bumbodium.WebApp.Models;
+﻿using Bumbodium.Data;
+using Bumbodium.Data.Interfaces;
+using Bumbodium.WebApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Configuration;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Bumbodium.WebApp.Controllers
@@ -9,13 +14,18 @@ namespace Bumbodium.WebApp.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IConfiguration _configuration;
+        private readonly EmployeeRepo _db;
 
         public AccountController(
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _configuration = configuration;
+            _db = new EmployeeRepo(new SqlDataAccess(config: _configuration));
         }
 
         public IActionResult Register()
@@ -33,7 +43,7 @@ namespace Bumbodium.WebApp.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect("/");
+                    return RedirectToAction("Index", "Home");
                 }
                 foreach(var error in result.Errors)
                 {
@@ -56,7 +66,13 @@ namespace Bumbodium.WebApp.Controllers
                 var result = await _signInManager.PasswordSignInAsync(input.Email, input.Password, false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return LocalRedirect("/");
+                    var currentUserTask = _db.GetUser(input.Email);
+                    await currentUserTask;
+                    IdentityUser currentUser = currentUserTask.Result.FirstOrDefault();
+                    if (_db.GetEmployee(currentUser).Result.FirstOrDefault().Type == Data.DBModels.TypeStaff.Manager)
+                        return RedirectToAction("Index", "Home");
+                    else
+                        return RedirectToAction("EmployeeIndex", "Home");
                 }
                 else
                 {

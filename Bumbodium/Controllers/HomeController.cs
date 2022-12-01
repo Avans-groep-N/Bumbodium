@@ -16,6 +16,11 @@ namespace Bumbodium.WebApp.Controllers
             return View();
         }
 
+        public IActionResult EmployeeIndex()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
