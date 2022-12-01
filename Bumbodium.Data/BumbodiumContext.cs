@@ -31,12 +31,12 @@ namespace Bumbodium.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<BranchEmployee>()
-                .HasKey(t => new { t.FiliaalId, t.EmployeeId });
+                .HasKey(bp => new { bp.FiliaalId, bp.EmployeeId });
 
             modelBuilder.Entity<BranchEmployee>()
-                .HasOne(pt => pt.Filiaal)
+                .HasOne(bp => bp.Filiaal)
                 .WithMany(p => p.PartOFEmployee)
-                .HasForeignKey(pt => pt.FiliaalId);
+                .HasForeignKey(bp => bp.FiliaalId);
 
             modelBuilder.Entity<BranchEmployee>()
                 .HasOne(pt => pt.Employee)
@@ -57,9 +57,6 @@ namespace Bumbodium.Data
                 .HasForeignKey(pt => pt.EmployeeId);
 
             modelBuilder.Entity<Shift>()
-                .HasKey(t => new { t.DepartmentId, t.EmployeeId, t.ShiftId });
-
-            modelBuilder.Entity<Shift>()
                 .HasOne(pt => pt.Department)
                 .WithMany(t => t.Shifts)
                 .HasForeignKey(pt => pt.DepartmentId);
@@ -69,11 +66,102 @@ namespace Bumbodium.Data
                 .WithMany(t => t.Shifts)
                 .HasForeignKey(pt => pt.EmployeeId);
 
-            modelBuilder.Entity<Availability>()
-                .HasKey(t => new { t.AvailabilityId, t.EmployeeId});
+            modelBuilder.Entity<Forecast>()
+                .HasKey(t => new { t.Date, t.DepartmentId });
 
             modelBuilder.Entity<Presence>()
                 .HasKey(t => new { t.PresenceId, t.EmployeeId });
+
+            #region seedData
+            InsertBranchData(modelBuilder);
+            InsertDepartmentData(modelBuilder);
+            InsertStandardsData(modelBuilder);
+            InsertEmployeeData(modelBuilder);
+            InsertAccountData(modelBuilder);
         }
+
+        private static void InsertStandardsData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Standards>().HasData(
+                new Standards()
+                {
+                    Id = 1,
+                    Subject = "Coli",
+                    Value = 5,
+                    Description = "aantal minuten per Coli uitladen.",
+                    Country = Country.Netherlands
+                },
+
+                new Standards()
+                {
+                    Id = 2,
+                    Subject = "VakkenVullen",
+                    Value = 30,
+                    Description = "aantal minuten Vakken vullen per Coli.",
+                    Country = Country.Netherlands
+                },
+
+                new Standards()
+                {
+                    Id = 3,
+                    Subject = "Kasiere",
+                    Value = 30,
+                    Description = "1 Kasiere per uur per aantal klanten.",
+                    Country = Country.Netherlands
+                },
+
+                new Standards()
+                {
+                    Id = 4,
+                    Subject = "Medewerker",
+                    Value = 100,
+                    Description = "1 medewerker per customer per uur per aantal klanten.",
+                    Country = Country.Netherlands
+                },
+
+                new Standards()
+                {
+                    Id = 5,
+                    Subject = "Spiegelen",
+                    Value = 30,
+                    Description = "aantal seconde voor medewerker per customer per meter.",
+                    Country = Country.Netherlands
+                });
+        }
+
+        private static void InsertAccountData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IdentityUser>().HasData(
+                                new IdentityUser { Id = "1", Email = "j.vangeest@bumbodium.nl"}
+                            );
+        }
+
+        private static void InsertEmployeeData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Employee>().HasData(
+                            new Employee { EmployeeID = "1", FirstName = "Jan", MiddleName = "van", LastName = "Geest", Birthdate = new DateTime(1989, 10, 22), PhoneNumber = "+31 6 56927484", Email = "j.vangeest@bumbodium.nl", DateInService = new DateTime(2006, 05, 12), Type = TypeStaff.Manager }
+                            );
+        }
+
+        private static void InsertDepartmentData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Department>().HasData(
+                            new Department() { Id = 1, BranchId = 1, SurfaceAreaInM2 = 50, Name = DepartmentType.Vegetables_Fruit, Description = "Vegetables_Fruit" },
+                            new Department() { Id = 2, BranchId = 1, SurfaceAreaInM2 = 140, Name = DepartmentType.Meat, Description = "Meat" },
+                            new Department() { Id = 3, BranchId = 1, SurfaceAreaInM2 = 80, Name = DepartmentType.Fish, Description = "Fish" },
+                            new Department() { Id = 4, BranchId = 1, SurfaceAreaInM2 = 200, Name = DepartmentType.Cheese_Milk, Description = "Cheese_Milk" },
+                            new Department() { Id = 5, BranchId = 1, SurfaceAreaInM2 = 150, Name = DepartmentType.Bread, Description = "Bread" },
+                            new Department() { Id = 6, BranchId = 1, SurfaceAreaInM2 = 180, Name = DepartmentType.Cosmetics, Description = "Cosmetics" },
+                            new Department() { Id = 7, BranchId = 1, SurfaceAreaInM2 = 90, Name = DepartmentType.Checkout, Description = "Checkout" },
+                            new Department() { Id = 8, BranchId = 1, SurfaceAreaInM2 = 100, Name = DepartmentType.Stockroom, Description = "Stockroom" },
+                            new Department() { Id = 9, BranchId = 1, SurfaceAreaInM2 = 70, Name = DepartmentType.InformationDesk, Description = "InformationDesk" });
+        }
+
+        private static void InsertBranchData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Branch>().HasData(
+                            new Branch() { Id = 1, City = "Den Bosch", Street = "01", HouseNumber = "1", PostalCode = "0000 AA", Country = Country.Netherlands });
+        }
+        #endregion
     }
 }

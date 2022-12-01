@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.Data.DBModels
 {
     public class Presence
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int PresenceId { get; set; }
-        [Key]
+        
         public string EmployeeId { get; set; }
-
+        [Key]
+        public int PresenceId { get; set; }
         public Employee Employee { get; set; }
 
         [Required]

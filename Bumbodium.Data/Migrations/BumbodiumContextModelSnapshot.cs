@@ -24,13 +24,14 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Availability", b =>
                 {
-                    b.Property<int>("AvailabilityId")
+                    b.Property<int>("AvailablityId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvailabilityId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvailablityId"), 1L, 1);
 
                     b.Property<string>("EmployeeId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("EndDateTime")
@@ -42,7 +43,7 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("AvailabilityId", "EmployeeId");
+                    b.HasKey("AvailablityId");
 
                     b.HasIndex("EmployeeId");
 
@@ -51,21 +52,19 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Branch", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                    b.Property<int>("Country")
+                        .HasColumnType("int");
 
                     b.Property<string>("HouseNumber")
                         .IsRequired()
@@ -82,9 +81,20 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Branch");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "Den Bosch",
+                            Country = 0,
+                            HouseNumber = "1",
+                            PostalCode = "0000 AA",
+                            Street = "01"
+                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.BranchEmployee", b =>
@@ -104,7 +114,13 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
                 {
-                    b.Property<int>("Name")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -112,9 +128,91 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("Name");
+                    b.Property<int>("Name")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SurfaceAreaInM2")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
 
                     b.ToTable("Department");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BranchId = 1,
+                            Description = "Vegetables_Fruit",
+                            Name = 0,
+                            SurfaceAreaInM2 = 50
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BranchId = 1,
+                            Description = "Meat",
+                            Name = 1,
+                            SurfaceAreaInM2 = 140
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BranchId = 1,
+                            Description = "Fish",
+                            Name = 2,
+                            SurfaceAreaInM2 = 80
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BranchId = 1,
+                            Description = "Cheese_Milk",
+                            Name = 3,
+                            SurfaceAreaInM2 = 200
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BranchId = 1,
+                            Description = "Bread",
+                            Name = 4,
+                            SurfaceAreaInM2 = 150
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BranchId = 1,
+                            Description = "Cosmetics",
+                            Name = 5,
+                            SurfaceAreaInM2 = 180
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BranchId = 1,
+                            Description = "Checkout",
+                            Name = 6,
+                            SurfaceAreaInM2 = 90
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BranchId = 1,
+                            Description = "Stockroom",
+                            Name = 7,
+                            SurfaceAreaInM2 = 100
+                        },
+                        new
+                        {
+                            Id = 9,
+                            BranchId = 1,
+                            Description = "InformationDesk",
+                            Name = 8,
+                            SurfaceAreaInM2 = 70
+                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.DepartmentEmployee", b =>
@@ -179,15 +277,55 @@ namespace Bumbodium.Data.Migrations
                     b.HasKey("EmployeeID");
 
                     b.ToTable("Employee");
+
+                    b.HasData(
+                        new
+                        {
+                            EmployeeID = "1",
+                            Birthdate = new DateTime(1989, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2006, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "j.vangeest@bumbodium.nl",
+                            FirstName = "Jan",
+                            LastName = "Geest",
+                            MiddleName = "van",
+                            PhoneNumber = "+31 6 56927484",
+                            Type = 0
+                        });
+                });
+
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Forecast", b =>
+                {
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmountExpectedColis")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmountExpectedCustomers")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmountExpectedEmployees")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StandardsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Date", "DepartmentId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("StandardsId");
+
+                    b.ToTable("Forecast");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Presence", b =>
                 {
                     b.Property<int>("PresenceId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PresenceId"), 1L, 1);
 
                     b.Property<string>("EmployeeId")
                         .HasColumnType("nvarchar(450)");
@@ -213,14 +351,18 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Shift", b =>
                 {
+                    b.Property<int>("ShiftId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShiftId"), 1L, 1);
+
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("EmployeeId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ShiftId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("ShiftEndDateTime")
                         .HasColumnType("datetime2");
@@ -228,7 +370,9 @@ namespace Bumbodium.Data.Migrations
                     b.Property<DateTime>("ShiftStartDateTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("DepartmentId", "EmployeeId", "ShiftId");
+                    b.HasKey("ShiftId");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("EmployeeId");
 
@@ -237,42 +381,72 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Standards", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Country")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(1048)
                         .HasColumnType("nvarchar(1048)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
 
-                    b.HasKey("Description");
+                    b.HasKey("Id");
 
                     b.ToTable("Standards");
-                });
 
-            modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
-                {
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("AmountExpectedCustomers")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AmountExpectedEmployees")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DepartmentName")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StandardsDescription")
-                        .HasColumnType("nvarchar(1048)");
-
-                    b.HasKey("Date");
-
-                    b.HasIndex("DepartmentName");
-
-                    b.HasIndex("StandardsDescription");
-
-                    b.ToTable("Forecast");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Country = 0,
+                            Description = "aantal minuten per Coli uitladen.",
+                            Subject = "Coli",
+                            Value = 5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Country = 0,
+                            Description = "aantal minuten Vakken vullen per Coli.",
+                            Subject = "VakkenVullen",
+                            Value = 30
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Country = 0,
+                            Description = "1 Kasiere per uur per aantal klanten.",
+                            Subject = "Kasiere",
+                            Value = 30
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Country = 0,
+                            Description = "1 medewerker per customer per uur per aantal klanten.",
+                            Subject = "Medewerker",
+                            Value = 100
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Country = 0,
+                            Description = "aantal seconde voor medewerker per customer per meter.",
+                            Subject = "Spiegelen",
+                            Value = 30
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -390,6 +564,20 @@ namespace Bumbodium.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "4ada4634-f25e-4359-ba45-45b24e748fd0",
+                            Email = "j.vangeest@bumbodium.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "c3f5ac24-d0d6-4664-8f98-e7470ce3c230",
+                            TwoFactorEnabled = false
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -503,6 +691,17 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Filiaal");
                 });
 
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
+                {
+                    b.HasOne("Bumbodium.Data.DBModels.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
             modelBuilder.Entity("Bumbodium.Data.DBModels.DepartmentEmployee", b =>
                 {
                     b.HasOne("Bumbodium.Data.DBModels.Department", "Department")
@@ -533,6 +732,21 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Forecast", b =>
+                {
+                    b.HasOne("Bumbodium.Data.DBModels.Department", "Department")
+                        .WithMany("Forecast")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bumbodium.Data.DBModels.Standards", null)
+                        .WithMany("ForecastId")
+                        .HasForeignKey("StandardsId");
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("Bumbodium.Data.DBModels.Presence", b =>
                 {
                     b.HasOne("Bumbodium.Data.DBModels.Employee", "Employee")
@@ -561,17 +775,6 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
-                {
-                    b.HasOne("Bumbodium.Data.DBModels.Department", null)
-                        .WithMany("ForecastId")
-                        .HasForeignKey("DepartmentName");
-
-                    b.HasOne("Bumbodium.Data.DBModels.Standards", null)
-                        .WithMany("ForecastId")
-                        .HasForeignKey("StandardsDescription");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -632,7 +835,7 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
                 {
-                    b.Navigation("ForecastId");
+                    b.Navigation("Forecast");
 
                     b.Navigation("PartOFEmployee");
 
