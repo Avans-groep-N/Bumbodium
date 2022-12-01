@@ -16,19 +16,6 @@ namespace Bumbodium.WebApp.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View(new Account());
-        }
-
-        [HttpPost]
-        public IActionResult Login(Account account)
-        {
-            Account dbAccount = new Account() { Username = account.Username, Password = account.Password };
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

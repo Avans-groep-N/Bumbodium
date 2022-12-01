@@ -12,7 +12,7 @@ namespace Bumbodium.Data.DBModels
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AvailabilityId { get; set; }
         [Key]
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         public Employee Employee { get; set; }
 

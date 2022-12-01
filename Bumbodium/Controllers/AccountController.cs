@@ -49,7 +49,7 @@ namespace Bumbodium.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(InputModel input)
+        public async Task<IActionResult> Login(LoginModel input)
         {
             if (ModelState.IsValid)
             {

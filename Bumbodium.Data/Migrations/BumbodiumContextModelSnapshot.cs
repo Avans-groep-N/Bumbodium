@@ -22,26 +22,6 @@ namespace Bumbodium.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Bumbodium.Data.DBModels.Account", b =>
-                {
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.HasKey("EmployeeId");
-
-                    b.ToTable("Accounts");
-                });
-
             modelBuilder.Entity("Bumbodium.Data.DBModels.Availability", b =>
                 {
                     b.Property<int>("AvailabilityId")
@@ -50,8 +30,8 @@ namespace Bumbodium.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvailabilityId"), 1L, 1);
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("EndDateTime")
                         .HasColumnType("datetime2");
@@ -112,8 +92,8 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("FiliaalId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("FiliaalId", "EmployeeId");
 
@@ -142,8 +122,8 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("WorkFunction")
                         .HasColumnType("int");
@@ -157,11 +137,8 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Employee", b =>
                 {
-                    b.Property<int>("EmployeeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeID"), 1L, 1);
+                    b.Property<string>("EmployeeID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("datetime2");
@@ -212,8 +189,8 @@ namespace Bumbodium.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PresenceId"), 1L, 1);
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("AlteredClockInDateTime")
                         .HasColumnType("datetime2");
@@ -239,8 +216,8 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ShiftId")
                         .HasColumnType("int");
@@ -496,17 +473,6 @@ namespace Bumbodium.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Bumbodium.Data.DBModels.Account", b =>
-                {
-                    b.HasOne("Bumbodium.Data.DBModels.Employee", "Employee")
-                        .WithOne("Account")
-                        .HasForeignKey("Bumbodium.Data.DBModels.Account", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("Bumbodium.Data.DBModels.Availability", b =>
                 {
                     b.HasOne("Bumbodium.Data.DBModels.Employee", "Employee")
@@ -554,6 +520,17 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Employee", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Account")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Presence", b =>
@@ -664,9 +641,6 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Employee", b =>
                 {
-                    b.Navigation("Account")
-                        .IsRequired();
-
                     b.Navigation("Availability");
 
                     b.Navigation("PartOFDepartment");

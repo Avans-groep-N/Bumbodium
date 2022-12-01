@@ -16,7 +16,6 @@ namespace Bumbodium.Data
         }
 
         public DbSet<Presence> Presence { get; set; }
-        public DbSet<Account> Accounts { get; set; }
         public DbSet<Department> Department { get; set; }
         public DbSet<Availability> Availability { get; set; }
         public DbSet<Shift> Shift { get; set; }
@@ -30,11 +29,6 @@ namespace Bumbodium.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Employee>()
-            .HasOne(a => a.Account)
-            .WithOne(e => e.Employee)
-            .HasForeignKey<Account>(a => a.EmployeeId);
 
             modelBuilder.Entity<BranchEmployee>()
                 .HasKey(t => new { t.FiliaalId, t.EmployeeId });
