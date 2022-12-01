@@ -24,13 +24,13 @@
 </RadzenDropDownDataGrid>
 
 <RadzenScheduler @ref=@scheduler Data="@ShiftsData" TItem="Shift"
-                 StartProperty="ShiftStartDateTime" EndProperty="ShiftEndDateTime" TextProperty="Employee.FullName"
+                 StartProperty="ShiftStartDateTime" EndProperty="ShiftEndDateTime" TextProperty="Text"
                  LoadData=@OnLoadData
                  style="height: 1010px;" TodayText="Vandaag"
                  SlotRender=@OnSlotRender SlotSelect=@OnSlotSelect AppointmentRender=@OnAppointmentRender>
     <Template Context="data">
         <p>
-            @data.Employee.FullName
+            @data.EmployeeId
             <RadzenButton Click=@(args => EditItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="edit" />
             <RadzenButton Click=@(args => DeleteItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="delete" />
         </p>
@@ -51,12 +51,16 @@
 
     DateTime? SelectedStartTime;
     DateTime? SelectedEndTime;
-    int SelectedEmployeeId;
-    DepartmentType SelectedDepartmentId;
+    int? SelectedEmployeeId;
+    int? SelectedDepartmentId;
 
     async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
     {
         //TODO single abscence per time constraint, somehow
+        if(SelectedEmployeeId == null)
+        {
+            return;
+        }
         if (SelectedStartTime == null && SelectedEndTime == null)
         {
             SelectedStartTime = args.Start;
@@ -70,8 +74,8 @@
                     {
                         ShiftStartDateTime = SelectedStartTime.GetValueOrDefault(),
                         ShiftEndDateTime = args.End,
-                        EmployeeId = SelectedEmployeeId,
-                        DepartmentId = SelectedDepartmentId
+                        EmployeeId = SelectedEmployeeId.GetValueOrDefault(),
+                        DepartmentId = SelectedDepartmentId.GetValueOrDefault()
                     });
             }
             else
@@ -80,8 +84,8 @@
                     {
                         ShiftStartDateTime = args.Start,
                         ShiftEndDateTime = SelectedEndTime.GetValueOrDefault(),
-                        EmployeeId = SelectedEmployeeId,
-                        DepartmentId = SelectedDepartmentId
+                        EmployeeId = SelectedEmployeeId.GetValueOrDefault(),
+                        DepartmentId = SelectedDepartmentId.GetValueOrDefault()
                     });
             }
             SelectedStartTime = null;
@@ -122,8 +126,8 @@
 
     async Task OnDepartmentChange(object value)
     {
-        SelectedDepartmentId = (DepartmentType)value;
-        SelectedEmployeeId = 0;
+        SelectedDepartmentId = (int)value;
+        SelectedEmployeeId = null;
         await dropdown.Reload();
         dropdown.Reset();
     }
