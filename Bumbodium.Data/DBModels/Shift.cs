@@ -6,7 +6,8 @@ namespace Bumbodium.Data.DBModels
     {
         [Key]
         public int ShiftId { get; set; }
-        public string EmployeeId { get; set; }
+
+        public int EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
         public int DepartmentId { get; set; }

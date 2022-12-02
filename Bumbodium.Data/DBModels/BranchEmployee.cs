@@ -2,7 +2,7 @@
 {
     public class BranchEmployee
     {
-        public string EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
         public int FiliaalId { get; set; }
 
         public Branch Filiaal { get; set; }
