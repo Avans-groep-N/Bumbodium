@@ -16,16 +16,8 @@ namespace Bumbodium.WebApp.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Login()
+        public IActionResult EmployeeIndex()
         {
-            return View(new Account());
-        }
-
-        [HttpPost]
-        public IActionResult Login(Account account)
-        {
-            Account dbAccount = new Account() { Username = account.Username, Password = account.Password };
             return View();
         }
 

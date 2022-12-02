@@ -4,10 +4,10 @@ namespace Bumbodium.Data.DBModels
 {
     public class Presence
     {
+        
+        public string EmployeeId { get; set; }
         [Key]
         public int PresenceId { get; set; }
-        
-        public int EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
         [Required]
