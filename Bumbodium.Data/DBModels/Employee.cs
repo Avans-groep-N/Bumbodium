@@ -1,10 +1,3 @@
-
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.Data.DBModels
@@ -12,7 +5,7 @@ namespace Bumbodium.Data.DBModels
     public class Employee
     {
         [Key]
-        public string EmployeeID { get; set; }
+        public int EmployeeID { get; set; }
 
         [Required]
         [StringLength(64)]
@@ -46,8 +39,7 @@ namespace Bumbodium.Data.DBModels
 
         public List<Availability> Availability { get; set; }
         public List<Presence> Presence { get; set; }
-        [ForeignKey("EmployeeID")]
-        public IdentityUser Account { get; set; }
+        public Account? Account { get; set; }
         public virtual ICollection<Shift> Shifts { get; set; }
         public virtual ICollection<BranchEmployee> PartOFFiliaal { get; set; }
         public virtual ICollection<DepartmentEmployee> PartOFDepartment { get; set; }
