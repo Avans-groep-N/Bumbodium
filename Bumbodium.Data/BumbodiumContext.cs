@@ -98,7 +98,7 @@ namespace Bumbodium.Data
                 new Standards()
                 {
                     Id = 2,
-                    Subject = "VakkenVullen",
+                    Subject = "StockingShelves",
                     Value = 30,
                     Description = "aantal minuten Vakken vullen per Coli.",
                     Country = Country.Netherlands
@@ -107,7 +107,7 @@ namespace Bumbodium.Data
                 new Standards()
                 {
                     Id = 3,
-                    Subject = "Kasiere",
+                    Subject = "Cashier",
                     Value = 30,
                     Description = "1 Kasiere per uur per aantal klanten.",
                     Country = Country.Netherlands
@@ -116,7 +116,7 @@ namespace Bumbodium.Data
                 new Standards()
                 {
                     Id = 4,
-                    Subject = "Medewerker",
+                    Subject = "Employee",
                     Value = 100,
                     Description = "1 medewerker per customer per uur per aantal klanten.",
                     Country = Country.Netherlands
@@ -125,7 +125,7 @@ namespace Bumbodium.Data
                 new Standards()
                 {
                     Id = 5,
-                    Subject = "Spiegelen",
+                    Subject = "Mirror",
                     Value = 30,
                     Description = "aantal seconde voor medewerker per customer per meter.",
                     Country = Country.Netherlands
