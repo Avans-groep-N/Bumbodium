@@ -1,15 +1,18 @@
 ﻿using Bumbodium.Data.DBModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using System.Reflection.Metadata;
 
 
 namespace Bumbodium.Data
 {
-    public class BumbodiumContext : DbContext
+    public class BumbodiumContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
+        public BumbodiumContext(DbContextOptions<BumbodiumContext> options)
+            : base(options)
+        {
+        }
         public DbSet<Presence> Presence { get; set; }
-        public DbSet<Account> Accounts { get; set; }
         public DbSet<Department> Department { get; set; }
         public DbSet<Availability> Availability { get; set; }
         public DbSet<Shift> Shift { get; set; }
@@ -20,20 +23,10 @@ namespace Bumbodium.Data
         public DbSet<DepartmentEmployee> DepartmentEmployee { get; set; }
         public DbSet<BranchEmployee> BranchEmployee { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=.;Database=BumbodiumDB;Trusted_Connection=true");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>()
-            .HasOne(a => a.Account)
-            .WithOne(e => e.Employee)
-            .HasForeignKey<Account>(a => a.EmployeeId);
+            //Seed data
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<BranchEmployee>()
                 .HasKey(bp => new { bp.FiliaalId, bp.EmployeeId });
@@ -74,6 +67,8 @@ namespace Bumbodium.Data
             modelBuilder.Entity<Forecast>()
                 .HasKey(t => new { t.Date, t.DepartmentId });
 
+            modelBuilder.Entity<Presence>()
+                .HasKey(t => new { t.PresenceId, t.EmployeeId });
 
             #region seedData
             InsertBranchData(modelBuilder);
@@ -134,15 +129,35 @@ namespace Bumbodium.Data
 
         private static void InsertAccountData(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Account>().HasData(
-                                new Account { EmployeeId = 1, Username = "j.vangeest@bumbodium.nl", Password = "jan4ever" }
-                            );
+            IdentityUser user = new IdentityUser()
+            {
+                Id = "b74ddd14-6340-4840-95c2-db12554843e5",
+                UserName = "Admin",
+                Email = "j.vangeest@bumbodium.nl",
+                LockoutEnabled = false,
+                PhoneNumber = "+31 6 56927484"
+            };
+
+            PasswordHasher<IdentityUser> passwordHasher = new PasswordHasher<IdentityUser>();
+            passwordHasher.HashPassword(user, "Password");
+
+            modelBuilder.Entity<IdentityUser>().HasData(user);
         }
 
         private static void InsertEmployeeData(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().HasData(
-                            new Employee { EmployeeID = 1, FirstName = "Jan", MiddleName = "van", LastName = "Geest", Birthdate = new DateTime(1989, 10, 22), PhoneNumber = "+31 6 56927484", Email = "j.vangeest@bumbodium.nl", DateInService = new DateTime(2006, 05, 12), Type = TypeStaff.Manager }
+                            new Employee { 
+                                EmployeeID = "b74ddd14-6340-4840-95c2-db12554843e5", 
+                                FirstName = "Jan", 
+                                MiddleName = "van", 
+                                LastName = "Geest", 
+                                Birthdate = new DateTime(1989, 10, 22), 
+                                PhoneNumber = "+31 6 56927484", 
+                                Email = "j.vangeest@bumbodium.nl", 
+                                DateInService = new DateTime(2006, 05, 12), 
+                                Type = TypeStaff.Manager 
+                            }
                             );
         }
 

@@ -3,12 +3,14 @@ using Bumbodium.Data.Interfaces;
 using Bumbodium.Data.Repositories;
 using Radzen;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Bumbodium.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<BumbodiumContext>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<DialogService>();
@@ -21,6 +23,12 @@ builder.Services.AddScoped<ForecastRepo>();
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddTransient<IAvailablityRepo, AvailabilityRepo>();
 builder.Services.AddTransient<IShiftRepo, ShiftRepo>();
+
+builder.Services.AddDbContext<BumbodiumContext>(options =>
+                options.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;")); //TODO: change back to azure db
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>{
+    options.SignIn.RequireConfirmedAccount = false;
+    }).AddEntityFrameworkStores<BumbodiumContext>();
 
 var app = builder.Build();
 

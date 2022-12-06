@@ -6,9 +6,9 @@ namespace Bumbodium.Data.DBModels
     public class Availability
     {
         [Key]
-        public int AvailablityId { get; set; }
+        public int AvailabilityId { get; set; }
 
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         public Employee Employee { get; set; }
 
