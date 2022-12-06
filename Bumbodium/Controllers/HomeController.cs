@@ -7,25 +7,12 @@ namespace Bumbodium.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController(ILogger<HomeController> logger)
-        {
-        }
-
         public IActionResult Index()
         {   
             return View();
         }
-
-        [HttpGet]
-        public IActionResult Login()
+        public IActionResult EmployeeIndex()
         {
-            return View(new Account());
-        }
-
-        [HttpPost]
-        public IActionResult Login(Account account)
-        {
-            Account dbAccount = new Account() { Username = account.Username, Password = account.Password };
             return View();
         }
 

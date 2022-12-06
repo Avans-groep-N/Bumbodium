@@ -8,7 +8,7 @@ namespace Bumbodium.Data.DBModels
         [Key]
         public int AvailabilityId { get; set; }
 
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         public Employee Employee { get; set; }
 

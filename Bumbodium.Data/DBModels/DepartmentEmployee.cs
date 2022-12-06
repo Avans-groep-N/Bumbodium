@@ -2,7 +2,7 @@
 {
     public class DepartmentEmployee
     {
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         public int DepartmentId { get; set; }
 
         public Department Department { get; set; }
