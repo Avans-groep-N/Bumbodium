@@ -41,7 +41,7 @@ namespace Bumbodium.WebApp.Controllers
             {
 
                 var user = new IdentityUser { 
-                    UserName = input.FirstName + input.MiddleName + input.LastName, 
+                    UserName = input.Email,
                     Email = input.Email,
                     PhoneNumber = input.PhoneNumber
                 };
