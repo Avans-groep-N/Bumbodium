@@ -18,6 +18,7 @@ builder.Services.AddScoped<ContextMenuService>();
 
 builder.Services.AddScoped<ForecastRepo>();
 builder.Services.AddScoped<DepartmentRepo>();
+builder.Services.AddScoped<StandardsRepo>();
 
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddTransient<IAvailablityRepo, AvailabilityRepo>();
