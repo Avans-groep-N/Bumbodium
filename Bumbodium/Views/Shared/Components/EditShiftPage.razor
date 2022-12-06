@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Components
+@using Bumbodium.Data.DBModels
+@inject DialogService DialogService
+
+<RadzenTemplateForm TItem="Shift" Data="@model" Submit=@OnSubmit>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Start" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker @bind-Value="@model.ShiftStartDateTime" Name="Start" ShowTime="true" />
+            <RadzenRequiredValidator Text="Start is verplicht" Component="Start" />
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 16px">
+        <div class="col-md-3">
+            <RadzenLabel Text="Eind" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker Name="End" @bind-Value="@model.ShiftEndDateTime" ShowTime="true" />
+            <RadzenRequiredValidator Component="End" Text="End is verplicht" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Opslaan" />
+        </div>
+    </div>
+</RadzenTemplateForm>
+@code {
+    [Parameter]
+    public Shift Shift { get; set; }
+
+    Shift model = new();
+
+    protected override void OnParametersSet()
+    {
+        model = Shift;
+    }
+
+    void OnSubmit(Shift model)
+    {
+        DialogService.Close(model);
+    }
+}

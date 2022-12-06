@@ -46,6 +46,33 @@ namespace Bumbodium.Data.DBModels
         public virtual ICollection<Shift> Shifts { get; set; }
         public virtual ICollection<BranchEmployee> PartOFFiliaal { get; set; }
         public virtual ICollection<DepartmentEmployee> PartOFDepartment { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + MiddleName + " " + LastName;
+            }
+        }
+        public int Age
+        {
+            get
+            {
+                int age;
+                age = DateTime.Now.Year - Birthdate.Year;
+
+                if (age > 0)
+                {
+                    age -= Convert.ToInt32(DateTime.Now.Date < Birthdate.Date.AddYears(age));
+                }
+                else
+                {
+                    age = 0;
+                }
+
+                return age;
+            }
+        }
     }
 
     public enum TypeStaff

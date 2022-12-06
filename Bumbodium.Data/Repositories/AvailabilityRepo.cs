@@ -39,8 +39,7 @@ namespace Bumbodium.Data
 
         public Task DeleteAvailability(Availability availability)
         {
-            string sql = @"delete from dbo.Availability where EmployeeId = @EmployeeId 
-                        AND AvailabilityId = @AvailabilityId;";
+            string sql = @"delete from dbo.Availability where AvailabilityId = @AvailabilityId;";
 
             return _db.SaveData(sql, availability);
         }
@@ -49,8 +48,7 @@ namespace Bumbodium.Data
         {
             string sql = @"update dbo.Availability 
                         set StartDateTime = @StartDateTime, EndDateTime = @EndDateTime, Type = @Type
-                        where EmployeeId = @EmployeeId 
-                        AND AvailabilityId = @AvailabilityId;;";
+                        where AvailabilityId = @AvailabilityId;";
 
             return _db.SaveData(sql, availability);
         }

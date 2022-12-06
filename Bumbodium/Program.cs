@@ -22,6 +22,7 @@ builder.Services.AddScoped<ForecastRepo>();
 
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddTransient<IAvailablityRepo, AvailabilityRepo>();
+builder.Services.AddTransient<IShiftRepo, ShiftRepo>();
 
 builder.Services.AddDbContext<BumbodiumContext>(options =>
                 options.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;")); //TODO: change back to azure db
