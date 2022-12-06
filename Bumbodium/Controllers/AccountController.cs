@@ -39,7 +39,12 @@ namespace Bumbodium.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = input.Email, Email = input.Email };
+
+                var user = new IdentityUser { 
+                    UserName = input.FirstName + input.MiddleName + input.LastName, 
+                    Email = input.Email,
+                    PhoneNumber = input.PhoneNumber
+                };
                 var result = await _userManager.CreateAsync(user, input.Password);
                 if (result.Succeeded)
                 {

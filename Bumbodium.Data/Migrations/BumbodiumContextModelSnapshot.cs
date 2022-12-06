@@ -281,7 +281,7 @@ namespace Bumbodium.Data.Migrations
                     b.HasData(
                         new
                         {
-                            EmployeeID = "1",
+                            EmployeeID = "b74ddd14-6340-4840-95c2-db12554843e5",
                             Birthdate = new DateTime(1989, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateInService = new DateTime(2006, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "j.vangeest@bumbodium.nl",
@@ -568,15 +568,17 @@ namespace Bumbodium.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "99fe840b-e86e-40f3-bb1d-eed3f7f24d62",
+                            ConcurrencyStamp = "1f767877-3760-40f8-99e5-2dae9485c80c",
                             Email = "j.vangeest@bumbodium.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
+                            PhoneNumber = "+31 6 56927484",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "27074825-0ba8-4df1-8f17-a306677d3bd1",
-                            TwoFactorEnabled = false
+                            SecurityStamp = "95e58305-fbaf-403b-8353-bb24af612098",
+                            TwoFactorEnabled = false,
+                            UserName = "Admin"
                         });
                 });
 
