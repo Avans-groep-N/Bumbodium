@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 using Bumbodium.Data.DBModels;
@@ -11,29 +12,29 @@ namespace Bumbodium.Data.Repositories
     public class ForecastRepo
     {
         private List<Standards> _standards;
-        
-        //int[] _amountHoursOpen = new int[] { 14, 14, 14, 14, 14, 14, 8 };
-        // werkelijk ^
-        int[] _amountHoursOpen = new int[] { 14, 8 };
-        // test ^
+
+        int[] _amountHoursOpen = new int[] { 14, 14, 14, 14, 14, 14, 8 };
+
         public BumbodiumContext _ctx;
+        private DepartmentRepo _departmentRepo;
 
         private readonly int Minute = 60;
+        private readonly int Hours = 3600;
 
-        public ForecastRepo(BumbodiumContext ctx)
+        public ForecastRepo(BumbodiumContext ctx, DepartmentRepo departmentRepo)
         {
             _ctx = ctx;
+            _departmentRepo = departmentRepo;
         }
 
         public List<Forecast> GetAll() => _ctx.Forecast.ToList();
 
         public void CreateForecast(Forecast[] forecasts)
         {
-            //_standards = _ctx.Standards.Where(s => s.Id == "Netherlands").ToList();
-
-            //List<Forecast> departmentforecasts = ;
-            
-            _ctx.AddRange(WeekCalEmployes(forecasts));
+            //TODO Make Country relative to the forecast
+            _standards = _ctx.Standards.Where(s => s.Country == Country.Netherlands).ToList();
+            var weekprognose = WeekCalEmployes(forecasts);
+            _ctx.AddRange(weekprognose);
             _ctx.SaveChanges();
 
         }
@@ -42,15 +43,13 @@ namespace Bumbodium.Data.Repositories
         {
             List<Forecast> allDepForecasts = new List<Forecast>();
 
-            //percentage of departments has been abstracted for convenience. real equation is "= (1/ Enum.GetNames(typeof(DepartmentType)).Length -1)"
-            //TODO: add the correct equation for the percentage of departments
-            double percentOfGrantPerDep = 0.125;
+            int percentOfGrantPerDep = (1 / (Enum.GetNames(typeof(DepartmentType)).Length - 1));
+            int surfaceAreaOfBranch = _departmentRepo.GetSurfaceOfBranch(1);
 
             for (int i = 0; i < _amountHoursOpen.Length; i++)
             {
-                int amountEmployes = DayCalcuEmployes(time:
-                    //TODO: add the correct amount of metres
-                    DayCalcuSpiegelen(amountMeters: 1000) +
+                int amountWorkingHours = DayCalcuWorkHours(workHours:
+                    DayCalcuSpiegelen(amountMeters: surfaceAreaOfBranch) +
                     DayCalcuColis(amountColis: forecast[i].AmountExpectedColis) +
                     DayCalcuVakkenVullen(amountColis: forecast[i].AmountExpectedColis),
                     customers: forecast[i].AmountExpectedCustomers,
@@ -61,33 +60,71 @@ namespace Bumbodium.Data.Repositories
                     if (department == DepartmentType.Checkout)
                         continue;
 
+                    int test = _departmentRepo.GetSurfaceOfDepartment(1, department);
+                    int amountHoursForDepartment = amountWorkingHours * surfaceAreaOfBranch / _departmentRepo.GetSurfaceOfDepartment(1, department);
+
                     allDepForecasts.Add(new Forecast()
                     {
                         Date = forecast[i].Date,
-                        //DepartmentId = department,
+                        //TODO make branch id relative
+                        DepartmentId = _departmentRepo.GetDepartment(department, 1),
                         AmountExpectedColis = forecast[i].AmountExpectedColis,
                         AmountExpectedCustomers = forecast[i].AmountExpectedCustomers,
-                        AmountExpectedEmployees = (int)(amountEmployes * percentOfGrantPerDep + 1)
+                        //TODO make branch id relative
+                        AmountExpectedHours = amountHoursForDepartment,
+                        AmountExpectedEmployees = DayCalcuEmployees(amountHoursForDepartment)
                     });
                 }
 
+                amountWorkingHours = DayCalcuKasiere(forecast[i].AmountExpectedCustomers);
                 allDepForecasts.Add(new Forecast()
                 {
+
                     Date = forecast[i].Date,
-                    //DepartmentId = DepartmentType.Checkout,
+                    //TODO make branch id relative
+                    DepartmentId = _departmentRepo.GetDepartment(DepartmentType.Checkout, 1),
                     AmountExpectedColis = forecast[i].AmountExpectedColis,
                     AmountExpectedCustomers = forecast[i].AmountExpectedCustomers,
-                    AmountExpectedEmployees = CalcuKasiere(forecast[i].AmountExpectedCustomers)
+                    AmountExpectedEmployees = amountWorkingHours / 9,
+                    AmountExpectedHours = amountWorkingHours
                 });
             }
             return allDepForecasts;
         }
 
-        //returns in secondes
-        private int DayCalcuColis(int amountColis) => _standards.Find(s => s.Id.Equals("Coli")).Value * amountColis * Minute;
-        private int DayCalcuVakkenVullen(int amountColis) => _standards.Find(s => s.Id.Equals("VakkenVullen")).Value * amountColis * Minute;
-        private int CalcuKasiere(int amountCustomers) => amountCustomers / _standards.Find(s => s.Id.Equals("Kasiere")).Value;
-        private int DayCalcuSpiegelen(int amountMeters) => _standards.Find(s => s.Id.Equals("Spiegelen")).Value * amountMeters;
-        private int DayCalcuEmployes(int time, int customers, int day) => customers / (_standards.Find(s => s.Id.Equals("Medewerker")).Value * _amountHoursOpen[day]);
+        public int GetAmountOfEmployeesPerDay(DateTime date, int branchId)
+        {
+            //TODO fix dit je krijg hier 0 return
+            var amount = (from f in _ctx.Forecast
+                          join d in _ctx.Department on f.DepartmentId equals d.Id
+                          where f.Date == date && d.BranchId == branchId
+                          select f.AmountExpectedEmployees).Sum();
+            return amount;
+        }
+
+        //TODO Make Standards relative to country
+        private int DayCalcuColis(int amountColis) => _standards.Find(
+            s => s.Subject == "Coli" && s.Country == Country.Netherlands).Value * amountColis * Minute;
+        private int DayCalcuVakkenVullen(int amountColis) => _standards.Find(
+            s => s.Subject == "StockingShelves" && s.Country == Country.Netherlands).Value * amountColis * Minute;
+        private int DayCalcuKasiere(int amountCustomers) => amountCustomers / _standards.Find(
+            s => s.Subject == "Cashier" && s.Country == Country.Netherlands).Value;
+        private int DayCalcuSpiegelen(int amountMeters) => _standards.Find(
+            s => s.Subject == "Mirror" && s.Country == Country.Netherlands).Value * amountMeters;
+        private int DayCalcuEmployees(int workHours)
+        {
+            return workHours / 9;
+        }
+
+        private int DayCalcuWorkHours(int workHours, int customers, int day)
+        {
+            int amountOfSecondsToDay = _amountHoursOpen[day] * Hours;
+            int workTimeNotWithCustomers = workHours / amountOfSecondsToDay;
+            int timeNeededToHelpCustomers = (customers / _standards.Find(
+                   s => s.Subject == "Employee" && s.Country == Country.Netherlands).Value) *
+                   Hours;
+
+            return (int)(workTimeNotWithCustomers + timeNeededToHelpCustomers) / Hours;
+        }
     }
 }

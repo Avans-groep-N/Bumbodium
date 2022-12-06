@@ -12,6 +12,9 @@ namespace Bumbodium.Data.DBModels
 
         [Required]
         public int AmountExpectedEmployees { get; set; }
+
+        [Required]
+        public int AmountExpectedHours { get; set; }
         
         [Required]
         public int AmountExpectedCustomers { get; set; }
