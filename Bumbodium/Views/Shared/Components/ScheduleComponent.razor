@@ -5,6 +5,7 @@
 @inject IShiftRepo _db
 
 <RadzenDialog />
+<!-- TODO localize-->
 <RadzenDropDown TValue="DepartmentType" Class="w-100"
                 Data=@(Enum.GetValues<DepartmentType>())
                 Change=@(args => OnDepartmentChange(args)) />
@@ -19,7 +20,8 @@
     </EmptyTemplate>
     <Columns>
         <RadzenDropDownDataGridColumn Property="FullName" Title="Naam" Width="200px" />
-        <RadzenDropDownDataGridColumn Property="EmployeeID" Title="Id" Width="80px" />
+        <RadzenDropDownDataGridColumn Property="Age" Title="Leeftijd" Width="80px" />
+        <RadzenDropDownDataGridColumn Property="PhoneNumber" Title="Telefoon" Width="80px" />
     </Columns>
 </RadzenDropDownDataGrid>
 
@@ -30,7 +32,8 @@
                  SlotRender=@OnSlotRender SlotSelect=@OnSlotSelect AppointmentRender=@OnAppointmentRender>
     <Template Context="data">
         <p>
-            @data.EmployeeId
+            <!--TODO Change to something readable-->
+            @data.EmployeeId.ToString()
             <RadzenButton Click=@(args => EditItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="edit" />
             <RadzenButton Click=@(args => DeleteItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="delete" />
         </p>
@@ -51,7 +54,7 @@
 
     DateTime? SelectedStartTime;
     DateTime? SelectedEndTime;
-    int? SelectedEmployeeId;
+    string? SelectedEmployeeId;
     int? SelectedDepartmentId;
 
     async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
@@ -74,7 +77,7 @@
                     {
                         ShiftStartDateTime = SelectedStartTime.GetValueOrDefault(),
                         ShiftEndDateTime = args.End,
-                        EmployeeId = SelectedEmployeeId.GetValueOrDefault(),
+                        EmployeeId = SelectedEmployeeId,
                         DepartmentId = SelectedDepartmentId.GetValueOrDefault()
                     });
             }
@@ -84,7 +87,7 @@
                     {
                         ShiftStartDateTime = args.Start,
                         ShiftEndDateTime = SelectedEndTime.GetValueOrDefault(),
-                        EmployeeId = SelectedEmployeeId.GetValueOrDefault(),
+                        EmployeeId = SelectedEmployeeId,
                         DepartmentId = SelectedDepartmentId.GetValueOrDefault()
                     });
             }
@@ -133,6 +136,9 @@
     }
     void OnEmployeeChange(Employee value)
     {
+        if(value == null) {
+            return;
+        }
         SelectedEmployeeId = value.EmployeeID;
     }
     async Task LoadEmployeeData(LoadDataArgs args)

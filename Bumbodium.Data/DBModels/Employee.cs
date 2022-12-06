@@ -54,6 +54,25 @@ namespace Bumbodium.Data.DBModels
                 return FirstName + " " + MiddleName + " " + LastName;
             }
         }
+        public int Age
+        {
+            get
+            {
+                int age;
+                age = DateTime.Now.Year - Birthdate.Year;
+
+                if (age > 0)
+                {
+                    age -= Convert.ToInt32(DateTime.Now.Date < Birthdate.Date.AddYears(age));
+                }
+                else
+                {
+                    age = 0;
+                }
+
+                return age;
+            }
+        }
     }
 
     public enum TypeStaff

@@ -18,7 +18,7 @@ namespace Bumbodium.Data
 
         public Task<List<Shift>> GetShiftsInRange(DateTime start, DateTime end)
         {
-            string sql = "select * from dbo.Shift " +
+            string sql = "select * from dbo.Shift " + 
                 "where ShiftStartDateTime between '" + start.ToString("yyyy-MM-dd") + "' AND '" + end.ToString("yyyy-MM-dd") + "'";
             return _db.LoadData<Shift, dynamic>(sql, new { });
         }
@@ -33,9 +33,7 @@ namespace Bumbodium.Data
 
         public Task DeleteShift(Shift Shift)
         {
-            string sql = @"delete from dbo.Shift where ShiftId = @ShiftId
-                         AND EmployeeId = @EmployeeId
-                         AND DepartmentId = @DepartmentId;";
+            string sql = @"delete from dbo.Shift where ShiftId = @ShiftId";
 
             return _db.SaveData(sql, Shift);
         }
@@ -44,9 +42,7 @@ namespace Bumbodium.Data
         {
             string sql = @"update dbo.Shift 
                         set ShiftStartDateTime = @ShiftStartDateTime, ShiftEndDateTime = @ShiftEndDateTime
-                        where EmployeeId = @EmployeeId 
-                        AND ShiftId = @ShiftId
-                        AND DepartmentId = @DepartmentId;";
+                        where ShiftId = @ShiftId";
 
             return _db.SaveData(sql, Shift);
         }
@@ -55,6 +51,7 @@ namespace Bumbodium.Data
         {
             string sql = @"SELECT * FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId" +
                         " WHERE CONCAT(FirstName, MiddleName, LastName) LIKE '%" + filter + "%'" +
+                        " AND DateOutService IS NULL" +
                         " AND de.DepartmentId = " + departmentId +
                         " ORDER BY FirstName" +
                         " OFFSET " + offset +  " ROWS" +
@@ -66,6 +63,7 @@ namespace Bumbodium.Data
         {
             string sql = @"SELECT COUNT(*) FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId" +
                         " WHERE CONCAT(FirstName, MiddleName, LastName) LIKE '%" + filter + "%'" +
+                        " AND DateOutService IS NULL" +
                         " AND de.DepartmentId = " + departmentId;
             return _db.LoadSingleRecord<int, dynamic>(sql, new { });
         }
