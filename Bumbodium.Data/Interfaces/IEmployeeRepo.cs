@@ -13,5 +13,9 @@ namespace Bumbodium.Data.Interfaces
         Task<List<Employee>> GetEmployee(IdentityUser user);
         Task InsertEmployee(Employee employee);
         Task<List<IdentityUser>> GetUser(string email);
+        Task<List<Employee>> GetEmployees();
+        Task<Employee> GetSingleEmployee(string id);
+        Task DeleteEmployee(Employee employee);
+        Task UpdateEmployee(Employee employee);
     }
 }

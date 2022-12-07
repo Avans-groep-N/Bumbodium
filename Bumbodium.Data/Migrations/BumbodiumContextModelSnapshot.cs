@@ -573,13 +573,13 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1f767877-3760-40f8-99e5-2dae9485c80c",
+                            ConcurrencyStamp = "94f8b5de-27de-47eb-9cda-b23716378e3d",
                             Email = "j.vangeest@bumbodium.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumber = "+31 6 56927484",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "95e58305-fbaf-403b-8353-bb24af612098",
+                            SecurityStamp = "e0d65fbb-d83a-489f-b6d0-6d473d4ae8ff",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });

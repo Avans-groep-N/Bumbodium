@@ -37,5 +37,30 @@ namespace Bumbodium.Data
                 "WHERE '" + email + "' = AspNetUsers.Email";
             return _db.LoadData<IdentityUser, dynamic>(sql, new { });
         }
+
+        public Task<List<Employee>> GetEmployees()
+        {
+            string sql = "SELECT * FROM Employee;";
+
+            return _db.LoadData<Employee, dynamic>(sql, new { });
+        }
+        public Task<Employee> GetSingleEmployee(string id)
+        {
+            string sql = @"select * from dbo.Employee where EmployeeID = @EmployeeID;";
+
+            return _db.LoadSingleRecord<Employee, dynamic>(sql, new { });
+        }
+        public Task DeleteEmployee(Employee employee)
+        {
+            string sql = @"DELETE FROM dbo.Employee WHERE EmployeeID = @EmployeeID;";
+
+            return _db.SaveData(sql, employee);
+        }
+        public  Task UpdateEmployee(Employee employee)
+        {
+            string sql = @"UPDATE dbo.Employee SET FirstName = @FirstName, MiddleName = @MiddleName, LastName = @LastName, Birthdate = @Birthdate, PhoneNumber = @PhoneNumber, Mail = @Mail, DateInService = @DateInService, DateOutService = @DateOutService, Type = @Type WHERE EmployeeID = @EmployeeID;";
+
+            return _db.SaveData(sql, employee);
+        }
     }
 }
