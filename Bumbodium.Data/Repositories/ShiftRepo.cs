@@ -49,6 +49,7 @@ namespace Bumbodium.Data
 
         public Task<List<Employee>> GetEmployeesInRange(int departmentId, string? filter, int offset, int top)
         {
+            departmentId++;
             string sql = @"SELECT * FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId" +
                         " WHERE CONCAT(FirstName, MiddleName, LastName) LIKE '%" + filter + "%'" +
                         " AND DateOutService IS NULL" +
@@ -61,6 +62,7 @@ namespace Bumbodium.Data
 
         public Task<int> GetEmployeeCount(int departmentId, string? filter)
         {
+            departmentId++;
             string sql = @"SELECT COUNT(*) FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId" +
                         " WHERE CONCAT(FirstName, MiddleName, LastName) LIKE '%" + filter + "%'" +
                         " AND DateOutService IS NULL" +
