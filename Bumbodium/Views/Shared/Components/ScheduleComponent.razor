@@ -78,7 +78,7 @@
                         ShiftStartDateTime = SelectedStartTime.GetValueOrDefault(),
                         ShiftEndDateTime = args.End,
                         EmployeeId = SelectedEmployeeId,
-                        DepartmentId = SelectedDepartmentId.GetValueOrDefault()
+                        DepartmentId = SelectedDepartmentId.GetValueOrDefault() +1
                     });
             }
             else
@@ -88,7 +88,7 @@
                         ShiftStartDateTime = args.Start,
                         ShiftEndDateTime = SelectedEndTime.GetValueOrDefault(),
                         EmployeeId = SelectedEmployeeId,
-                        DepartmentId = SelectedDepartmentId.GetValueOrDefault()
+                        DepartmentId = SelectedDepartmentId.GetValueOrDefault() +1
                     });
             }
             SelectedStartTime = null;

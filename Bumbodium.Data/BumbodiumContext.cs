@@ -74,8 +74,9 @@ namespace Bumbodium.Data
             InsertBranchData(modelBuilder);
             InsertDepartmentData(modelBuilder);
             InsertStandardsData(modelBuilder);
+            InsertAccountsData(modelBuilder);
             InsertEmployeeData(modelBuilder);
-            InsertAccountData(modelBuilder);
+            InsertDepartmentEmployeeData(modelBuilder);
         }
 
         private static void InsertStandardsData(ModelBuilder modelBuilder)
@@ -127,8 +128,10 @@ namespace Bumbodium.Data
                 });
         }
 
-        private static void InsertAccountData(ModelBuilder modelBuilder)
+        private static void InsertAccountsData(ModelBuilder modelBuilder)
         {
+            List<IdentityUser> users = new List<IdentityUser>();
+            PasswordHasher<IdentityUser> passwordHasher = new PasswordHasher<IdentityUser>();
             IdentityUser user = new IdentityUser()
             {
                 Id = "b74ddd14-6340-4840-95c2-db12554843e5",
@@ -137,28 +140,241 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "+31 6 56927484"
             };
-
-            PasswordHasher<IdentityUser> passwordHasher = new PasswordHasher<IdentityUser>();
             passwordHasher.HashPassword(user, "Password");
+            users.Add(user);
 
-            modelBuilder.Entity<IdentityUser>().HasData(user);
+            user = new IdentityUser()
+            {
+                Id = "19f7d479-542a-408b-9016-0561e3e70f65",
+                UserName = "Martijs@Martijs.Martijs",
+                Email = "Martijs@Martijs.Martijs",
+                LockoutEnabled = false,
+                PhoneNumber = "Martijs"
+            };
+            passwordHasher.HashPassword(user, "Martijs");
+            users.Add(user);
+
+            user = new IdentityUser()
+            {
+                Id = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                UserName = "Johnny@vos.nl",
+                Email = "Johnny@vos.nl",
+                LockoutEnabled = false,
+                PhoneNumber = "+31 5"
+            };
+            passwordHasher.HashPassword(user, "Johnny");
+            users.Add(user);
+
+            user = new IdentityUser()
+            {
+                Id = "44128c29-b648-431e-89f4-7a105f79b00c",
+                UserName = "Heinz@vonschmichtelstein.de",
+                Email = "Heinz@vonschmichtelstein.de",
+                LockoutEnabled = false,
+                PhoneNumber = "+49 420 69 7777"
+            };
+            passwordHasher.HashPassword(user, "Heinz");
+            users.Add(user);
+
+            user = new IdentityUser()
+            {
+                Id = "5782d108-8865-40f8-b3b7-ced82309983f",
+                UserName = "Bliksem@martijnshamster.nl",
+                Email = "Bliksem@martijnshamster.nl",
+                LockoutEnabled = false,
+                PhoneNumber = "+31 snel"
+            };
+            passwordHasher.HashPassword(user, "Bliksem");
+            users.Add(user);
+
+            user = new IdentityUser()
+            {
+                Id = "5989a56b-4d00-4213-9b73-34f80701836b",
+                UserName = "Lobbus@kjell.nl",
+                Email = "Lobbus@kjell.nl",
+                LockoutEnabled = false,
+                PhoneNumber = "+31 6 67215943"
+            };
+            passwordHasher.HashPassword(user, "Lobbus");
+            users.Add(user);
+
+            user = new IdentityUser()
+            {
+                Id = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                UserName = "Paula@campina.nl",
+                Email = "Paula@campina.nl",
+                LockoutEnabled = false,
+                PhoneNumber = "+31 612345678"
+            };
+            passwordHasher.HashPassword(user, "Paula");
+            users.Add(user);
+
+            user = new IdentityUser()
+            {
+                Id = "a20cddd4-9704-439f-94bc-95f4659ce543",
+                UserName = "Henkie@Wauwzerz.nl",
+                Email = "Henkie@Wauwzerz.nl",
+                LockoutEnabled = false,
+                PhoneNumber = "ten minste vijf"
+            };
+            passwordHasher.HashPassword(user, "Henkie");
+            users.Add(user);
+
+            user = new IdentityUser()
+            {
+                Id = "a357223e-5d1e-461e-b1ad-3a8592f548dd",
+                UserName = "Katriene@smedensberg.com",
+                Email = "Katriene@smedensberg.com",
+                LockoutEnabled = false,
+                PhoneNumber = "+31 99999999"
+            };
+            passwordHasher.HashPassword(user, "Katriene");
+            users.Add(user);
+
+            user = new IdentityUser()
+            {
+                Id = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                UserName = "Henk@henk.nl",
+                Email = "Henk@henk.nl",
+                LockoutEnabled = false,
+                PhoneNumber = "+31 6666666666"
+            };
+            passwordHasher.HashPassword(user, "Henk");
+            users.Add(user);
+
+            user = new IdentityUser()
+            {
+                Id = "bdece4e2-3ed9-4008-8878-65884c142394",
+                UserName = "Henk@maardanstoer.nl",
+                Email = "Henk@maardanstoer.nl",
+                LockoutEnabled = false,
+                PhoneNumber = "+31 123123123"
+            };
+            passwordHasher.HashPassword(user, "HenkStoer");
+            users.Add(user);
+
+            modelBuilder.Entity<IdentityUser>().HasData(users);
         }
 
         private static void InsertEmployeeData(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().HasData(
-                            new Employee { 
-                                EmployeeID = "b74ddd14-6340-4840-95c2-db12554843e5", 
-                                FirstName = "Jan", 
-                                MiddleName = "van", 
-                                LastName = "Geest", 
-                                Birthdate = new DateTime(1989, 10, 22), 
-                                PhoneNumber = "+31 6 56927484", 
-                                Email = "j.vangeest@bumbodium.nl", 
-                                DateInService = new DateTime(2006, 05, 12), 
-                                Type = TypeStaff.Manager 
+            List<Employee> employees = new List<Employee>()
+            {
+                new Employee {
+                                EmployeeID = "b74ddd14-6340-4840-95c2-db12554843e5",
+                                FirstName = "Jan",
+                                MiddleName = "van",
+                                LastName = "Geest",
+                                Birthdate = new DateTime(1989, 10, 22),
+                                PhoneNumber = "+31 6 56927484",
+                                Email = "j.vangeest@bumbodium.nl",
+                                DateInService = new DateTime(2006, 05, 12),
+                                Type = TypeStaff.Manager
+                            },
+                new Employee {
+                                EmployeeID = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                                FirstName = "Johnny",
+                                LastName = "Vos",
+                                Birthdate = new DateTime(0001, 10, 10),
+                                PhoneNumber = "+31 777777777",
+                                Email = "Johnny@vos.nl",
+                                DateInService = new DateTime(2001, 05, 12),
+                                Type = TypeStaff.Manager
+                            },
+                new Employee {
+                                EmployeeID = "19f7d479-542a-408b-9016-0561e3e70f65",
+                                FirstName = "Martijs",
+                                LastName = "Martijs",
+                                Birthdate = new DateTime(0001, 10, 10),
+                                PhoneNumber = "Martijs",
+                                Email = "Martijs@Martijs.Martijs",
+                                DateInService = new DateTime(2001, 05, 12),
+                                Type = TypeStaff.Manager
+                            },
+                new Employee {
+                                EmployeeID = "44128c29-b648-431e-89f4-7a105f79b00c",
+                                FirstName = "Heinz",
+                                MiddleName = "von",
+                                LastName = "Schmichtelstein",
+                                Birthdate = new DateTime(1975, 10, 09),
+                                PhoneNumber = "+49 420 69 7777",
+                                Email = "Heinz@vonschmichtelstein.de",
+                                DateInService = new DateTime(2009, 05, 12),
+                                Type = TypeStaff.Employee
+                            },
+                new Employee {
+                                EmployeeID = "5782d108-8865-40f8-b3b7-ced82309983f",
+                                FirstName = "Bliksem",
+                                LastName = "Snel",
+                                Birthdate = new DateTime(2021, 10, 09),
+                                PhoneNumber = "+31 snel",
+                                Email = "Bliksem@martijnshamster.nl",
+                                DateInService = new DateTime(2022, 05, 12),
+                                Type = TypeStaff.Employee
+                            },
+                new Employee {
+                                EmployeeID = "5989a56b-4d00-4213-9b73-34f80701836b",
+                                FirstName = "Lobbus",
+                                LastName = "Good boy",
+                                Birthdate = new DateTime(2018, 10, 09),
+                                PhoneNumber = "+31 1684867685",
+                                Email = "Lobbus@kjell.nl",
+                                DateInService = new DateTime(2022, 05, 12),
+                                Type = TypeStaff.Employee
+                            },
+                new Employee {
+                                EmployeeID = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                                FirstName = "Paula",
+                                LastName = "Campina",
+                                Birthdate = new DateTime(1988, 10, 09),
+                                PhoneNumber = "+31 612345678",
+                                Email = "Paula@campina.nl",
+                                DateInService = new DateTime(2020, 05, 12),
+                                Type = TypeStaff.Manager
+                            },
+                new Employee {
+                                EmployeeID = "a20cddd4-9704-439f-94bc-95f4659ce543",
+                                FirstName = "Henkie",
+                                LastName = "T",
+                                Birthdate = new DateTime(1957, 10, 09),
+                                PhoneNumber = "ten minste vijf",
+                                Email = "Henkie@Wauwzerz.nl",
+                                DateInService = new DateTime(2019, 05, 12),
+                                Type = TypeStaff.Employee
+                            },
+                new Employee {
+                                EmployeeID = "a357223e-5d1e-461e-b1ad-3a8592f548dd",
+                                FirstName = "Katriene",
+                                LastName = "Smedensberg",
+                                Birthdate = new DateTime(1999, 10, 09),
+                                PhoneNumber = "+31 99999999",
+                                Email = "Katriene@smedensberg.com",
+                                DateInService = new DateTime(2014, 05, 12),
+                                Type = TypeStaff.Manager
+                            },
+                new Employee {
+                                EmployeeID = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                                FirstName = "Henk",
+                                LastName = "Henk",
+                                Birthdate = new DateTime(1900, 10, 09),
+                                PhoneNumber = "+31 6666666666",
+                                Email = "Henk@henk.nl",
+                                DateInService = new DateTime(2002, 05, 12),
+                                Type = TypeStaff.Employee
+                            },
+                new Employee {
+                                EmployeeID = "bdece4e2-3ed9-4008-8878-65884c142394",
+                                FirstName = "Henk",
+                                MiddleName = "maar dan",
+                                LastName = "Stoer",
+                                Birthdate = new DateTime(1869, 10, 09),
+                                PhoneNumber = "+31 123123123",
+                                Email = "Henk@maardanstoer.nl",
+                                DateInService = new DateTime(2002, 05, 12),
+                                Type = TypeStaff.Employee
                             }
-                            );
+            };
+            modelBuilder.Entity<Employee>().HasData(employees);
         }
 
         private static void InsertDepartmentData(ModelBuilder modelBuilder)
@@ -173,6 +389,49 @@ namespace Bumbodium.Data
                             new Department() { Id = 7, BranchId = 1, SurfaceAreaInM2 = 90, Name = DepartmentType.Checkout, Description = "Checkout" },
                             new Department() { Id = 8, BranchId = 1, SurfaceAreaInM2 = 100, Name = DepartmentType.Stockroom, Description = "Stockroom" },
                             new Department() { Id = 9, BranchId = 1, SurfaceAreaInM2 = 70, Name = DepartmentType.InformationDesk, Description = "InformationDesk" });
+        }
+        private static void InsertDepartmentEmployeeData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DepartmentEmployee>().HasData(
+                new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
+                new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
+                new DepartmentEmployee() { DepartmentId = 3, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
+                new DepartmentEmployee() { DepartmentId = 4, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
+                new DepartmentEmployee() { DepartmentId = 5, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
+                new DepartmentEmployee() { DepartmentId = 6, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
+                new DepartmentEmployee() { DepartmentId = 7, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
+                new DepartmentEmployee() { DepartmentId = 8, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
+                new DepartmentEmployee() { DepartmentId = 9, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
+                new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c" },
+                new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c" },
+                new DepartmentEmployee() { DepartmentId = 3, EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c" },
+                new DepartmentEmployee() { DepartmentId = 7, EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c" },
+                new DepartmentEmployee() { DepartmentId = 8, EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c" },
+                new DepartmentEmployee() { DepartmentId = 9, EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c" },
+                new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
+                new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
+                new DepartmentEmployee() { DepartmentId = 3, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
+                new DepartmentEmployee() { DepartmentId = 4, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
+                new DepartmentEmployee() { DepartmentId = 5, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
+                new DepartmentEmployee() { DepartmentId = 6, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
+                new DepartmentEmployee() { DepartmentId = 7, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
+                new DepartmentEmployee() { DepartmentId = 8, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
+                new DepartmentEmployee() { DepartmentId = 9, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
+                new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b" },
+                new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b" },
+                new DepartmentEmployee() { DepartmentId = 3, EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b" },
+                new DepartmentEmployee() { DepartmentId = 4, EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b" },
+                new DepartmentEmployee() { DepartmentId = 5, EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b" },
+                new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b" },
+                new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b" },
+                new DepartmentEmployee() { DepartmentId = 3, EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b" },
+                new DepartmentEmployee() { DepartmentId = 4, EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b" },
+                new DepartmentEmployee() { DepartmentId = 5, EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b" },
+                new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "a20cddd4-9704-439f-94bc-95f4659ce543" },
+                new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "a357223e-5d1e-461e-b1ad-3a8592f548dd" },
+                new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "b74ddd14-6340-4840-95c2-db12554843e5" },
+                new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f" },
+                new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "bdece4e2-3ed9-4008-8878-65884c142394" });
         }
 
         private static void InsertBranchData(ModelBuilder modelBuilder)

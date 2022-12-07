@@ -231,6 +231,242 @@ namespace Bumbodium.Data.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("DepartmentEmployee");
+
+                    b.HasData(
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 4,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 5,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 6,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 7,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 8,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 9,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 7,
+                            EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 8,
+                            EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 9,
+                            EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 4,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 5,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 6,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 7,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 8,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 9,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 4,
+                            EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 5,
+                            EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 4,
+                            EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 5,
+                            EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "a20cddd4-9704-439f-94bc-95f4659ce543",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "a357223e-5d1e-461e-b1ad-3a8592f548dd",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "b74ddd14-6340-4840-95c2-db12554843e5",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "bdece4e2-3ed9-4008-8878-65884c142394",
+                            WorkFunction = 0
+                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Employee", b =>
@@ -290,6 +526,118 @@ namespace Bumbodium.Data.Migrations
                             MiddleName = "van",
                             PhoneNumber = "+31 6 56927484",
                             Type = 0
+                        },
+                        new
+                        {
+                            EmployeeID = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                            Birthdate = new DateTime(1, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2001, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Johnny@vos.nl",
+                            FirstName = "Johnny",
+                            LastName = "Vos",
+                            PhoneNumber = "+31 777777777",
+                            Type = 0
+                        },
+                        new
+                        {
+                            EmployeeID = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            Birthdate = new DateTime(1, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2001, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Martijs@Martijs.Martijs",
+                            FirstName = "Martijs",
+                            LastName = "Martijs",
+                            PhoneNumber = "Martijs",
+                            Type = 0
+                        },
+                        new
+                        {
+                            EmployeeID = "44128c29-b648-431e-89f4-7a105f79b00c",
+                            Birthdate = new DateTime(1975, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2009, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Heinz@vonschmichtelstein.de",
+                            FirstName = "Heinz",
+                            LastName = "Schmichtelstein",
+                            MiddleName = "von",
+                            PhoneNumber = "+49 420 69 7777",
+                            Type = 1
+                        },
+                        new
+                        {
+                            EmployeeID = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            Birthdate = new DateTime(2021, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2022, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Bliksem@martijnshamster.nl",
+                            FirstName = "Bliksem",
+                            LastName = "Snel",
+                            PhoneNumber = "+31 snel",
+                            Type = 1
+                        },
+                        new
+                        {
+                            EmployeeID = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            Birthdate = new DateTime(2018, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2022, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Lobbus@kjell.nl",
+                            FirstName = "Lobbus",
+                            LastName = "Good boy",
+                            PhoneNumber = "+31 1684867685",
+                            Type = 1
+                        },
+                        new
+                        {
+                            EmployeeID = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            Birthdate = new DateTime(1988, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2020, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Paula@campina.nl",
+                            FirstName = "Paula",
+                            LastName = "Campina",
+                            PhoneNumber = "+31 612345678",
+                            Type = 0
+                        },
+                        new
+                        {
+                            EmployeeID = "a20cddd4-9704-439f-94bc-95f4659ce543",
+                            Birthdate = new DateTime(1957, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2019, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Henkie@Wauwzerz.nl",
+                            FirstName = "Henkie",
+                            LastName = "T",
+                            PhoneNumber = "ten minste vijf",
+                            Type = 1
+                        },
+                        new
+                        {
+                            EmployeeID = "a357223e-5d1e-461e-b1ad-3a8592f548dd",
+                            Birthdate = new DateTime(1999, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2014, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Katriene@smedensberg.com",
+                            FirstName = "Katriene",
+                            LastName = "Smedensberg",
+                            PhoneNumber = "+31 99999999",
+                            Type = 0
+                        },
+                        new
+                        {
+                            EmployeeID = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            Birthdate = new DateTime(1900, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2002, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Henk@henk.nl",
+                            FirstName = "Henk",
+                            LastName = "Henk",
+                            PhoneNumber = "+31 6666666666",
+                            Type = 1
+                        },
+                        new
+                        {
+                            EmployeeID = "bdece4e2-3ed9-4008-8878-65884c142394",
+                            Birthdate = new DateTime(1869, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2002, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Henk@maardanstoer.nl",
+                            FirstName = "Henk",
+                            LastName = "Stoer",
+                            MiddleName = "maar dan",
+                            PhoneNumber = "+31 123123123",
+                            Type = 1
                         });
                 });
 
@@ -573,15 +921,155 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1f767877-3760-40f8-99e5-2dae9485c80c",
+                            ConcurrencyStamp = "0e514c93-fcf5-4718-ae1e-286f837760bc",
                             Email = "j.vangeest@bumbodium.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumber = "+31 6 56927484",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "95e58305-fbaf-403b-8353-bb24af612098",
+                            SecurityStamp = "5742724d-2a86-462c-8aba-711c1841e004",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
+                        },
+                        new
+                        {
+                            Id = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "7235cae4-ab29-4edc-a35c-f824c175acca",
+                            Email = "Martijs@Martijs.Martijs",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumber = "Martijs",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ef981add-c510-4a1d-855e-8ace99e89f2b",
+                            TwoFactorEnabled = false,
+                            UserName = "Martijs@Martijs.Martijs"
+                        },
+                        new
+                        {
+                            Id = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ca7211e4-6ca1-4483-a861-4b865d8f28ad",
+                            Email = "Johnny@vos.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumber = "+31 5",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "8c1e390c-f2e8-422d-936b-c328493fb8f5",
+                            TwoFactorEnabled = false,
+                            UserName = "Johnny@vos.nl"
+                        },
+                        new
+                        {
+                            Id = "44128c29-b648-431e-89f4-7a105f79b00c",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "cb190224-e87e-402b-ad14-69015450ffaf",
+                            Email = "Heinz@vonschmichtelstein.de",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumber = "+49 420 69 7777",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "c4000c8c-3cc6-4d04-bfd2-2fc83387dc85",
+                            TwoFactorEnabled = false,
+                            UserName = "Heinz@vonschmichtelstein.de"
+                        },
+                        new
+                        {
+                            Id = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "6b5ffdc2-0066-403c-b14d-ebddc60343fb",
+                            Email = "Bliksem@martijnshamster.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumber = "+31 snel",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "63c002bf-1e0f-4345-9c1e-6d319d43c227",
+                            TwoFactorEnabled = false,
+                            UserName = "Bliksem@martijnshamster.nl"
+                        },
+                        new
+                        {
+                            Id = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a1b55940-516c-4382-a80f-67b59386dbac",
+                            Email = "Lobbus@kjell.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumber = "+31 6 67215943",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "badce163-0e4f-49c9-9332-618db9c9b6dd",
+                            TwoFactorEnabled = false,
+                            UserName = "Lobbus@kjell.nl"
+                        },
+                        new
+                        {
+                            Id = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "023929df-2b63-4a6e-ae25-4dfda488a18d",
+                            Email = "Paula@campina.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumber = "+31 612345678",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "95688368-9b7e-4aa9-ae39-36164aeea5dc",
+                            TwoFactorEnabled = false,
+                            UserName = "Paula@campina.nl"
+                        },
+                        new
+                        {
+                            Id = "a20cddd4-9704-439f-94bc-95f4659ce543",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f1a04103-90dc-44b7-a645-0ef85d4736c2",
+                            Email = "Henkie@Wauwzerz.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumber = "ten minste vijf",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "0920d0a3-9aad-4c44-a472-f001c9e36891",
+                            TwoFactorEnabled = false,
+                            UserName = "Henkie@Wauwzerz.nl"
+                        },
+                        new
+                        {
+                            Id = "a357223e-5d1e-461e-b1ad-3a8592f548dd",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "57c3a952-2ebb-40fb-9954-a11f5919314d",
+                            Email = "Katriene@smedensberg.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumber = "+31 99999999",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "6096c604-1636-4cc0-9724-aee1619aa3dd",
+                            TwoFactorEnabled = false,
+                            UserName = "Katriene@smedensberg.com"
+                        },
+                        new
+                        {
+                            Id = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f84e4c29-0804-4d5f-82f4-c18cd452e3f6",
+                            Email = "Henk@henk.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumber = "+31 6666666666",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "b19e47fd-767c-4b17-b0bc-2f89af462086",
+                            TwoFactorEnabled = false,
+                            UserName = "Henk@henk.nl"
+                        },
+                        new
+                        {
+                            Id = "bdece4e2-3ed9-4008-8878-65884c142394",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "084ebbf7-8066-4e92-bed1-d51e962e7e6b",
+                            Email = "Henk@maardanstoer.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumber = "+31 123123123",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "a9495e2d-aa4b-4f48-a25f-1f8772ed7cc3",
+                            TwoFactorEnabled = false,
+                            UserName = "Henk@maardanstoer.nl"
                         });
                 });
 
