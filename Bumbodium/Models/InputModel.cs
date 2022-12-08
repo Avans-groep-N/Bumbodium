@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Bumbodium.Data.DBModels;
 
 namespace Bumbodium.WebApp.Models
 {
@@ -25,5 +26,7 @@ namespace Bumbodium.WebApp.Models
         [Required]
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
+
+        public Bumbodium.Data.DBModels.TypeStaff TypeStaff { get; set; }
     }
 }

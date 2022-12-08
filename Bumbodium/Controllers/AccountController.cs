@@ -34,13 +34,14 @@ namespace Bumbodium.WebApp.Controllers
             return View();
         }
 
+        //TODO replace this with a proper Employee Create
         [HttpPost]
         public async Task<IActionResult> Register(InputModel input)
         {
             if (ModelState.IsValid)
             {
-
-                var user = new IdentityUser { 
+                var user = new IdentityUser
+                {
                     UserName = input.Email,
                     Email = input.Email,
                     PhoneNumber = input.PhoneNumber
@@ -48,16 +49,20 @@ namespace Bumbodium.WebApp.Controllers
                 var result = await _userManager.CreateAsync(user, input.Password);
                 if (result.Succeeded)
                 {
-                    await _db.InsertEmployee(new Employee() { 
-                        EmployeeID = user.Id, 
+                    await _db.InsertEmployee(new Employee()
+                    {
+                        EmployeeID = user.Id,
                         FirstName = input.FirstName,
                         MiddleName = input.MiddleName,
                         LastName = input.LastName,
                         Birthdate = input.Birthday,
                         PhoneNumber = input.PhoneNumber,
-                        Email = user.Email});    
+                        Email = user.Email,
+                        Type = input.TypeStaff
+                    });
+                    await _userManager.AddToRoleAsync(user, input.TypeStaff.ToString());
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Availability");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -67,13 +72,24 @@ namespace Bumbodium.WebApp.Controllers
             return View();
         }
 
-        public IActionResult Login()
+        public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Manager"))
+                {
+                    return RedirectToAction("Index", "WeekSchedule");
+                }
+                if (User.IsInRole("Employee"))
+                {
+                    return RedirectToAction("Index", "Availability");
+                }
+            }
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel input)
+        public async Task<IActionResult> Index(LoginModel input)
         {
             if (ModelState.IsValid)
             {
@@ -85,9 +101,14 @@ namespace Bumbodium.WebApp.Controllers
                     var employeeTask = await _db.GetEmployee(currentUser);
                     Employee employee = employeeTask.FirstOrDefault();
                     if (employee.Type == Data.DBModels.TypeStaff.Manager)
-                        return RedirectToAction("Index", "Home");
+                    {
+                        return RedirectToAction("Index", "WeekSchedule");
+                    }
                     else
-                        return RedirectToAction("EmployeeIndex", "Home");
+                    {
+                        //TODO Change to employee schedule once its made.
+                        return RedirectToAction("Index", "Availability");
+                    }
                 }
                 else
                 {
@@ -96,6 +117,25 @@ namespace Bumbodium.WebApp.Controllers
                 }
             }
             return View();
+        }
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index");
+        }
+
+        //actions for the debug buttons
+        public async Task<IActionResult> DebugEmployeeLogin()
+        {
+            string email = "Henk@henk.nl";
+            string password = "Henk";
+            return await Index(new InputModel { Email = email, Password = password });
+        }
+        public async Task<IActionResult> DebugManagerLogin()
+        {
+            string email = "Johnny@vos.nl";
+            string password = "Johnny";
+            return await Index(new InputModel { Email = email, Password = password });
         }
     }
 }

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+using System.Runtime.CompilerServices;
 
 namespace Bumbodium.Data
 {
@@ -137,10 +137,11 @@ namespace Bumbodium.Data
                 Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                 UserName = "Admin",
                 Email = "j.vangeest@bumbodium.nl",
+                NormalizedEmail = "J.VANGEEST@BUMBODIUM.NL",
                 LockoutEnabled = false,
                 PhoneNumber = "+31 6 56927484"
             };
-            passwordHasher.HashPassword(user, "Password");
+            user.PasswordHash = passwordHasher.HashPassword(user, "Password");
             users.Add(user);
 
             user = new IdentityUser()
@@ -151,7 +152,7 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "Martijs"
             };
-            passwordHasher.HashPassword(user, "Martijs");
+            user.PasswordHash = passwordHasher.HashPassword(user, "Martijs");
             users.Add(user);
 
             user = new IdentityUser()
@@ -162,7 +163,7 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "+31 5"
             };
-            passwordHasher.HashPassword(user, "Johnny");
+            user.PasswordHash = passwordHasher.HashPassword(user, "Johnny");
             users.Add(user);
 
             user = new IdentityUser()
@@ -173,7 +174,7 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "+49 420 69 7777"
             };
-            passwordHasher.HashPassword(user, "Heinz");
+            user.PasswordHash = passwordHasher.HashPassword(user, "Heinz");
             users.Add(user);
 
             user = new IdentityUser()
@@ -184,7 +185,7 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "+31 snel"
             };
-            passwordHasher.HashPassword(user, "Bliksem");
+            user.PasswordHash = passwordHasher.HashPassword(user, "Bliksem");
             users.Add(user);
 
             user = new IdentityUser()
@@ -195,7 +196,7 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "+31 6 67215943"
             };
-            passwordHasher.HashPassword(user, "Lobbus");
+            user.PasswordHash = passwordHasher.HashPassword(user, "Lobbus");
             users.Add(user);
 
             user = new IdentityUser()
@@ -206,7 +207,7 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "+31 612345678"
             };
-            passwordHasher.HashPassword(user, "Paula");
+            user.PasswordHash = passwordHasher.HashPassword(user, "Paula");
             users.Add(user);
 
             user = new IdentityUser()
@@ -217,7 +218,7 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "ten minste vijf"
             };
-            passwordHasher.HashPassword(user, "Henkie");
+            user.PasswordHash = passwordHasher.HashPassword(user, "Henkie");
             users.Add(user);
 
             user = new IdentityUser()
@@ -228,7 +229,7 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "+31 99999999"
             };
-            passwordHasher.HashPassword(user, "Katriene");
+            user.PasswordHash = passwordHasher.HashPassword(user, "Katriene");
             users.Add(user);
 
             user = new IdentityUser()
@@ -239,7 +240,7 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "+31 6666666666"
             };
-            passwordHasher.HashPassword(user, "Henk");
+            user.PasswordHash = passwordHasher.HashPassword(user, "Henk");
             users.Add(user);
 
             user = new IdentityUser()
@@ -250,9 +251,13 @@ namespace Bumbodium.Data
                 LockoutEnabled = false,
                 PhoneNumber = "+31 123123123"
             };
-            passwordHasher.HashPassword(user, "HenkStoer");
+            user.PasswordHash = passwordHasher.HashPassword(user, "HenkStoer");
             users.Add(user);
 
+            foreach(IdentityUser userfromlist in users)
+            {
+                userfromlist.NormalizedUserName = userfromlist.UserName.ToUpper();
+            }
             modelBuilder.Entity<IdentityUser>().HasData(users);
         }
 
