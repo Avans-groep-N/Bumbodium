@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Bumbodium.Data.Utilities;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,6 +22,7 @@ namespace Bumbodium.Data.DBModels
         public string LastName { get; set; }
 
         [Required]
+        [ValidateEmployeeAgeAttribute(15)]
         public DateTime Birthdate { get; set; }
 
         [Required]
