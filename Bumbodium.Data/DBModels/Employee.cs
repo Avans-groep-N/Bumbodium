@@ -1,4 +1,5 @@
 ﻿using Bumbodium.Data.Utilities;
+using Bumbodium.Data.Utilities.EmployeeValidation;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,7 +23,7 @@ namespace Bumbodium.Data.DBModels
         public string LastName { get; set; }
 
         [Required]
-        [ValidateEmployeeAgeAttribute(15)]
+        [ValidateAgeAttribute(15, 67)]
         public DateTime Birthdate { get; set; }
 
         [Required]
@@ -34,6 +35,7 @@ namespace Bumbodium.Data.DBModels
         public string Email { get; set; }
 
         [Required]
+        [ValidateDateInService(2000)]
         public DateTime DateInService { get; set; }
 
         public DateTime? DateOutService { get; set; }
