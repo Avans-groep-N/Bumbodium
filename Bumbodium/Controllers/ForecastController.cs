@@ -5,13 +5,6 @@ namespace Bumbodium.WebApp.Controllers
 {
     public class ForecastController : Controller
     {
-        /*private readonly ForecastRepo _forecastRepo;
-
-        public ForecastController(ForecastRepo forecastRepo)
-        {
-            _forecastRepo = forecastRepo;
-        }*/
-
 
         // GET: ForecastController
         public ActionResult Index()
@@ -75,34 +68,6 @@ namespace Bumbodium.WebApp.Controllers
             });
 
             return View(fw);
-        }
-
-        // GET: ForecastController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: ForecastController/Create
-        public ActionResult Create()
-        {
-            return View(new ForecastWeek());
-        }
-
-        // POST: ForecastController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateNewForcast(ForecastWeek forecast)
-        {
-            try
-            {
-                //_forecastRepo.CreateForecast(forecast.DaysOfTheWeek);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return RedirectToAction(nameof(Index));
-            }
         }
     }
 }
