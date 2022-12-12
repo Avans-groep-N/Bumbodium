@@ -16,6 +16,7 @@ namespace Bumbodium.Data.Utilities.EmployeeValidation
         public ValidateAgeAttribute(int allowedMinAge, int allowedMaxAge)
         {
             _allowedMinAge = allowedMinAge;
+            _allowedMaxAge = allowedMaxAge;
         }
 
         public override bool IsValid(object value)

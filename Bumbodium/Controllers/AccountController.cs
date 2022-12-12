@@ -55,7 +55,8 @@ namespace Bumbodium.WebApp.Controllers
                         LastName = input.LastName,
                         Birthdate = input.Birthday,
                         PhoneNumber = input.PhoneNumber,
-                        Email = user.Email});    
+                        Email = user.Email,
+                        DateInService = input.DateInService});    
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
