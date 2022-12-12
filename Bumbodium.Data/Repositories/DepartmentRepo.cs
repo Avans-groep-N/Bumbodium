@@ -19,6 +19,8 @@ namespace Bumbodium.Data.Repositories
 
         public int GetDepartment(DepartmentType type, int branchId) => _ctx.Department.FirstOrDefault(d => d.Name == type && d.BranchId == branchId).Id;
 
+        public IEnumerable<Department> GetAllDepartments() => _ctx.Department;
+
         public int GetSurfaceOfDepartment(int branchId, DepartmentType type)
         {
             Department dep = _ctx.Department.First(d => d.BranchId == branchId && d.Name == type);
@@ -37,6 +39,18 @@ namespace Bumbodium.Data.Repositories
                 sum += dep.SurfaceAreaInM2;
             }
             return sum;
+        }
+
+        public void AddEmployeeToDepartment(string EmployeeId, int DepartmentId)
+        {
+            var employee = new DepartmentEmployee()
+            {
+                EmployeeId = EmployeeId,
+                DepartmentId = DepartmentId,
+                WorkFunction = 0
+            };
+            _ctx.DepartmentEmployee.Add(employee);
+            _ctx.SaveChanges();
         }
     }
 }

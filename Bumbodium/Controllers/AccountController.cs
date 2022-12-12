@@ -1,9 +1,11 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Interfaces;
+using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Configuration;
 using System.Security.Claims;
@@ -16,22 +18,29 @@ namespace Bumbodium.WebApp.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
-        private readonly EmployeeRepo _db;
+        private readonly EmployeeRepo _EmployeeDb;
+        private readonly DepartmentRepo _departmentRepo;
+        private readonly BumbodiumContext _db;
 
         public AccountController(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            Microsoft.Extensions.Configuration.IConfiguration configuration)
+            Microsoft.Extensions.Configuration.IConfiguration configuration,
+            BumbodiumContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
-            _db = new EmployeeRepo(new SqlDataAccess(config: _configuration));
+            _EmployeeDb = new EmployeeRepo(new SqlDataAccess(config: _configuration));
+            _db = db;
+            _departmentRepo = new DepartmentRepo(_db);
         }
 
         public IActionResult Register()
         {
-            return View();
+            InputModel input = new InputModel();
+            PopulateInput(input);
+            return View(input);
         }
 
         //TODO replace this with a proper Employee Create
@@ -49,7 +58,8 @@ namespace Bumbodium.WebApp.Controllers
                 var result = await _userManager.CreateAsync(user, input.Password);
                 if (result.Succeeded)
                 {
-                    await _db.InsertEmployee(new Employee()
+                    //Employee
+                    await _EmployeeDb.InsertEmployee(new Employee()
                     {
                         EmployeeID = user.Id,
                         FirstName = input.FirstName,
@@ -59,17 +69,27 @@ namespace Bumbodium.WebApp.Controllers
                         PhoneNumber = input.PhoneNumber,
                         Email = user.Email,
                         Type = input.TypeStaff
-                    });
+                    }) ;
+
+                    //Departments
+                    foreach (var department in input.ActiveDepartmentIds)
+                    {
+                        _departmentRepo.AddEmployeeToDepartment(user.Id, department);
+                    }
                     await _userManager.AddToRoleAsync(user, input.TypeStaff.ToString());
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Availability");
+                    if(input.TypeStaff == TypeStaff.Employee)
+                        return RedirectToAction("Index", "Availability");
+                    else
+                        return RedirectToAction("Index", "WeekSchedule");
                 }
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            return View();
+            PopulateInput(input);
+            return View(input);
         }
 
         public IActionResult Index()
@@ -96,9 +116,9 @@ namespace Bumbodium.WebApp.Controllers
                 var result = await _signInManager.PasswordSignInAsync(input.Email, input.Password, false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    var currentUserTask = await _db.GetUser(input.Email);
+                    var currentUserTask = await _EmployeeDb.GetUser(input.Email);
                     IdentityUser currentUser = currentUserTask.FirstOrDefault();
-                    var employeeTask = await _db.GetEmployee(currentUser);
+                    var employeeTask = await _EmployeeDb.GetEmployee(currentUser);
                     Employee employee = employeeTask.FirstOrDefault();
                     if (employee.Type == Data.DBModels.TypeStaff.Manager)
                     {
@@ -122,6 +142,11 @@ namespace Bumbodium.WebApp.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index");
+        }
+
+        private void PopulateInput(InputModel input)
+        {
+            input.DepartmentList = _departmentRepo.GetAllDepartments();
         }
 
         //actions for the debug buttons
