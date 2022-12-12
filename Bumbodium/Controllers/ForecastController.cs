@@ -1,26 +1,80 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Bumbodium.WebApp.Models;
-using Bumbodium.Data.DBModels;
-using Bumbodium.Data.Repositories;
-using Bumbodium.Data;
 
 namespace Bumbodium.WebApp.Controllers
 {
     public class ForecastController : Controller
     {
-        private readonly ForecastRepo _forecastRepo;
+        /*private readonly ForecastRepo _forecastRepo;
 
         public ForecastController(ForecastRepo forecastRepo)
         {
             _forecastRepo = forecastRepo;
-        }
+        }*/
+
 
         // GET: ForecastController
         public ActionResult Index()
         {
-            
-            return View(_forecastRepo.GetAll());
+            var fw = new ForecastWeek() { WeekNr = 34 };
+            fw.Days.Add(new ForecastItems()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountEmployees = 8,
+                AmountColis = 8,
+                AmountCustommers = 8,
+                AmountHours = 8
+            });
+            fw.Days.Add(new ForecastItems()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountEmployees = 8,
+                AmountColis = 8,
+                AmountCustommers = 8,
+                AmountHours = 8
+            });
+            fw.Days.Add(new ForecastItems()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountEmployees = 8,
+                AmountColis = 8,
+                AmountCustommers = 8,
+                AmountHours = 8
+            });
+            fw.Days.Add(new ForecastItems()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountEmployees = 8,
+                AmountColis = 8,
+                AmountCustommers = 8,
+                AmountHours = 8
+            });
+            fw.Days.Add(new ForecastItems()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountEmployees = 8,
+                AmountColis = 8,
+                AmountCustommers = 8,
+                AmountHours = 8
+            });
+            fw.Days.Add(new ForecastItems()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountEmployees = 8,
+                AmountColis = 8,
+                AmountCustommers = 8,
+                AmountHours = 8
+            });
+            fw.Days.Add(new ForecastItems()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountEmployees = 8,
+                AmountColis = 8,
+                AmountCustommers = 8,
+                AmountHours = 8
+            });
+
+            return View(fw);
         }
 
         // GET: ForecastController/Details/5
@@ -32,64 +86,22 @@ namespace Bumbodium.WebApp.Controllers
         // GET: ForecastController/Create
         public ActionResult Create()
         {
-            return View(new ForecastWeekViewModel());
+            return View(new ForecastWeek());
         }
 
         // POST: ForecastController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateNewForcast(ForecastWeekViewModel forecast)
+        public ActionResult CreateNewForcast(ForecastWeek forecast)
         {
             try
             {
-                _forecastRepo.CreateForecast(forecast.DaysOfTheWeek);
+                //_forecastRepo.CreateForecast(forecast.DaysOfTheWeek);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return RedirectToAction(nameof(Index));
-            }
-        }
-
-        // GET: ForecastController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: ForecastController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ForecastController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ForecastController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
             }
         }
     }

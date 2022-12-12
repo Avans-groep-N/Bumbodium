@@ -1,57 +1,65 @@
-﻿@model IEnumerable<Bumbodium.Data.DBModels.Forecast>
+﻿@model ForecastWeek
 
-@{
-    ViewData["Title"] = "Index";
-}
+<h1>Prognose</h1>
 
-<h1>Index</h1>
+<form>
+    <input type="week" name="week" id="camp-week" required>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Department)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountExpectedEmployees)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountExpectedHours)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountExpectedCustomers)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountExpectedColis)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Department.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountExpectedEmployees)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountExpectedHours)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountExpectedCustomers)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountExpectedColis)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <table class="table table-striped text-center table-responsive">
+        <thead>
+            <tr>
+                <th class="row-cols-md-4">icons</th>
+                @for (int i = 0; i < Model.Days.Count; i++)
+                {
+                    <th class="row-cols-md-4">@Model.Days[i].Date.DayOfWeek</th>
+                }
+            </tr>
+        </thead>
+        <tbody class="">
+            <tr>
+                <td>
+                    <i class="fa fa-group"></i>
+                </td>
+                @for (int i = 0; i < Model.Days.Count; i++)
+                {
+                    <td class="row-cols-md-4">
+                        <input type="text" name="AmountEmployees" value="@Model.Days[i].AmountEmployees">
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td>
+                    <i class="far fa-calendar"></i>
+                </td>
+                @for (int i = 0; i < Model.Days.Count; i++)
+                {
+                    <td class="row-cols-md-4">
+                        <input type="text" name="AmountHours" value="@Model.Days[i].AmountHours">
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td>
+                    <i class="fa fa-shopping-basket"></i>
+                </td>
+                @for (int i = 0; i < Model.Days.Count; i++)
+                {
+                    <td class="row-cols-md-4">
+                        <input type="text" name="AmountCustommers" value="@Model.Days[i].AmountCustommers">
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td>
+                    <i class="fa fa-cubes"></i>
+                </td>
+                @for (int i = 0; i < Model.Days.Count; i++)
+                {
+                    <td class="row-cols-md-4">
+                        <input type="text" name="AmountColis" value="@Model.Days[i].AmountColis">
+                    </td>
+                }
+            </tr>
+        </tbody>
+    </table>
+</form>
