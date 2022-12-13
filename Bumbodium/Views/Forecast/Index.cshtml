@@ -1,4 +1,5 @@
-﻿@model ForecastWeek
+﻿@using System.Globalization;
+@model ForecastWeek
 
 <h1>Prognose</h1>
 
@@ -8,17 +9,17 @@
     <table class="table table-striped text-center table-responsive">
         <thead>
             <tr>
-                <th class="row-cols-md-4">icons</th>
+                <th class="row-cols-md-4"/>
                 @for (int i = 0; i < Model.Days.Count; i++)
                 {
-                    <th class="row-cols-md-4">@Model.Days[i].Date.DayOfWeek</th>
+                    <th class="row-cols-md-4">@Model.Days[i].Date.ToString("dddd", new CultureInfo("nl-NL"))<br />@Model.Days[i].Date.ToString("dd-MM")</th>
                 }
             </tr>
         </thead>
         <tbody class="">
             <tr>
                 <td>
-                    <i class="fa fa-group"></i>
+                    <i title="Benodigd Personeel" class="material-icons">groups</i>
                 </td>
                 @for (int i = 0; i < Model.Days.Count; i++)
                 {
@@ -29,7 +30,7 @@
             </tr>
             <tr>
                 <td>
-                    <i class="far fa-calendar"></i>
+                    <i title="Aantal Uren" class="material-icons">event</i>
                 </td>
                 @for (int i = 0; i < Model.Days.Count; i++)
                 {
@@ -40,7 +41,7 @@
             </tr>
             <tr>
                 <td>
-                    <i class="fa fa-shopping-basket"></i>
+                    <i title="Verwacht Aantal Klanten" class="material-icons">shopping_basket</i>
                 </td>
                 @for (int i = 0; i < Model.Days.Count; i++)
                 {
@@ -51,7 +52,7 @@
             </tr>
             <tr>
                 <td>
-                    <i class="fa fa-cubes"></i>
+                    <i title="Verwacht Aantal Tolleys" class="material-icons">trolley</i>
                 </td>
                 @for (int i = 0; i < Model.Days.Count; i++)
                 {
