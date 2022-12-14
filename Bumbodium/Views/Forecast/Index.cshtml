@@ -1,10 +1,14 @@
 ﻿@using System.Globalization;
 @model ForecastWeek
 
+@{
+    string calanderVal = Model.Days[0].Date.Year + "-W" + Model.WeekNr;
+}
+
 <h1>Prognose</h1>
 
 <form>
-    <input type="week" name="week" id="camp-week" required>
+    <input type="week" name="week" id="camp-week" value="@calanderVal" required>
 
     <table class="table table-striped text-center table-responsive">
         <thead>
@@ -23,8 +27,8 @@
                 </td>
                 @for (int i = 0; i < Model.Days.Count; i++)
                 {
-                    <td class="row-cols-md-4">
-                        <input type="text" name="AmountEmployees" value="@Model.Days[i].AmountEmployees">
+                    <td class="row-cols-md-1">
+                        <input class="forecast-textbox" type="text" name="AmountEmployees" value="@Model.Days[i].AmountEmployees">
                     </td>
                 }
             </tr>
@@ -34,8 +38,8 @@
                 </td>
                 @for (int i = 0; i < Model.Days.Count; i++)
                 {
-                    <td class="row-cols-md-4">
-                        <input type="text" name="AmountHours" value="@Model.Days[i].AmountHours">
+                    <td class="row-cols-md-1">
+                        <input class="forecast-textbox" type="text" name="AmountHours" value="@Model.Days[i].AmountHours">
                     </td>
                 }
             </tr>
@@ -45,8 +49,8 @@
                 </td>
                 @for (int i = 0; i < Model.Days.Count; i++)
                 {
-                    <td class="row-cols-md-4">
-                        <input type="text" name="AmountCustommers" value="@Model.Days[i].AmountCustommers">
+                    <td class="row-cols-md-1">
+                        <input class="forecast-textbox" type="text" name="AmountCustommers" value="@Model.Days[i].AmountCustommers">
                     </td>
                 }
             </tr>
@@ -56,11 +60,12 @@
                 </td>
                 @for (int i = 0; i < Model.Days.Count; i++)
                 {
-                    <td class="row-cols-md-4">
-                        <input type="text" name="AmountColis" value="@Model.Days[i].AmountColis">
+                    <td class="row-cols-md-1">
+                        <input class="forecast-textbox" type="text" name="AmountColis" value="@Model.Days[i].AmountColis">
                     </td>
                 }
             </tr>
         </tbody>
     </table>
+    <a class="btn btn-primary text-dark" asp-area="" asp-controller="Standard" asp-action="Index"><span class="inline-icon material-icons"> info</span>Normering</a>
 </form>

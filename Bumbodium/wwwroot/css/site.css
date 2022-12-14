@@ -46,3 +46,13 @@ body {
     align-content: center;
     flex-direction: column;
 }
+
+.forecast-textbox {
+    background-color: transparent;
+    border: 0px;
+    text-align: center;
+}
+
+.inline-icon {
+    vertical-align: bottom;
+}
