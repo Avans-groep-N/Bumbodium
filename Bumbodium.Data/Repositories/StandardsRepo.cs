@@ -16,6 +16,6 @@ namespace Bumbodium.Data.Repositories
             _ctx = ctx;
         }
 
-        public List<Standards> GetAll(Country country) => _ctx.Standards.Where(s => s.Country == country).ToList();
+        public List<Standards> GetAllInRange(Country country) => _ctx.Standards.Where(s => s.Country == country).ToList();
     }
 }

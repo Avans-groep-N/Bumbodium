@@ -17,7 +17,6 @@ namespace Bumbodium.Data.Repositories
 
         public BumbodiumContext _ctx;
         private DepartmentRepo _departmentRepo;
-
         private readonly int Minute = 60;
         private readonly int Hours = 3600;
 
@@ -27,7 +26,17 @@ namespace Bumbodium.Data.Repositories
             _departmentRepo = departmentRepo;
         }
 
-        public List<Forecast> GetAll() => _ctx.Forecast.ToList();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="start"> included</param>
+        /// <param name="end"> included</param>
+        /// <returns></returns>
+        public List<Forecast> GetAllInRange(DateTime start, DateTime end , List<int> departmentsId)
+        {
+            return _ctx.Forecast.Where(f => f.Date >= start && f.Date <= end && departmentsId.Contains(f.DepartmentId)).ToList();
+        }
+
 
         public void CreateForecast(Forecast[] forecasts)
         {

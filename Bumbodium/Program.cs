@@ -5,7 +5,8 @@ using Radzen;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Bumbodium.Data.Repositories;
+using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
+using Bumbodium.WebApp.Models.Utilities.StandardsValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,9 @@ builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddScoped<ForecastRepo>();
 builder.Services.AddScoped<DepartmentRepo>();
 builder.Services.AddScoped<StandardsRepo>();
+
+builder.Services.AddScoped<BLForecast>();
+builder.Services.AddScoped<BLStandards>();
 
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddTransient<IAvailablityRepo, AvailabilityRepo>();
