@@ -1,6 +1,6 @@
 ﻿namespace BumBodium.BusinessLayer.BLStandards
 {
-    public class StandardsConnectores
+    public class StandardsConnector
     {
     }
 }
