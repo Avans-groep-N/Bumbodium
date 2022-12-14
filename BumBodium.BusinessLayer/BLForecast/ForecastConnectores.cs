@@ -2,7 +2,7 @@
 
 namespace BumBodium.BusinessLayer.BLForecast
 {
-    public class ForecastConnectores
+    public class ForecastConnector
     {
     }
 }
