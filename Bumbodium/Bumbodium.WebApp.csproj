@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BumBodium.BusinessLayer\BumBodium.BusinessLayer.csproj" />
     <ProjectReference Include="..\Bumbodium.Data\Bumbodium.Data.csproj" />
   </ItemGroup>
 

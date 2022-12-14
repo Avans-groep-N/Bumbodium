@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bumbodium.WebApp", "Bumbodi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bumbodium.Data", "Bumbodium.Data\Bumbodium.Data.csproj", "{B9080F82-C3D5-44CD-8C32-680BE96F8154}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BumBodium.BusinessLayer", "BumBodium.BusinessLayer\BumBodium.BusinessLayer.csproj", "{8A5880DA-93D3-4848-8069-B71C6E65618D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B9080F82-C3D5-44CD-8C32-680BE96F8154}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9080F82-C3D5-44CD-8C32-680BE96F8154}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9080F82-C3D5-44CD-8C32-680BE96F8154}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A5880DA-93D3-4848-8069-B71C6E65618D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A5880DA-93D3-4848-8069-B71C6E65618D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A5880DA-93D3-4848-8069-B71C6E65618D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A5880DA-93D3-4848-8069-B71C6E65618D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
