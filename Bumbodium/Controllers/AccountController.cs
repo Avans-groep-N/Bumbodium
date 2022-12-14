@@ -162,5 +162,17 @@ namespace Bumbodium.WebApp.Controllers
             string password = "Johnny";
             return await Index(new InputModel { Email = email, Password = password });
         }
+        public async Task<IActionResult> DebugEmployee15Login()
+        {
+            string email = "Bliksem@martijnshamster.nl";
+            string password = "Bliksem";
+            return await Index(new InputModel { Email = email, Password = password });
+        }
+        public async Task<IActionResult> DebugEmployee17Login()
+        {
+            string email = "Lobbus@kjell.nl";
+            string password = "Lobbus";
+            return await Index(new InputModel { Email = email, Password = password });
+        }
     }
 }

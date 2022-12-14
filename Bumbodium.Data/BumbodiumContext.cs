@@ -311,20 +311,20 @@ namespace Bumbodium.Data
                                 EmployeeID = "5782d108-8865-40f8-b3b7-ced82309983f",
                                 FirstName = "Bliksem",
                                 LastName = "Snel",
-                                Birthdate = new DateTime(2021, 10, 09),
+                                Birthdate = new DateTime(2007, 10, 09),
                                 PhoneNumber = "+31 snel",
                                 Email = "Bliksem@martijnshamster.nl",
-                                DateInService = new DateTime(2022, 05, 12),
+                                DateInService = new DateTime(2009, 05, 12),
                                 Type = TypeStaff.Employee
                             },
                 new Employee {
                                 EmployeeID = "5989a56b-4d00-4213-9b73-34f80701836b",
                                 FirstName = "Lobbus",
                                 LastName = "Good boy",
-                                Birthdate = new DateTime(2018, 10, 09),
+                                Birthdate = new DateTime(2005, 10, 09),
                                 PhoneNumber = "+31 1684867685",
                                 Email = "Lobbus@kjell.nl",
-                                DateInService = new DateTime(2022, 05, 12),
+                                DateInService = new DateTime(2009, 05, 12),
                                 Type = TypeStaff.Employee
                             },
                 new Employee {
