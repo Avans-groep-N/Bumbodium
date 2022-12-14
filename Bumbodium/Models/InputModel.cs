@@ -28,7 +28,7 @@ namespace Bumbodium.WebApp.Models
 
         [Required]
         [DataType(DataType.Date)]
-        [ValidateAgeAttribute(15, 67)]
+        [ValidateAgeAttribute()]
         public DateTime Birthday { get; set; }
 
         [Required]
@@ -37,7 +37,7 @@ namespace Bumbodium.WebApp.Models
 
         [Required]
         [DataType(DataType.Date)]
-        [ValidateDateInServiceAttribute(2000)]
+        [ValidateDateInServiceAttribute()]
         public DateTime DateInService { get; set; }
 
     }

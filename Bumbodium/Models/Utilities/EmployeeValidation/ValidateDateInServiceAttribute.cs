@@ -11,12 +11,7 @@ namespace Bumbodium.Data.Utilities.EmployeeValidation
     public class ValidateDateInServiceAttribute : ValidationAttribute
     {
 
-        private readonly int _minStartingYear;
-
-        public ValidateDateInServiceAttribute(int minStartingYear)
-        {
-            _minStartingYear = minStartingYear;
-        }
+        private static readonly int _minStartingYear = 2000;
 
         public override bool IsValid(object? value)
         {
