@@ -1,6 +1,8 @@
-﻿namespace BumBodium.BusinessLayer.BLStandards
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BumBodium.BusinessLayer.BLStandards
 {
-    public class StandardsValidation
+    internal class StandardsValidation : ValidationAttribute
     {
     }
 }
