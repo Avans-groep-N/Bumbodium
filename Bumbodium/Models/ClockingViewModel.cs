@@ -3,10 +3,10 @@
     public class ClockingViewModel
     {
 
-        public List<ClockingItemViewModel> ClockingItems { get; set; }
+        public List<ClockingDayViewModel> ClockingDays { get; set; }
         public ClockingViewModel()
         {
-            ClockingItems = new List<ClockingItemViewModel>();
+            ClockingDays = new List<ClockingDayViewModel>();
         }
 
         public string EmployeeName { get; set; }

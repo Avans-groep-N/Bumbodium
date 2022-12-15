@@ -16,20 +16,31 @@
     <div class="col"><strong>Kloktijden</strong></div>
     <div class="col"><strong>Roostertijden</strong></div>
 </div>
-@foreach (var item in Model.ClockingItems)
+
+@foreach (var day in Model.ClockingDays)
 {
 
     <div class="row">
-        <div class="col">@item.ClockStartTime</div>
-        <div class="col">@item.ScheduleStartTime</div>
-    </div>
-    <div class="row">
-        <div class="col">@item.ClockEndTime</div>
-        <div class="col">@item.ScheduleEndTime</div>
-    </div>
+        @foreach (var shift in day.ClockingItems)
+        {
 
+            <div class="row">
+                <div class="col">@shift.ClockStartTime</div>
+                <div class="col">@shift.ScheduleStartTime</div>
+            </div>
+            <div class="row">
+                <div class="col">@shift.ClockEndTime</div>
+                <div class="col">@shift.ScheduleEndTime</div>
+            </div>
+ 
+        }
+    </div>
     <br />
 
 }
+
+
+
+
 
 
