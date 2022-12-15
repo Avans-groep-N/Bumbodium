@@ -1,4 +1,5 @@
 ﻿using Bumbodium.Data.DBModels;
+using Bumbodium.WebApp.Models.BusinessLayer;
 using Microsoft.Build.Framework;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,7 +7,7 @@ namespace Bumbodium.WebApp.Models
 {
     public class ShiftViewModel
     {
-        [Range(typeof(DateTime), "01/01/0000", "01/01/5000", ErrorMessage = "cannot be added in the past")]
+        [ScheduleApproval]
         public DateTime ShiftStartDateTime { get; set; }
     }
 }

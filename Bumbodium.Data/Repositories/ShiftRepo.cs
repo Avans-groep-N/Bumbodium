@@ -10,12 +10,16 @@ namespace Bumbodium.Data
 {
     public class ShiftRepo : IShiftRepo
     {
+        private BumbodiumContext _ctx;
         private readonly ISqlDataAccess _db;
         public ShiftRepo(ISqlDataAccess db)
         {
             _db = db;
         }
-
+        public ShiftRepo(BumbodiumContext ctx)
+        {
+            _ctx = ctx;
+        }
         public Task<List<Shift>> GetShiftsInRange(DateTime start, DateTime end)
         {
             string sql = "select * from dbo.Shift " + 
@@ -36,6 +40,8 @@ namespace Bumbodium.Data
             string sql = @"delete from dbo.Shift where ShiftId = @ShiftId";
 
             return _db.SaveData(sql, Shift);
+
+
         }
 
         public Task UpdateShift(Shift Shift)
