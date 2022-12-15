@@ -1,79 +1,35 @@
-﻿<div class="container">
+﻿@model ClockingViewModel
 
-    <div class="col">
+<div class="row">
+    <div class="col">Gijs van der Velden</div>
+</div>
 
-        <div class="row">
-            <strong>week: 01-01-2023 / 07-01-2023</strong>
-        </div>
-        <div class="row">
-        </div>
+<br />
 
-        <div class="row">
-            <div class="col">
-                
-                <h3>Kloktijden</h3>
+<div class="row">
+    <div class="col">Week: @Model.WeekNumber</div>
+</div>
 
-                <div class="row">
-                    <strong>02-01-2022</strong>
-                    <p>ingeklokt om 12:54<br>uitgeklokt om 18:12</p>
-                </div>
+<br />
 
-                <div class="row">
-                    <strong>03-01-2022</strong>
-                    <p>ingeklokt om 12:57<br>uitgeklokt om 19:00</p>
-                </div>
-                
-                <div class="row">
-                    <strong>03-01-2022</strong>
-                    <p>ingeklokt om 12:57<br>uitgeklokt om 19:00</p>
-                </div>
+<div class="row">
+    <div class="col"><strong>Kloktijden</strong></div>
+    <div class="col"><strong>Roostertijden</strong></div>
+</div>
+@foreach (var item in Model.ClockingItems)
+{
 
-                <div class="row">
-                    <strong>03-01-2022</strong>
-                    <p>ingeklokt om 12:57<br>uitgeklokt om 19:00</p>
-                </div>
-
-                <div class="row">
-                    <strong>03-01-2022</strong>
-                    <p>ingeklokt om 12:57<br>uitgeklokt om 19:00</p>
-                </div>
-
-            </div>
-
-            <div class="col">
-
-                <h3>Roostertijden</h3>
-
-                <div class="row">
-                    <strong>02-01-2022</strong>
-                    <p>van 13:00<br>tot 18:00</p>
-                </div>
-
-                <div class="row">
-                    <strong>03-01-2022</strong>
-                    <p>van 13:00<br>tot 18:00</p>
-                </div>
-
-                <div class="row">
-                    <strong>03-01-2022</strong>
-                    <p>van 13:00<br>tot 18:00</p>
-                </div>
-
-                <div class="row">
-                    <strong>03-01-2022</strong>
-                    <p>van 13:00<br>tot 18:00</p>
-                </div>
-
-                <div class="row">
-                    <strong>03-01-2022</strong>
-                    <p>van 13:00<br>tot 18:00</p>
-                </div>
-
-            </div>
-
-        </div>
-
+    <div class="row">
+        <div class="col">@item.ClockStartTime</div>
+        <div class="col">@item.ScheduleStartTime</div>
+    </div>
+    <div class="row">
+        <div class="col">@item.ClockEndTime</div>
+        <div class="col">@item.ScheduleEndTime</div>
     </div>
 
-</div>
+    <br />
+
+}
+
 
