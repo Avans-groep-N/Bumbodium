@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddScoped<ForecastRepo>();
 builder.Services.AddScoped<DepartmentRepo>();
 builder.Services.AddScoped<StandardsRepo>();
+
+builder.Services.AddScoped<BLExcelExport>();
 
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddTransient<IAvailablityRepo, AvailabilityRepo>();

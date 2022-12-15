@@ -1,0 +1,50 @@
+﻿@model ExcelExportEmployeesHours
+
+
+<h1>Excel export werknemers uren</h1>
+
+<h2>@Model.Year - @Model.WeekNr</h2>
+
+<div class="col-md-12">
+
+    <div class="card-header">
+        <h3 class="card-title">Download Excel</h3>
+    </div>
+    <form autocomplete="off" asp-controller="ExcelExport" asp-antiforgery="true" asp-action="DownloadExcel" method="post">
+        <div class="card-body register-card-body">
+            <div class="form-row">
+                <button type="submit" value="@Model"id="btnsubmit" class="btn btn-success">Export to Excel</button>
+            </div>
+
+        </div>
+        <div class="card-footer">
+        </div>
+    </form>
+
+</div>
+
+
+
+<table class="table table-striped text-center table-responsive">
+    <thead>
+        <tr>
+            <th class="row-cols-md-4">BID</th>
+            <th class="row-cols-md-4">Naam</th>
+            <th class="row-cols-md-4">Uren</th>
+            <th class="row-cols-md-4">Toeslag</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.EmployeeHours)
+        {
+            <tr>
+                <td>@item.EmployeeId</td>
+                <td>@item.EmployeeName</td>
+                <td>@item.WorkedHours</td>
+                <td>@item.SurchargeRate %</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
