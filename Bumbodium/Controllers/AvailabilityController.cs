@@ -1,20 +1,16 @@
 ﻿using Bumbodium.Data.DBModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbodium.WebApp.Controllers
 {
+    [Authorize(Roles = "Employee")]
     public class AvailabilityController : Controller
     {
         // GET: AvailabilityController
         public ActionResult Index()
         {
-            var Availability = new Availability[] { 
-                new Availability() {
-                StartDateTime = DateTime.Now,
-                EndDateTime = DateTime.Now.AddHours(1),
-                Type = AvailabilityType.Schoolhours} 
-            };
-            return View(Availability);
+            return View();
         }
     }
 }

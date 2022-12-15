@@ -48,6 +48,29 @@
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
+            <div class="col-form-label-lg">
+                <label asp-for="TypeStaff"></label>
+                <input asp-for="TypeStaff" class="form-control" />
+                <span asp-validation-for="TypeStaff" class="text-danger"></span>
+            </div>
+            @{
+                    int cnt = 0;
+                    
+                    foreach (var department in Model.DepartmentList)
+                    {
+                        if (cnt++ % 3 == 0)
+                        {
+                        @:</div><div class="row">
+                        }
+                        @:<div class="col-4">
+                            <input type="checkbox" 
+                                   name="ActiveDepartmentIds"
+                                   value="@department.Id" />
+                                   @: @department.Name
+                        @:</div>
+                    }
+                @:</div>
+                }
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>

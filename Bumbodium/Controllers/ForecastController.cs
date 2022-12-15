@@ -4,9 +4,12 @@ using Bumbodium.WebApp.Models;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Repositories;
 using Bumbodium.Data;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Bumbodium.WebApp.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class ForecastController : Controller
     {
         private readonly ForecastRepo _forecastRepo;
