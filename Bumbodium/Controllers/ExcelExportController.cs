@@ -18,12 +18,12 @@ namespace Bumbodium.WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View(_bLExcelExport.GetEmployeesHours(2022,52));
+            return View(_bLExcelExport.GetEmployeesHours(2022,50));
         }
 
-        public ActionResult DownloadExcel(ExcelExportEmployeesHours b)
+        public ActionResult DownloadExcel(ExcelExportEmployeesHours employeesHours)
         {
-            var data = _bLExcelExport.GetEmployeesHours(2022, 52);
+            var data = _bLExcelExport.GetEmployeesHours(employeesHours.Year, employeesHours.WeekNr);
 
 
             var stream = new MemoryStream();

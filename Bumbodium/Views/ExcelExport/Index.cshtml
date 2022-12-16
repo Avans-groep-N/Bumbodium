@@ -3,23 +3,22 @@
 
 <h1>Excel export werknemers uren</h1>
 
-<h2>@Model.Year - @Model.WeekNr</h2>
+<h2>Jaar: @Model.Year en week nummer: @Model.WeekNr</h2>
 
 <div class="col-md-12">
 
     <div class="card-header">
         <h3 class="card-title">Download Excel</h3>
     </div>
-    <form autocomplete="off" asp-controller="ExcelExport" asp-antiforgery="true" asp-action="DownloadExcel" method="post">
-        <div class="card-body register-card-body">
-            <div class="form-row">
-                <button type="submit" value="@Model"id="btnsubmit" class="btn btn-success">Export to Excel</button>
-            </div>
 
+    <div class="card-body register-card-body">
+        <div class="form-row">
+        <br/>
+            <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-success">Export to Excel</button>
         </div>
-        <div class="card-footer">
-        </div>
-    </form>
+    </div>
+    <div class="card-footer">
+    </div>
 
 </div>
 
