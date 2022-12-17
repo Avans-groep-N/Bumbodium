@@ -25,8 +25,11 @@ namespace Bumbodium.Data
         }
         public Task InsertEmployee(Employee employee)
         {
+            var isEmployee = 1;
+            if (employee.Type == TypeStaff.Manager)
+                isEmployee = 0;
             string sql = @"INSERT INTO dbo.Employee (EmployeeID, FirstName, MiddleName, LastName, Birthdate, PhoneNumber, Email, DateInService, Type) 
-                            VALUES (@EmployeeID, @FirstName, @MiddleName, @LastName, @Birthdate, @PhoneNumber, @Email, GETDATE(), 1);";
+                            VALUES (@EmployeeID, @FirstName, @MiddleName, @LastName, @Birthdate, @PhoneNumber, @Email, GETDATE(), " + isEmployee + ");";
             return _db.SaveData(sql, employee);
         }
 
