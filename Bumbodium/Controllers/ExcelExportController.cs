@@ -31,6 +31,7 @@ namespace Bumbodium.WebApp.Controllers
             int[] yearAndWeek = { Int32.Parse(week[0]), Int32.Parse(week[1]) };
 
             var workedHours = _bLExcelExport.GetEmployeesHours(yearAndWeek[0], yearAndWeek[1]);
+            //TODO look for another way to get to the view
             return View("../ExcelExport/Index", workedHours);
         }
 
