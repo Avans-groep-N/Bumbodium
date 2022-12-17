@@ -87,8 +87,8 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
                 string name = _presenceRepo.GetEmployeeName(key);
 
                 AddToWorkedHours(workedHours, hoursDict, name, key + $":{Addition0Percent}");
-                AddToWorkedHours(workedHours, hoursDict, name, key + $":{33}");
-                AddToWorkedHours(workedHours, hoursDict, name, key + $":{50}");
+                AddToWorkedHours(workedHours, hoursDict, name, key + $":{Addition33Percent}");
+                AddToWorkedHours(workedHours, hoursDict, name, key + $":{Addition50Percent}");
             }
             return workedHours;
         }

@@ -1,9 +1,25 @@
 ﻿@model Bumbodium.WebApp.Models.ExcelExport.ExcelExportEmployeesHours
 
+@{
+    string calanderVal = Model.Year + "-W" + Model.WeekNr;
+}
+
+<form asp-controller="ExcelExport" asp-action="SelectWeek" method="post">
+    <div class="mb-3">
+        <label class="form-label">select week</label>
+        <input class="form-label" type="week" name="week" id="week" value="@calanderVal" required>
+        <input type="submit" name="submit", id="submit"/>
+        @*<select class="form-select" asp-items="Model"></select>*@
+    </div>
+
+</form>
+
 
 <h1>Excel export werknemers uren</h1>
 
 <h2>Jaar: @Model.Year en week nummer: @Model.WeekNr</h2>
+
+
 
 <div class="col-md-12">
 
