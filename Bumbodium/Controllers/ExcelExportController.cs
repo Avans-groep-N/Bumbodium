@@ -1,9 +1,7 @@
-﻿using Bumbodium.WebApp.Models;
+﻿using Bumbodium.WebApp.Models.ExcelExport;
 using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
 using Microsoft.AspNetCore.Mvc;
 using Radzen.Blazor.Rendering;
-using System.Formats.Asn1;
-using System.IO;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -18,26 +16,18 @@ namespace Bumbodium.WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View(_bLExcelExport.GetEmployeesHours(2022,50));
+            var workedHours = _bLExcelExport.GetEmployeesHours(2021, 1);
+            return View(workedHours);
         }
 
         public ActionResult DownloadExcel(ExcelExportEmployeesHours employeesHours)
         {
-            var data = _bLExcelExport.GetEmployeesHours(employeesHours.Year, employeesHours.WeekNr);
+            var employeesHoursPulsList = _bLExcelExport.GetEmployeesHours(employeesHours.Year, employeesHours.WeekNr);
 
-
-            var stream = new MemoryStream();
-            using (var writeFile = new StreamWriter(stream, leaveOpen: true))
-            {
-                writeFile.WriteLine($"Yeer: {data.Year}; WeekNr: {data.WeekNr}");
-                writeFile.WriteLine($"BID;Naam;Uren;Toeslag");
-                foreach (var item in data.EmployeeHours)
-                {
-                    writeFile.WriteLine($"{item.EmployeeId};{item.EmployeeName};{item.WorkedHours};{item.SurchargeRate}%;");
-                }
-            }
-            stream.Position = 0;
-            return File(stream, "application/octet-stream", "Verloning.csv"); ;
+            var stream = _bLExcelExport.GetEmployeesHoursStream(employeesHoursPulsList);
+            return File(stream, "application/octet-stream", "Verloning.csv");
         }
+
+        
     }
 }

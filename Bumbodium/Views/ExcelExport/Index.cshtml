@@ -1,4 +1,4 @@
-﻿@model ExcelExportEmployeesHours
+﻿@model Bumbodium.WebApp.Models.ExcelExport.ExcelExportEmployeesHours
 
 
 <h1>Excel export werknemers uren</h1>
@@ -13,7 +13,7 @@
 
     <div class="card-body register-card-body">
         <div class="form-row">
-        <br/>
+            <br />
             <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-success">Export to Excel</button>
         </div>
     </div>
@@ -22,6 +22,19 @@
 
 </div>
 
+
+
+
+@*
+TODO uploading a file    
+<br />
+<form id="Form1" method="post" runat="server" EncType="multipart/form-data" action="WebForm1.aspx">
+    CSV/Excel file to upload to the server: <INPUT id="oFile" type="file" runat="server" NAME="oFile">
+    <asp:button id="btnUpload" type="submit" text="Upload" runat="server"></asp:button>
+    <asp:Panel ID="frmConfirmation" Visible="False" Runat="server">
+        <asp:Label id="lblUploadResult" Runat="server"></asp:Label>
+    </asp:Panel>
+</form>*@
 
 
 <table class="table table-striped text-center table-responsive">
