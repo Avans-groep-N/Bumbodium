@@ -16,7 +16,7 @@ namespace Bumbodium.WebApp.Controllers
 
         public IActionResult Index()
         {
-            var workedHours = _bLExcelExport.GetEmployeesHours(2021, 1);
+            var workedHours = _bLExcelExport.GetEmployeesHours(2021, 0);
             return View(workedHours);
         }
 

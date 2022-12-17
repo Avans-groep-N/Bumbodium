@@ -8,11 +8,55 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
 {
     public class BLExcelExport
     {
+        private const int Addition0Percent = 0;
+        private const int Addition33Percent = 33;
+        private const int Addition50Percent = 50;
+        private const double HourDif = 60.0;
+        private const int Hour0Mark = 0;
+        private const int Hour6Mark = 6;
+        private const int Hour20Mark = 20;
+        private const int Hour21Mark = 21;
+        private const int Hour24Mark = 24;
+
         private PresenceRepo _presenceRepo;
 
         public BLExcelExport(PresenceRepo presenceRepo)
         {
             _presenceRepo = presenceRepo;
+        }
+
+        public ExcelExportEmployeesHours GetEmployeesHours(int year, int weekNr)
+        {
+            var employeeHoursDict = GetEEEHours(year, weekNr);
+
+            var workedHoursList = FillEEEHours(employeeHoursDict);
+            var employeesHours = new ExcelExportEmployeesHours() { Year = year, WeekNr = weekNr, EmployeeHours = workedHoursList };
+
+            return employeesHours;
+        }
+
+        private Dictionary<string, EmployeeHours> GetEEEHours(int year, int weekNr)
+        {
+            var firstdayOfWeek = FirstDateOfWeekISO8601(year, weekNr);
+            var lastDayOfWeek = firstdayOfWeek.AddDays(6);
+            var allWorkedHours = _presenceRepo.GetAllWorkedHoursInRange(firstdayOfWeek, lastDayOfWeek);
+
+            var employeesHoursSurchargeRate = new Dictionary<string, EmployeeHours>();
+
+            foreach (var item in allWorkedHours)
+            {
+                var clockIn = item.ClockInDateTime;
+                var clockOut = item.ClockOutDateTime;
+
+                if (item.AlteredClockInDateTime != null)
+                    clockIn = item.AlteredClockInDateTime.GetValueOrDefault();
+
+                if (item.AlteredClockOutDateTime != null)
+                    clockOut = item.AlteredClockOutDateTime.GetValueOrDefault();
+
+                FillHours(employeesHoursSurchargeRate, item.EmployeeId, clockIn, clockOut);
+            }
+            return employeesHoursSurchargeRate;
         }
 
         public MemoryStream GetEmployeesHoursStream(ExcelExportEmployeesHours employeesHours)
@@ -31,15 +75,6 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
 
             return stream;
         }
-        public ExcelExportEmployeesHours GetEmployeesHours(int year, int weekNr)
-        {
-            var hoursDict = GetEEEHours(year, weekNr);
-
-            var workedHoursList = FillEEEHours(hoursDict);
-            var emmployeesHours = new ExcelExportEmployeesHours() { Year = year, WeekNr = weekNr, EmployeeHours = workedHoursList };
-
-            return emmployeesHours;
-        }
 
         private List<CSVRowEmployee> FillEEEHours(Dictionary<string, EmployeeHours> hoursDict)
         {
@@ -48,10 +83,10 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
             foreach (var employeeIDkey in hoursDict.Keys)
             {
                 var key = hoursDict[employeeIDkey].EmployeeId;
-
+                //TODO this has to by the EmployeeRepo
                 string name = _presenceRepo.GetEmployeeName(key);
 
-                AddToWorkedHours(workedHours, hoursDict, name, key + $":{0}");
+                AddToWorkedHours(workedHours, hoursDict, name, key + $":{Addition0Percent}");
                 AddToWorkedHours(workedHours, hoursDict, name, key + $":{33}");
                 AddToWorkedHours(workedHours, hoursDict, name, key + $":{50}");
             }
@@ -73,163 +108,71 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
             }
         }
 
-        private Dictionary<string, EmployeeHours> GetEEEHours(int year, int weekNr)
-        {
-            //var workedHoursList = new List<CSVRowEmployeeHours>();
-            #region
-            /*workedHoursList.Add(new ExcelItemEmployeeHours()
-            {
-                EmployeeId = "bd18f87f-7340-44a1-a739-97e67b8a4226",
-                EmployeeName = "Maarten-Jan Kempernaar",
-                WorkedHours = (30 + 30.0/ 60.0),
-                SurchargeRate = 0
-            });
-            workedHoursList.Add(new ExcelItemEmployeeHours()
-            {
-                EmployeeId = "bd18f87f-7340-44a1-a739-97e67b8a4226",
-                EmployeeName = "Maarten-Jan Kempernaar",
-                WorkedHours = 4,
-                SurchargeRate = 33
-            });
-            workedHoursList.Add(new ExcelItemEmployeeHours()
-            {
-                EmployeeId = "bd18f87f-7340-44a1-a739-97e67b8a4226",
-                EmployeeName = "Maarten-Jan Kempernaar",
-                WorkedHours = (2 + (30.0 / 60.0)),
-                SurchargeRate = 50
-            });
-            workedHoursList.Add(new ExcelItemEmployeeHours()
-            {
-                EmployeeId = "4dc43714-5c7c-440a-9954-a696256013c2",
-                EmployeeName = "Noa Veenboer",
-                WorkedHours = 30,
-                SurchargeRate = 0
-            });
-            workedHoursList.Add(new ExcelItemEmployeeHours()
-            {
-                EmployeeId = "4dc43714-5c7c-440a-9954-a696256013c2",
-                EmployeeName = "Noa Veenboer",
-                WorkedHours = 4 + 45.0 / 60.0,
-                SurchargeRate = 33
-            });
-            workedHoursList.Add(new ExcelItemEmployeeHours()
-            {
-                EmployeeId = "4dc43714-5c7c-440a-9954-a696256013c2",
-                EmployeeName = "Noa Veenboer",
-                WorkedHours = 2,
-                SurchargeRate = 50
-            });
-            workedHoursList.Add(new ExcelItemEmployeeHours()
-            {
-                EmployeeId = "db4fc362-868e-4bd0-9269-00cb17231a07",
-                EmployeeName = "Gerry van Herk",
-                WorkedHours = 30,
-                SurchargeRate = 0
-            });
-            workedHoursList.Add(new ExcelItemEmployeeHours()
-            {
-                EmployeeId = "db4fc362-868e-4bd0-9269-00cb17231a07",
-                EmployeeName = "Gerry van Herk",
-                WorkedHours = 4,
-                SurchargeRate = 33
-            });
-            workedHoursList.Add(new ExcelItemEmployeeHours()
-            {
-                EmployeeId = "db4fc362-868e-4bd0-9269-00cb17231a07",
-                EmployeeName = "Gerry van Herk",
-                WorkedHours = 2,
-                SurchargeRate = 50
-            });*/
-            #endregion
-
-            var firstdayOfWeek = FirstDateOfWeekISO8601(year, weekNr).AddDays(-3);
-            var lastDayOfWeek = firstdayOfWeek.AddDays(7);
-            var allWorkedHours = _presenceRepo.GetAllWorkedHoursInRange(firstdayOfWeek, lastDayOfWeek);
-
-            var employeesHoursAndSurchargeRate = new Dictionary<string, EmployeeHours>();
-
-            foreach (var item in allWorkedHours)
-            {
-                var clockIn = item.ClockInDateTime;
-                var clockOut = item.ClockOutDateTime;
-
-                if (item.AlteredClockInDateTime != null)
-                    clockIn = item.AlteredClockInDateTime.GetValueOrDefault();
-
-                if (item.AlteredClockOutDateTime != null)
-                    clockOut = item.AlteredClockOutDateTime.GetValueOrDefault();
-
-                FillHours(employeesHoursAndSurchargeRate, item.EmployeeId, clockIn, clockOut);
-            }
-            return employeesHoursAndSurchargeRate;
-        }
-
         private void FillHours(Dictionary<string, EmployeeHours> workedHoursDict, string employeeId, DateTime clockIn, DateTime clockOut)
         {
-            if (clockIn.Hour < 6)
+            if (clockIn.Hour < Hour6Mark)
             {
-                var morningShift = new DateTime(clockIn.Year, clockIn.Month, clockIn.Day, 6, 0, 0).Subtract(clockIn);
-                if (workedHoursDict.ContainsKey($"{employeeId}:{50}"))
-                    workedHoursDict[$"{employeeId}:{50}"].WorkedHours += morningShift.Hours + (morningShift.Minutes / 60.0);
+                var morningShift = new DateTime(clockIn.Year, clockIn.Month, clockIn.Day, Hour6Mark, 0, 0).Subtract(clockIn);
+                if (workedHoursDict.ContainsKey($"{employeeId}:{Addition50Percent}"))
+                    workedHoursDict[$"{employeeId}:{Addition50Percent}"].WorkedHours += morningShift.Hours + (morningShift.Minutes / HourDif);
                 else
-                    workedHoursDict.Add($"{employeeId}:{50}", new EmployeeHours()
+                    workedHoursDict.Add($"{employeeId}:{Addition50Percent}", new EmployeeHours()
                     {
                         EmployeeId = employeeId,
-                        WorkedHours = morningShift.Hours + (morningShift.Minutes / 60.0),
-                        SurchargeRate = 50
+                        WorkedHours = morningShift.Hours + (morningShift.Minutes / HourDif),
+                        SurchargeRate = Addition50Percent
                     });
-                clockIn = new DateTime(clockIn.Year, clockIn.Month, clockIn.Day, 6, clockIn.Minute, clockIn.Second);
+                clockIn = new DateTime(clockIn.Year, clockIn.Month, clockIn.Day, Hour6Mark, clockIn.Minute, clockIn.Second);
             }
-
-            if (6 <= clockIn.Hour && clockIn.Hour <= 20)
+            if (Hour6Mark <= clockIn.Hour && clockIn.Hour <= Hour20Mark)
             {
                 var endTime = clockOut;
-                if (20 < clockOut.Hour)
-                    endTime = new DateTime(clockOut.Year, clockOut.Month, clockOut.Day, 20, 0, 0);
+                if (Hour20Mark < clockOut.Hour)
+                    endTime = new DateTime(clockOut.Year, clockOut.Month, clockOut.Day, Hour20Mark, 0, 0);
 
                 var workedHours = endTime.Subtract(clockIn);
-                if (workedHoursDict.ContainsKey($"{employeeId}:{0}"))
-                    workedHoursDict[$"{employeeId}:{0}"].WorkedHours += workedHours.Hours + (workedHours.Minutes / 60.0);
+                if (workedHoursDict.ContainsKey($"{employeeId}:{Addition0Percent}"))
+                    workedHoursDict[$"{employeeId}:{Addition0Percent}"].WorkedHours += workedHours.Hours + (workedHours.Minutes / HourDif);
                 else
-                    workedHoursDict.Add($"{employeeId}:{0}", new EmployeeHours()
+                    workedHoursDict.Add($"{employeeId}:{Addition0Percent}", new EmployeeHours()
                     {
                         EmployeeId = employeeId,
-                        WorkedHours = workedHours.Hours + (workedHours.Minutes / 60.0),
-                        SurchargeRate = 0
+                        WorkedHours = workedHours.Hours + (workedHours.Minutes / HourDif),
+                        SurchargeRate = Addition0Percent
                     });
             }
+            if (clockIn.Hour < Hour20Mark && Hour20Mark <= clockOut.Hour)
+            {
+                var endTime = clockOut;
+                if (Hour20Mark < clockOut.Hour)
+                    endTime = new DateTime(clockOut.Year, clockOut.Month, clockOut.Day, Hour21Mark, 0, 0);
 
-            if (clockIn.Hour < 20 && 21 <= clockOut.Hour)
-            {
-                var eveningShift = clockOut.AddHours(-20);
-                if (workedHoursDict.ContainsKey($"{employeeId}:{33}"))
-                    workedHoursDict[$"{employeeId}:{33}"].WorkedHours += eveningShift.Hour + (eveningShift.Minute / 60.0);
+                var eveningShift = endTime.AddHours(-Hour20Mark);
+                if (workedHoursDict.ContainsKey($"{employeeId}:{Addition33Percent}"))
+                    workedHoursDict[$"{employeeId}:{Addition33Percent}"].WorkedHours += eveningShift.Hour + (eveningShift.Minute / HourDif);
                 else
-                    workedHoursDict.Add($"{employeeId}:{33}", new EmployeeHours()
+                    workedHoursDict.Add($"{employeeId}:{Addition33Percent}", new EmployeeHours()
                     {
                         EmployeeId = employeeId,
-                        WorkedHours = eveningShift.Hour + (eveningShift.Minute / 60.0),
-                        SurchargeRate = 33
+                        WorkedHours = eveningShift.Hour + (eveningShift.Minute / HourDif),
+                        SurchargeRate = Addition33Percent
                     });
-                //clockIn = new DateTime(clockIn.Year, clockIn.Month, clockIn.Day, 21,0,0);
+                clockIn = new DateTime(clockIn.Year, clockIn.Month, clockIn.Day, Hour21Mark, clockIn.Minute, clockIn.Second);
             }
-            if (21 < clockOut.Hour)
+            if (Hour21Mark < clockOut.Hour + (clockOut.Minute / HourDif))
             {
-                var eveningShift = clockOut.AddHours(-21);
-                if (workedHoursDict.ContainsKey($"{employeeId}:{50}"))
-                    workedHoursDict[$"{employeeId}:{50}"].WorkedHours += eveningShift.Hour + (eveningShift.Minute / 60.0);
+                var eveningShift = clockOut.AddHours(-Hour21Mark);
+                if (workedHoursDict.ContainsKey($"{employeeId}:{Addition50Percent}"))
+                    workedHoursDict[$"{employeeId}:{Addition50Percent}"].WorkedHours += eveningShift.Hour + (eveningShift.Minute / HourDif);
                 else
-                    workedHoursDict.Add($"{employeeId}:{50}", new EmployeeHours()
+                    workedHoursDict.Add($"{employeeId}:{Addition50Percent}", new EmployeeHours()
                     {
                         EmployeeId = employeeId,
-                        WorkedHours = eveningShift.Hour + (eveningShift.Minute / 60.0),
-                        SurchargeRate = 50
+                        WorkedHours = eveningShift.Hour + (eveningShift.Minute / HourDif),
+                        SurchargeRate = Addition50Percent
                     });
             }
         }
-
-
-
 
         //TODO make this a separate class
         public DateTime FirstDateOfWeekISO8601(int year, int weekOfYear)
