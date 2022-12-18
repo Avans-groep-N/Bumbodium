@@ -1,6 +1,7 @@
 ﻿using Bumbodium.Data.Utilities.EmployeeValidation;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Bumbodium.Data.DBModels;
 
 namespace Bumbodium.WebApp.Models
 {
@@ -39,6 +40,11 @@ namespace Bumbodium.WebApp.Models
         [DataType(DataType.Date)]
         [ValidateDateInServiceAttribute()]
         public DateTime DateInService { get; set; }
+        public Bumbodium.Data.DBModels.TypeStaff TypeStaff { get; set; }
 
+        //List for displaying departments
+        public IEnumerable<Department>? DepartmentList { get; set; }
+        [Required]
+        public List<int> ActiveDepartmentIds { get; set; }
     }
 }
