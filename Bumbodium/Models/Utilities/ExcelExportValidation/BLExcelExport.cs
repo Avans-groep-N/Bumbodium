@@ -68,7 +68,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
             var stream = new MemoryStream();
             using (var writeFile = new StreamWriter(stream, leaveOpen: true))
             {
-                writeFile.WriteLine($"Yeer: {employeesHours.Year}; WeekNr: {employeesHours.WeekNr}");
+                writeFile.WriteLine($"Year: {employeesHours.Year}; WeekNr: {employeesHours.WeekNr}");
                 writeFile.WriteLine($"BID;Naam;Uren;Toeslag");
                 foreach (var item in employeesHours.EmployeeHours)
                 {
