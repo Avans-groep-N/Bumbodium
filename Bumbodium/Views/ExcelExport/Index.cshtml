@@ -4,22 +4,8 @@
     string calanderVal = Model.Year + "-W" + Model.WeekNr;
 }
 
-<form asp-controller="ExcelExport" asp-action="SelectWeek" method="post">
-    <div class="mb-3">
-        <label class="form-label">select week</label>
-        <input class="form-label" type="week" name="week" id="week" value="@calanderVal" required>
-        <input type="submit" name="submit", id="submit"/>
-        @*<select class="form-select" asp-items="Model"></select>*@
-    </div>
-
-</form>
-
 
 <h1>Excel export werknemers uren</h1>
-
-<h2>Jaar: @Model.Year en week nummer: @Model.WeekNr</h2>
-
-
 
 <div class="col-md-12">
 
@@ -38,20 +24,16 @@
 
 </div>
 
-
-
-
-@*
-TODO uploading a file    
 <br />
-<form id="Form1" method="post" runat="server" EncType="multipart/form-data" action="WebForm1.aspx">
-    CSV/Excel file to upload to the server: <INPUT id="oFile" type="file" runat="server" NAME="oFile">
-    <asp:button id="btnUpload" type="submit" text="Upload" runat="server"></asp:button>
-    <asp:Panel ID="frmConfirmation" Visible="False" Runat="server">
-        <asp:Label id="lblUploadResult" Runat="server"></asp:Label>
-    </asp:Panel>
-</form>*@
 
+<form asp-controller="ExcelExport" asp-action="SelectWeek" method="post">
+    <div class="mb-3">
+        <label class="form-label">select week</label>
+        <input class="form-label" type="week" name="week" id="week" value="@calanderVal" required>
+        <input type="submit" name="submit" , id="submit" />
+    </div>
+
+</form>
 
 <table class="table table-striped text-center table-responsive">
     <thead>
