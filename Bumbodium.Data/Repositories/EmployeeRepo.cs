@@ -26,7 +26,7 @@ namespace Bumbodium.Data
         public Task InsertEmployee(Employee employee)
         {
             string sql = @"INSERT INTO dbo.Employee (EmployeeID, FirstName, MiddleName, LastName, Birthdate, PhoneNumber, Email, DateInService, Type) 
-                            VALUES (@EmployeeID, @FirstName, @MiddleName, @LastName, @Birthdate, @PhoneNumber, @Email, GETDATE(), @Type);";
+                            VALUES (@EmployeeID, @FirstName, @MiddleName, @LastName, @Birthdate, @PhoneNumber, @Email, @DateInService, @Type);";
             return _db.SaveData(sql, employee);
         }
 

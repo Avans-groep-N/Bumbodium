@@ -73,6 +73,7 @@ namespace Bumbodium.Data.DBModels
                 return age;
             }
         }
+
     }
 
     public enum TypeStaff
