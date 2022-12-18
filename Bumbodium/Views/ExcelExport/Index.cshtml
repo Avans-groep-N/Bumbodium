@@ -1,0 +1,60 @@
+﻿@model Bumbodium.WebApp.Models.ExcelExport.ExcelExportEmployeesHours
+
+@{
+    string calanderVal = Model.Year + "-W" + Model.WeekNr;
+}
+
+
+<h1>Excel export werknemers uren</h1>
+
+<div class="col-md-12">
+
+    <div class="card-header">
+        <h3 class="card-title">Download Excel</h3>
+    </div>
+
+    <div class="card-body register-card-body">
+        <div class="form-row">
+            <br />
+            <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-success">Export to Excel</button>
+        </div>
+    </div>
+    <div class="card-footer">
+    </div>
+
+</div>
+
+<br />
+
+<form asp-controller="ExcelExport" asp-action="SelectWeek" method="post">
+    <div class="mb-3">
+        <label class="form-label">select week</label>
+        <input class="form-label" type="week" name="week" id="week" value="@calanderVal" required>
+        <input type="submit" name="submit" , id="submit" />
+    </div>
+
+</form>
+
+<table class="table table-striped text-center table-responsive">
+    <thead>
+        <tr>
+            <th class="row-cols-md-4">BID</th>
+            <th class="row-cols-md-4">Naam</th>
+            <th class="row-cols-md-4">Uren</th>
+            <th class="row-cols-md-4">Toeslag</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.EmployeeHours)
+        {
+            <tr>
+                <td>@item.EmployeeId</td>
+                <td>@item.EmployeeName</td>
+                <td>@item.WorkedHours</td>
+                <td>@item.SurchargeRate %</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
