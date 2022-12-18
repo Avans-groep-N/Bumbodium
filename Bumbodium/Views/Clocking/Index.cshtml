@@ -2,26 +2,26 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="row">
-    <div class="col">Gijs van der Velden</div>
+    <div class="col" style="padding: 5px;">Gijs van der Velden</div>
 </div>
 
 <br />
 
 <div class="row">
-    <div class="col">Week: @Model.WeekNumber</div>
+    <div class="col" style="padding: 5px;">Week: @Model.WeekNumber</div>
 </div>
 
 <br />
 
 <div class="row">
-    <div class="col"><strong>Kloktijden</strong></div>
-    <div class="col"><strong>Roostertijden</strong></div>
+    <div class="col" style="padding: 5px;"><strong>Kloktijden</strong></div>
+    <div class="col" style="padding: 5px;"><strong>Roostertijden</strong></div>
 </div>
 
 @foreach (var day in Model.ClockingDays)
 {
 
-    <div class="row">
+    <div class="row" style="background-color:cornflowerblue; color: white; padding: 15px;">
         @foreach (var shift in day.ClockingItems)
         {
 
@@ -29,13 +29,21 @@
                 <div class="col">
                     @if (shift.IsChanged)
                     {
-                       @shift.ClockStartTime<i class="fa fa-user-o" aria-hidden="true"></i>
-                    } else if (shift.IsOnGoing) {
-                        @shift.ClockStartTime<i class="fa fa-clock-o" aria-hidden="true"></i>
-                    } else {
+                        @shift.ClockStartTime
+
+                        <i class="fa fa-user-o" aria-hidden="true" style="padding-left: 5px"></i>
+                    }
+                    else if (shift.IsOnGoing)
+                    {
+                        @shift.ClockStartTime
+
+                        <i class="fa fa-clock-o" aria-hidden="true" style="padding-left: 5px"></i>
+                    }
+                    else
+                    {
                         @shift.ClockStartTime
                     }
-                 
+
                 </div>
                 <div class="col">@shift.ScheduleStartTime</div>
             </div>
@@ -43,11 +51,15 @@
                 <div class="col">
                     @if (shift.IsChanged)
                     {
-                        @shift.ClockEndTime<i class="fa fa-user-o" aria-hidden="true"></i>
-                    } else {
+                        @shift.ClockEndTime
+
+                        <i class="fa fa-user-o" aria-hidden="true" style="padding-left: 5px"></i>
+                    }
+                    else
+                    {
                         @shift.ClockEndTime
                     }
-                   
+
                 </div>
                 <div class="col">@shift.ScheduleEndTime</div>
             </div>
