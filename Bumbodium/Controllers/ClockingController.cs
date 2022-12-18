@@ -38,7 +38,7 @@ namespace Bumbodium.WebApp.Controllers
             {
                 ClockStartTime = new DateTime(2022, 12, 5, 12, 51, 0),
                 ClockEndTime = new DateTime(2022, 12, 5, 15, 04, 0),
-                IsChanged = false,
+                IsChanged = true,
                 IsOnGoing = false,
                 ScheduleStartTime = new DateTime(2022, 12, 5, 12, 00, 0),
                 ScheduleEndTime = new DateTime(2022, 12, 5, 15, 00, 0)
@@ -48,9 +48,10 @@ namespace Bumbodium.WebApp.Controllers
             clockingThirdDayViewModel.ClockingItems.Add(new ClockingItemViewModel()
             {
                 ClockStartTime = new DateTime(2022, 12, 5, 17, 53, 0),
-                ClockEndTime =  new DateTime(2022, 12, 5, 21, 13, 0),
+                /*ClockEndTime =  new DateTime(2022, 12, 5, 21, 13, 0),*/
+                ClockEndTime = null,
                 IsChanged = false,
-                IsOnGoing = false,
+                IsOnGoing = true,
                 ScheduleStartTime = new DateTime(2022, 12, 5, 18, 00, 0),
                 ScheduleEndTime = new DateTime(2022, 12, 5, 21, 00, 0)
             });

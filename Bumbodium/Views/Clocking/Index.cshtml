@@ -1,5 +1,6 @@
 ﻿@model ClockingViewModel
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="row">
     <div class="col">Gijs van der Velden</div>
 </div>
@@ -25,14 +26,32 @@
         {
 
             <div class="row">
-                <div class="col">@shift.ClockStartTime</div>
+                <div class="col">
+                    @if (shift.IsChanged)
+                    {
+                       @shift.ClockStartTime<i class="fa fa-user-o" aria-hidden="true"></i>
+                    } else if (shift.IsOnGoing) {
+                        @shift.ClockStartTime<i class="fa fa-clock-o" aria-hidden="true"></i>
+                    } else {
+                        @shift.ClockStartTime
+                    }
+                 
+                </div>
                 <div class="col">@shift.ScheduleStartTime</div>
             </div>
             <div class="row">
-                <div class="col">@shift.ClockEndTime</div>
+                <div class="col">
+                    @if (shift.IsChanged)
+                    {
+                        @shift.ClockEndTime<i class="fa fa-user-o" aria-hidden="true"></i>
+                    } else {
+                        @shift.ClockEndTime
+                    }
+                   
+                </div>
                 <div class="col">@shift.ScheduleEndTime</div>
             </div>
- 
+
         }
     </div>
     <br />
