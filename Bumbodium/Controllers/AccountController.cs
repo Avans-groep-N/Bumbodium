@@ -68,7 +68,7 @@ namespace Bumbodium.WebApp.Controllers
                         Birthdate = input.Birthday,
                         PhoneNumber = input.PhoneNumber,
                         Email = user.Email,
-                        DateInService = input.DateInService});    
+                        DateInService = input.DateInService,    
                         Type = input.TypeStaff
                     }) ;
 
