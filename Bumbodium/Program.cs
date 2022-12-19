@@ -28,8 +28,7 @@ builder.Services.AddScoped<PresenceRepo>();
 
 builder.Services.AddScoped<BLExcelExport>();
 
-builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
-builder.Services.AddTransient<IAvailablityRepo, AvailabilityRepo>();
+builder.Services.AddTransient<IAvailabilityRepo, AvailabilityRepo>();
 builder.Services.AddTransient<IShiftRepo, ShiftRepo>();
 
 builder.Services.AddDbContext<BumbodiumContext>(options =>
