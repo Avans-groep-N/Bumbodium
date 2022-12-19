@@ -11,31 +11,25 @@ namespace Bumbodium.Data
 {
     public class EmployeeRepo : IEmployeeRepo
     {
-        private readonly ISqlDataAccess _db;
-        public EmployeeRepo(ISqlDataAccess db)
+        private BumbodiumContext _ctx;
+
+        public EmployeeRepo(BumbodiumContext ctx)
         {
-            _db = db;
+            _ctx = ctx;
         }
-        public Task<List<Employee>> GetEmployee(IdentityUser user)
+        public Employee GetEmployee(string id)
         {
-            string sql = "SELECT TOP(1) * " +
-                "FROM dbo.Employee " +
-                "WHERE '" + user.Id + "' = Employee.EmployeeID";
-            return _db.LoadData<Employee, dynamic>(sql, new { });
+            return _ctx.Employee.Where(e => e.EmployeeID == id).Single();
         }
-        public Task InsertEmployee(Employee employee)
+        public void InsertEmployee(Employee employee)
         {
-            string sql = @"INSERT INTO dbo.Employee (EmployeeID, FirstName, MiddleName, LastName, Birthdate, PhoneNumber, Email, DateInService, Type) 
-                            VALUES (@EmployeeID, @FirstName, @MiddleName, @LastName, @Birthdate, @PhoneNumber, @Email, @DateInService, @Type);";
-            return _db.SaveData(sql, employee);
+            _ctx.Employee.Add(employee);
+            _ctx.SaveChanges();
         }
 
-        public Task<List<IdentityUser>> GetUser(string email)
+        public IdentityUser GetUser(string email)
         {
-            string sql = $"SELECT TOP(1) * " +
-                "FROM dbo.AspNetUsers " +
-                "WHERE '" + email + "' = AspNetUsers.Email";
-            return _db.LoadData<IdentityUser, dynamic>(sql, new { });
+            return _ctx.Users.Where(u => u.Email == email).Single();
         }
     }
 }

@@ -2,7 +2,7 @@
 @using Bumbodium.Data.DBModels
 @using Bumbodium.Data.Interfaces
 @inject DialogService DialogService
-@inject IAvailablityRepo _db
+@inject IAvailabilityRepo _db
 
 <RadzenDialog />
 <RadzenSelectBar @bind-Value=@SelectedType TValue="AvailabilityType">
@@ -52,7 +52,7 @@
         {
             if (SelectedStartTime < args.End)
             {
-                await _db.InsertAvailability(new Availability()
+                _db.InsertAvailability(new Availability()
                     {
                         StartDateTime = SelectedStartTime.GetValueOrDefault(),
                         EndDateTime = args.End,
@@ -63,7 +63,7 @@
             }
             else
             {
-                await _db.InsertAvailability(new Availability()
+                _db.InsertAvailability(new Availability()
                     {
                         StartDateTime = args.Start,
                         EndDateTime = SelectedEndTime.GetValueOrDefault(),
@@ -83,19 +83,19 @@
         await DialogService.OpenAsync<EditAvailabilityPage>("Aanpassen",
             new Dictionary<string, object>() { { "Availability", item } },
             new DialogOptions() { });
-        await _db.UpdateAvailability(item);
+        _db.UpdateAvailability(item);
         await scheduler.Reload();
     }
     async Task DeleteItem(Availability item)
     {
-        await _db.DeleteAvailability(item);
+        _db.DeleteAvailability(item);
         await scheduler.Reload();
     }
 
     async Task OnLoadData(SchedulerLoadDataEventArgs args)
     {
         //GET the appointments for between the Start and End
-        Data = await _db.GetAvailabilitiesInRange(args.Start, args.End);
+        Data = _db.GetAvailabilitiesInRange(args.Start, args.End);
     }
 
     void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Availability> args)

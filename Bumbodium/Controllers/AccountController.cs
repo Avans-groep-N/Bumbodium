@@ -20,20 +20,20 @@ namespace Bumbodium.WebApp.Controllers
         private readonly IConfiguration _configuration;
         private readonly EmployeeRepo _EmployeeDb;
         private readonly DepartmentRepo _departmentRepo;
-        private readonly BumbodiumContext _db;
+        private readonly BumbodiumContext _ctx;
 
         public AccountController(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             Microsoft.Extensions.Configuration.IConfiguration configuration,
-            BumbodiumContext db)
+            BumbodiumContext ctx)
         {
+            _ctx = ctx;
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
-            _EmployeeDb = new EmployeeRepo(new SqlDataAccess(config: _configuration));
-            _db = db;
-            _departmentRepo = new DepartmentRepo(_db);
+            _EmployeeDb = new EmployeeRepo(_ctx);
+            _departmentRepo = new DepartmentRepo(_ctx);
         }
 
         public IActionResult Register()
@@ -59,7 +59,7 @@ namespace Bumbodium.WebApp.Controllers
                 if (result.Succeeded)
                 {
                     //Employee
-                    await _EmployeeDb.InsertEmployee(new Employee()
+                    _EmployeeDb.InsertEmployee(new Employee()
                     {
                         EmployeeID = user.Id,
                         FirstName = input.FirstName,
@@ -117,10 +117,8 @@ namespace Bumbodium.WebApp.Controllers
                 var result = await _signInManager.PasswordSignInAsync(input.Email, input.Password, false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    var currentUserTask = await _EmployeeDb.GetUser(input.Email);
-                    IdentityUser currentUser = currentUserTask.FirstOrDefault();
-                    var employeeTask = await _EmployeeDb.GetEmployee(currentUser);
-                    Employee employee = employeeTask.FirstOrDefault();
+                    IdentityUser currentUser = _EmployeeDb.GetUser(input.Email);
+                    Employee employee = _EmployeeDb.GetEmployee(currentUser.Id);
                     if (employee.Type == Data.DBModels.TypeStaff.Manager)
                     {
                         return RedirectToAction("Index", "WeekSchedule");
