@@ -11,6 +11,7 @@ namespace Bumbodium.Data.Interfaces
     public interface IEmployeeRepo
     {
         Employee GetEmployee(string id);
+        Employee GetEmployeeByName(string name);
         void InsertEmployee(Employee employee);
         IdentityUser GetUser(string email);
     }
