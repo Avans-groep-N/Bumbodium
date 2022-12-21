@@ -1,6 +1,5 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
-using Bumbodium.WebApp.Models.Utilities.ScheduleValidation;
 using Radzen.Blazor.Rendering;
 using System.ComponentModel.DataAnnotations;
 
@@ -28,7 +27,7 @@ namespace Bumbodium.WebApp.Models
             foreach (Shift shift in shiftsThisWeek)
                 hoursThisWeek += (shift.ShiftStartDateTime.Hour - shift.ShiftEndDateTime.Hour);
 
-            //If end - start < 0
+            //Verify that shift can only be added if startTime is before EndTime
             if (EndTime.Subtract(StartTime) < TimeSpan.Zero)
                 yield return new ValidationResult("End time cannot be before start time", new[] { "StartTime" });
 
