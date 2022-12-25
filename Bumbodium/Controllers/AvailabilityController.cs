@@ -20,7 +20,6 @@ namespace Bumbodium.WebApp.Controllers
             _ctx = ctx;
             _userManager = userManager;
         }
-        // GET: AvailabilityController
         public IActionResult Index()
         {
             return View(new AvailabilityViewModel());
@@ -47,6 +46,48 @@ namespace Bumbodium.WebApp.Controllers
             _ctx.SaveChanges();
 
             return View(model);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            Availability availability = _ctx.Availability.Find(id);
+            if (availability == null)
+            {
+                //returns a 404 error
+                return NotFound();
+            }
+            IdentityUser user = _userManager.GetUserAsync(User).Result;
+
+            if(availability.EmployeeId != user.Id)
+            {
+                //returns a 401 error
+                return Unauthorized();
+            }
+            //TODO: add a pop-up to ask if they want to confirm the deletion
+            _ctx.Availability.Remove(availability);
+            _ctx.SaveChanges();
+
+            //TODO: return a message saying what was removed
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Update(int id, Availability model)
+        {
+            IdentityUser user = _userManager.GetUserAsync(User).Result;
+
+            model.EmployeeId= user.Id;
+
+            if(model.EmployeeId != user.Id)
+            {
+                //returns a 401 error
+                return Unauthorized();
+            }
+
+            _ctx.Availability.Update(model);
+            _ctx.SaveChanges();
+
+            //TODO: return a message saying what was updated
+            return RedirectToAction("Index");
         }
     }
 }

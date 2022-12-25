@@ -1,9 +1,61 @@
-﻿@model Bumbodium.Data.DBModels.Availability[]
+﻿@model AvailabilityViewModel
 @{
     ViewData["Title"] = "Index";
 }
+<script src="~/js/"></script>
 
-<div class="text-center">
-    <h1>Beschikbaarheid</h1>
-    @(await Html.RenderComponentAsync<Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent>(RenderMode.ServerPrerendered))
-</div> 
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            titleformat: {
+                hour: '2-digit'
+                hour12: false
+            }
+            //determines whether the grid displays 7 days of the week or a whole month with "dayGridMonth"
+            initialView: 'dayGridWeek'
+
+        });
+        calendar.render();
+    });
+
+</script>
+
+<body>
+    <div class="text-center">
+        <h1>Beschikbaarheid</h1>
+        <section class="content">
+            <div class="card">
+                <div class="card-body">
+
+                    <form asp-action="Index">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label for="Date">Datum</label>
+                            <input required type="date" class="form-control" id="Date" name="Date" />
+                            @*<input asp-for="Date" class="form-control" />
+                            <span asp-validation-for="Date" class="text-danger"></span>
+                            *@@*
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>*@
+                        </div>
+                        <div class="form-group">
+                            <label for="StartsAt">Starttijd</label>
+                            <input required type="time" class="form-control" id="StartsAt" name="StartsAt" />
+                        </div>
+                        <div class="form-group">
+                            <label for="EndsAt">Eindtijd</label>
+                            <input required type="time" class="form-control" id="EndsAt" name="EndsAt" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Toevoegen</button>
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    </form>
+
+                </div>
+            </div>
+        </section>
+
+        <div id='calendar'></div>
+    </div>
+</body>
