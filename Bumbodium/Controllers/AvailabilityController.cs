@@ -25,6 +25,21 @@ namespace Bumbodium.WebApp.Controllers
             return View(new AvailabilityViewModel());
         }
 
+        public IActionResult getAvailabilities(DateTime start, DateTime end)
+        {
+            IdentityUser user = _userManager.GetUserAsync(User).Result;
+
+            var availabilities = _ctx.Availability.Where(a => a.EmployeeId == user.Id && a.StartDateTime >= start && a.EndDateTime <= end).Select(a => new
+            {
+                id = a.AvailabilityId,
+                title = a.Type.ToString(),
+                start = a.StartDateTime,
+                end = a.EndDateTime
+            });
+
+            return View(availabilities);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(AvailabilityViewModel model)
@@ -38,8 +53,8 @@ namespace Bumbodium.WebApp.Controllers
             Availability availability = new Availability
             {
                 EmployeeId = user.Id,
-                StartDateTime = model.Date.Add(model.StartTime),
-                EndDateTime = model.Date.Add(model.EndTime)
+                StartDateTime = model.Date.ToDateTime(model.StartTime),
+                EndDateTime = model.Date.ToDateTime(model.EndTime)
             };
 
             _ctx.Availability.Add(availability);

@@ -5,12 +5,12 @@ namespace Bumbodium.WebApp.Models
     public class AvailabilityViewModel : IValidatableObject
     {
         [Required]
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
         [Required]
-        public TimeSpan StartTime { get; set; }
+        public TimeOnly StartTime { get; set; }
 
         [Required] 
-        public TimeSpan EndTime { get; set; }
+        public TimeOnly EndTime { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
