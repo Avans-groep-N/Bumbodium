@@ -54,7 +54,8 @@ namespace Bumbodium.WebApp.Controllers
             {
                 EmployeeId = user.Id,
                 StartDateTime = model.Date.ToDateTime(model.StartTime),
-                EndDateTime = model.Date.ToDateTime(model.EndTime)
+                EndDateTime = model.Date.ToDateTime(model.EndTime),
+                Type = model.AvailabilityType
             };
 
             _ctx.Availability.Add(availability);
