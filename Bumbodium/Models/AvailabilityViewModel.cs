@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Bumbodium.Data.DBModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.WebApp.Models
 {
@@ -11,6 +12,9 @@ namespace Bumbodium.WebApp.Models
 
         [Required] 
         public TimeOnly EndTime { get; set; }
+
+        [Required]
+        public AvailabilityType AvailabilityType { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

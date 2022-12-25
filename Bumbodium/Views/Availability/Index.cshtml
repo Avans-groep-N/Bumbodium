@@ -9,6 +9,7 @@
         <div class="card">
             <div class="card-body">
                 @*TODO: make a pop-up*@
+                @*follows the same structure as register.cshtml*@
                 <form asp-action="Index" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="col-form-label-lg">
@@ -25,6 +26,12 @@
                         <input asp-for="EndTime" class="form-control" />
                         <span asp-validation-for="EndTime" class="text-danger"></span>
                     </div>
+                    <div class="col-form-label-lg">
+                        <label asp-for="AvailabilityType"></label>
+                        <input asp-for="AvailabilityType" class="form-control" />
+                        <span asp-validation-for="AvailabilityType" class="text-danger"></span>
+                    </div>
+                    @*does not work yet*@
                     <button type="submit" class="btn btn-primary">Toevoegen</button>
                     @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
                 </form>
@@ -65,9 +72,9 @@
                 slotDuration: '00:30:00',
                 locale: 'nl',
                 //TODO: remove later. Test data for now
-                events: 'https://fullcalendar.io/api/demo-feeds/events.json'
+                //events: 'https://fullcalendar.io/api/demo-feeds/events.json'
                 //TODO: make sure you can retrieve this data
-                //events: '@Url.Action("GetAvailabilities", "Availability")'
+                events: '@Url.Action("GetAvailabilities", "Availability")'
             });
             calendar.render();
         });
