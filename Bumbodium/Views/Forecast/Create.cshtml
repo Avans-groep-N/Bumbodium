@@ -1,17 +1,8 @@
 ﻿@model Bumbodium.WebApp.Models.ForecastWeekViewModel
-@{
-    string calanderVal = 2023 + "-W" + 1;
-}
 
 <h2>Prognose</h2>
 
-<form asp-action="CreateNewForcast">
-    <div class="col-form-label-lg">
-        <label asp-for="@Model.DepartmentId" class="control-label">Afdeling</label>
-        <select asp-for="DepartmentId" asp-items="Html.GetEnumSelectList<Bumbodium.Data.DBModels.DepartmentType>()" class="form-control">
-            <option selected="selected" value="">Please select</option>
-        </select>
-    </div>
+<form asp-action="Create" method="post">
     <div class="row">
         @for (var i = 0; i < Model.DaysOfTheWeek.Length; i++)
         {
@@ -19,14 +10,17 @@
                 <div class="col-form-label-lg">
                     <label asp-for="@Model.DaysOfTheWeek[i].Date"></label>
                     <input asp-for="@Model.DaysOfTheWeek[i].Date" placeholder="Date" class="form-control" />
+                    <span asp-validation-for="@Model.DaysOfTheWeek[i].Date" class="text-danger"></span>
                 </div>
                 <div class="col-form-label-lg">
                     <label asp-for="@Model.DaysOfTheWeek[i].AmountExpectedColis"></label>
                     <input asp-for="@Model.DaysOfTheWeek[i].AmountExpectedColis" placeholder="AmountExpectedColis" class="form-control" />
+                    <span asp-validation-for="@Model.DaysOfTheWeek[i].AmountExpectedColis" class="text-danger"></span>
                 </div>
                 <div class="col-form-label-lg">
                     <label asp-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers"></label>
                     <input asp-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers" placeholder="AmountExpectedCustomers" class="form-control" />
+                    <span asp-validation-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers" class="text-danger"></span>
                 </div>
                 <hr />
             </div>

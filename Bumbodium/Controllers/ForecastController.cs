@@ -47,34 +47,36 @@ namespace Bumbodium.WebApp.Controllers
         // POST: ForecastController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateNewForcast(ForecastWeekViewModel forecastVM)
+        public ActionResult Create(ForecastWeekViewModel forecastVM)
         {
-            try
+            if (ModelState.IsValid)
             {
-                Forecast[] forecasts = new Forecast[7];
-
-                //Transitioning VMs to dbmodels
-                for (int index = 0; index < forecasts.Length; index++)
+                try
                 {
-                    var model = forecastVM.DaysOfTheWeek[index];
-                    forecasts[index] = new Forecast()
-                    {
-                        Date = model.Date,
-                        DepartmentId = forecastVM.DepartmentId,
-                        AmountExpectedColis = model.AmountExpectedColis,
-                        AmountExpectedCustomers = model.AmountExpectedCustomers,
-                        AmountExpectedEmployees = model.AmountExpectedEmployees,
-                        AmountExpectedHours = model.AmountExpectedHours
-                    };
-                }
+                    Forecast[] forecasts = new Forecast[7];
 
-                _forecastRepo.CreateForecast(forecasts);
-                return RedirectToAction(nameof(Index));
+                    //Transitioning VMs to dbmodels
+                    for (int index = 0; index < forecasts.Length; index++)
+                    {
+                        var model = forecastVM.DaysOfTheWeek[index];
+                        forecasts[index] = new Forecast()
+                        {
+                            Date = model.Date.Value,
+                            AmountExpectedColis = model.AmountExpectedColis.Value,
+                            AmountExpectedCustomers = model.AmountExpectedCustomers.Value
+                        };
+                    }
+
+                    _forecastRepo.CreateForecast(forecasts);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            catch
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            return View(new ForecastWeekViewModel());
+
         }
 
         // GET: ForecastController/Edit/5

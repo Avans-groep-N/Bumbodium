@@ -7,34 +7,41 @@ namespace Bumbodium.WebApp.Models
     public class ForecastWeekViewModel
     {
         public ForecastViewModel[] DaysOfTheWeek { get; set; } = new ForecastViewModel[7];
-        public int DepartmentId { get; set; }
     }
 
     public class ForecastViewModel : IValidatableObject
     {
         [Key]
-        public DateTime Date { get; set; }
+        [Required]
+        public DateTime? Date { get; set; }
 
-        public int DepartmentId { get; set; }
+        public int? DepartmentId { get; set; }
+
+        public int? AmountExpectedEmployees { get; set; }
+
+        public int? AmountExpectedHours { get; set; }
 
         [Required]
-        public int AmountExpectedEmployees { get; set; }
+        public int? AmountExpectedCustomers { get; set; }
 
         [Required]
-        public int AmountExpectedHours { get; set; }
-
-        [Required]
-        public int AmountExpectedCustomers { get; set; }
-
-        [Required]
-        public int AmountExpectedColis { get; set; }
+        public int? AmountExpectedColis { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (false)
+            //Validate that there are no negative numbers present
+            if (AmountExpectedColis < 0)
             {
-                yield return new ValidationResult("peepee", new[] {"lol"});
+                yield return new ValidationResult("Negative numbers cannot be added", new[] { "AmountExpectedColis" });
             }
+            if (AmountExpectedCustomers < 0)
+            {
+                yield return new ValidationResult("Negative numbers cannot be added", new[] { "AmountExpectedCustomers" });
+            }
+
+            //Validate date isn't in the past
+            if (DateTime.Now.CompareTo(Date) > 0)
+                yield return new ValidationResult("Date cannot be in the past", new[] { "Date" });
         }
     }
 }
