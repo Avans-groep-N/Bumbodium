@@ -20,7 +20,6 @@ namespace Bumbodium.WebApp.Models
             EmployeeRepo _employeeRepo = new EmployeeRepo(_ctx);
             Employee employee = _employeeRepo.GetEmployeeByName(EmployeeName);
 
-            //TODO: make this not hard coded
             var vacationWeeks = new[] { 1, 9, 18, 30, 31, 32, 33, 34, 35, 43, 52 };
             List<Shift> shiftsThisWeek = _shiftRepo.GetShiftsInRange(StartTime.StartOfWeek(), StartTime.EndOfWeek()).ToList(); 
             var hoursThisWeek = 0;
