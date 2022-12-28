@@ -34,7 +34,8 @@ namespace Bumbodium.Data.Repositories
             //TODO Make Country relative to the forecast
             _standards = _ctx.Standards.Where(s => s.Country == Country.Netherlands).ToList();
             var weekprognose = WeekCalEmployes(forecasts);
-            _ctx.AddRange(weekprognose);
+            foreach(var prognosis in weekprognose)
+                _ctx.Forecast.Add(prognosis);
             _ctx.SaveChanges();
 
         }

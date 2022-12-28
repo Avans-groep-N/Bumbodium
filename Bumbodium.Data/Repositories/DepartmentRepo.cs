@@ -19,6 +19,8 @@ namespace Bumbodium.Data.Repositories
 
         public int GetDepartment(DepartmentType type, int branchId) => _ctx.Department.FirstOrDefault(d => d.Name == type && d.BranchId == branchId).Id;
 
+        public Department GetDepartmentById(int id) => _ctx.Department.Where(d => d.Id == id).Single();
+
         public IEnumerable<Department> GetAllDepartments() => _ctx.Department;
 
         public int GetSurfaceOfDepartment(int branchId, DepartmentType type)

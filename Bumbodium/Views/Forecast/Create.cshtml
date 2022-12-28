@@ -1,20 +1,36 @@
 ﻿@model Bumbodium.WebApp.Models.ForecastWeekViewModel
+@{
+    string calanderVal = 2023 + "-W" + 1;
+}
 
-<div class="container-fluid">
-    <div class="col-md-4 p-3">
-        <h2>Prognose</h2>
-        <form asp-action="CreateNewForcast" class="col-md-4 p-3">
+<h2>Prognose</h2>
 
-            @for (var i = 0; i < Model.DaysOfTheWeek.Length; i++)
-            {
-                <label asp-for="@Model.DaysOfTheWeek[i].Date"></label>
-                <input asp-for="@Model.DaysOfTheWeek[i].Date" placeholder="Date" />
-                <label asp-for="@Model.DaysOfTheWeek[i].AmountExpectedColis"></label>
-                <input asp-for="@Model.DaysOfTheWeek[i].AmountExpectedColis" placeholder="AmountExpectedColis" />
-                <label asp-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers"></label>
-                <input asp-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers" placeholder="AmountExpectedCustomers" />
-            }
-            <input type="submit" class="btn" />
-        </form>
+<form asp-action="CreateNewForcast">
+    <div class="col-form-label-lg">
+        <label asp-for="@Model.DepartmentId" class="control-label">Afdeling</label>
+        <select asp-for="DepartmentId" asp-items="Html.GetEnumSelectList<Bumbodium.Data.DBModels.DepartmentType>()" class="form-control">
+            <option selected="selected" value="">Please select</option>
+        </select>
     </div>
-</div>
+    <div class="row">
+        @for (var i = 0; i < Model.DaysOfTheWeek.Length; i++)
+        {
+            <div class="col-5" >   
+                <div class="col-form-label-lg">
+                    <label asp-for="@Model.DaysOfTheWeek[i].Date"></label>
+                    <input asp-for="@Model.DaysOfTheWeek[i].Date" placeholder="Date" class="form-control" />
+                </div>
+                <div class="col-form-label-lg">
+                    <label asp-for="@Model.DaysOfTheWeek[i].AmountExpectedColis"></label>
+                    <input asp-for="@Model.DaysOfTheWeek[i].AmountExpectedColis" placeholder="AmountExpectedColis" class="form-control" />
+                </div>
+                <div class="col-form-label-lg">
+                    <label asp-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers"></label>
+                    <input asp-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers" placeholder="AmountExpectedCustomers" class="form-control" />
+                </div>
+                <hr />
+            </div>
+        }
+    </div>
+    <input type="submit" class="btn" />
+</form>
