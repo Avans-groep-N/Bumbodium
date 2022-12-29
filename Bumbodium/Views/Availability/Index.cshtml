@@ -5,79 +5,76 @@
 
 <div class="text-center">
     <h1>Beschikbaarheid</h1>
-    <section class="content">
-        <div class="card">
-            <div class="card-body">
-                @*TODO: make a pop-up*@
-                @*follows the same structure as register.cshtml*@
-                <form asp-action="Index" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="col-form-label-lg">
-                        <label asp-for="Date"></label>
-                        <input asp-for="Date" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="StartTime"></label>
-                        <input asp-for="StartTime" class="form-control" />
-                        <span asp-validation-for="StartTime" class="text-danger"></span>
-                    </div>
-                    <div class="col-form-label-lg">
-                        <label asp-for="EndTime"></label>
-                        <input asp-for="EndTime" class="form-control" />
-                        <span asp-validation-for="EndTime" class="text-danger"></span>
-                    </div>
-                    <div class="col-form-label-lg">
-                        <label asp-for="AvailabilityType"></label>
-                        <input asp-for="AvailabilityType" class="form-control" />
-                        <span asp-validation-for="AvailabilityType" class="text-danger"></span>
-                    </div>
-                    @*does not work yet*@
-                    <button type="submit" class="btn btn-primary">Toevoegen</button>
-                    @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
-                </form>
-
-            </div>
+    <div class="card">
+        <div class="card-body">
+            @*TODO: make a pop-up*@
+            follows the same structure as register.cshtml
+            <form asp-action="CreateAvailability" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="col-form-label-lg">
+                    <label asp-for="Date">Datum</label>
+                    <input asp-for="Date" class="form-control" />
+                </div>
+                <div class="form-group">
+                    @*TODO: fix that the label is smaller than it is supposed to be*@
+                    <label asp-for="StartTime">Start tijd</label>
+                    <input asp-for="StartTime" class="form-control" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+                <div class="col-form-label-lg">
+                    <label asp-for="EndTime">Eind tijd</label>
+                    <input asp-for="EndTime" class="form-control" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+                <div class="col-form-label-lg">
+                    <label asp-for="AvailabilityType">Type beschikbaarheid</label>
+                    <input asp-for="AvailabilityType" class="form-control" />
+                    <span asp-validation-for="AvailabilityType" class="text-danger"></span>
+                </div>
+                @*TODO: does not work yet*@
+                <button type="submit" class="btn btn-primary">Beschikbaarheid toevoegen</button>
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            </form>
         </div>
-    </section>
+    </div>
     <div id='calendar'></div>
 </div>
 
-<head>
-    <link href='~/css/fullcal_main.css' rel='stylesheet' />
-    <script src='~/js/fullcal_main.min.js'></script>
-    @*uses the Dutch script for displaying days*@
-    <script src='~/js/fullcal_nl.js'></script>
 
-    <script>
+<link href='~/css/fullcal_main.css' rel='stylesheet' />
+<script src='~/js/fullcal_main.min.js'></script>
+@*uses the Dutch script for displaying days*@
+<script src='~/js/fullcal_nl.js'></script>
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                SlotLabelFormat: {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    meridiem: 'long'
-                },
-                headerToolbar: {
-                    left: '',
-                    center: 'prev,title,next',
-                    right: 'today, dayGridMonth, timeGridWeek'
-                },
-                //determines the type of view
-                initialView: 'timeGridWeek',
-                weekNumbers: true,
-                navLinks: true,
-                editable: true,
-                selectable: true,
-                slotDuration: '00:30:00',
-                locale: 'nl',
-                //TODO: remove later. Test data for now
-                //events: 'https://fullcalendar.io/api/demo-feeds/events.json'
-                //TODO: make sure you can retrieve this data
-                events: '@Url.Action("GetAvailabilities", "Availability")'
-            });
-            calendar.render();
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            SlotLabelFormat: {
+                hour: 'numeric',
+                minute: '2-digit',
+            },
+            headerToolbar: {
+                left: '',
+                center: 'prev,title,next',
+                right: 'today, dayGridMonth, timeGridWeek'
+            },
+            //determines the type of view
+            initialView: 'timeGridWeek',
+            weekNumbers: true,
+            navLinks: true,
+            editable: true,
+            selectable: true,
+            allDaySlot: false,
+            slotDuration: '00:30:00',
+            locale: 'nl',
+            //TODO: remove later. Test data for now
+            //events: 'https://fullcalendar.io/api/demo-feeds/events.json'
+            //TODO: make sure you can retrieve this data
+            events: '@Url.Action("GetEvents", "Availability")'
         });
+        calendar.render();
+    });
 
-    </script>
-</head>
+</script>
