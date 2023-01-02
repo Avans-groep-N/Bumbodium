@@ -31,5 +31,10 @@ namespace Bumbodium.Data
         {
             return _ctx.Users.Where(u => u.Email == email).Single();
         }
+
+        public IQueryable<Employee> GetEmployees()
+        {
+            return _ctx.Employee.AsQueryable();
+        }
     }
 }

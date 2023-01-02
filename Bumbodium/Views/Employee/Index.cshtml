@@ -1,0 +1,69 @@
+﻿@model EmployeeIndexViewModel
+<h1>Werknemers</h1>
+<form action="/Account/Register" method="post">
+    <div class="col-form-label-lg">
+        <label asp-for="NameFilter">Naam filter:</label>
+        <input asp-for="NameFilter" class="form-control" />
+    </div>
+    <div class="col-form-label-lg">
+        <label asp-for="AgeFilter">Leeftijd filter:</label>
+        <input asp-for="AgeFilter" class="form-control" />
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Naam
+            </th>
+            <th>
+                Leeftijd
+            </th>
+            <th>
+                Telefoon
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Werkt sinds
+            </th>
+            <th>
+                Type
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Employees.Any())
+        {
+            foreach (var employee in Model.Employees)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(e => employee.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(e => employee.Age)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(e => employee.PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(e => employee.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(e => employee.DateInService.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(e => employee.Type)
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <h3>Geen werknemers gevonden</h3>
+        }
+
+    </tbody>
+</table>
