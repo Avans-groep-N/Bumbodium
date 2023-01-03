@@ -9,7 +9,7 @@
             <div class="col-5" >   
                 <div class="col-form-label-lg">
                     <label asp-for="@Model.DaysOfTheWeek[i].Date"></label>
-                    <input asp-for="@Model.DaysOfTheWeek[i].Date" placeholder="Date" class="form-control" />
+                    <input asp-for="@Model.DaysOfTheWeek[i].Date" placeholder="Date" type="date" class="form-control" />
                     <span asp-validation-for="@Model.DaysOfTheWeek[i].Date" class="text-danger"></span>
                 </div>
                 <div class="col-form-label-lg">
