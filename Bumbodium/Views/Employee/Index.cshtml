@@ -1,15 +1,76 @@
 ﻿@model EmployeeIndexViewModel
+@using Bumbodium.Data.DBModels
+
+@{
+    ViewData["Title"] = "Normeringen";
+}
+
 <h1>Werknemers</h1>
-<form action="/Account/Register" method="post">
-    <div class="col-form-label-lg">
-        <label asp-for="NameFilter">Naam filter:</label>
-        <input asp-for="NameFilter" class="form-control" />
-    </div>
-    <div class="col-form-label-lg">
-        <label asp-for="AgeFilter">Leeftijd filter:</label>
-        <input asp-for="AgeFilter" class="form-control" />
+<form action="/Employee/Index" method="post">
+    <input hidden asp-for="CurrentPage" value="1" />
+    <input hidden asp-for="EmployeesPerPage" />
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <label asp-for="NameFilter">Naam filter:</label>
+                <input asp-for="NameFilter" class="form-control" value=@Model.NameFilter />
+            </div>
+            <div class="col">
+                <label asp-for="DepartmentIdFiter">Afdeling filter:</label>
+                <input asp-for="DepartmentIdFiter" class="form-control" value=@Model.DepartmentIdFiter />
+            </div>
+            <div class="col">
+                <label asp-for="ShowInactive">Toon inactief:</label>
+                @if (Model.ShowInactive)
+                {
+                    <input asp-for="ShowInactive" type="checkbox" checked>
+                }
+                else
+                {
+                    <input asp-for="ShowInactive" type="checkbox" value=@Model.ShowInactive />
+                }
+
+
+            </div>
+            <div class="col">
+                <button type="submit" class="btn">Filters toepassen</button>
+            </div>
+        </div>
     </div>
 </form>
+<br />
+@if (Model.PageCount > 0)
+{
+    <div class="container">
+        <div class="row">
+            @if (Model.CurrentPage != 1)
+            {
+                <form action="Employee/Index" method="post" class="col-auto">
+                    <input hidden asp-for="CurrentPage" value=@(Model.CurrentPage - 1) />
+                    <input hidden asp-for="EmployeesPerPage" />
+                    <input hidden asp-for="NameFilter" value=@Model.NameFilter />
+                    <input hidden asp-for="DepartmentIdFiter" value="@Model.DepartmentIdFiter" />
+                    <input hidden asp-for="ShowInactive" value="@Model.ShowInactive" />
+                    <button type="submit" class="btn col-2"> &lt; </button>
+                </form>
+
+            }
+            <h3 class="col-auto">Pagina @Model.CurrentPage / @Model.PageCount</h3>
+            @if (Model.CurrentPage != Model.PageCount)
+            {
+                <form action="Employee/Index" method="post" class="col-auto">
+                    <input hidden asp-for="CurrentPage" value=@(Model.CurrentPage + 1) />
+                    <input hidden asp-for="EmployeesPerPage" />
+                    <input hidden asp-for="NameFilter" value=@Model.NameFilter />
+                    <input hidden asp-for="DepartmentIdFiter" value="@Model.DepartmentIdFiter" />
+                    <input hidden asp-for="ShowInactive" value="@Model.ShowInactive" />
+                    <button type="submit" class="btn col-2"> &gt; </button>
+                </form>
+            }
+        </div>
+    </div>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -24,6 +85,9 @@
             </th>
             <th>
                 Email
+            </th>
+            <th>
+                Afdelingen
             </th>
             <th>
                 Werkt sinds
@@ -51,8 +115,14 @@
                     <td>
                         @Html.DisplayFor(e => employee.Email)
                     </td>
+                    <td class="row">
+                        @foreach (DepartmentEmployee departmentEmployee in employee.PartOFDepartment)
+                        {
+                            <p class="col-auto">@departmentEmployee.Department.Name</p>
+                        }
+                    </td>
                     <td>
-                        @Html.DisplayFor(e => employee.DateInService.Date)
+                        <p>@employee.DateInService.ToShortDateString()</p>
                     </td>
                     <td>
                         @Html.DisplayFor(e => employee.Type)
