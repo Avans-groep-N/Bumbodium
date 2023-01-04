@@ -10,8 +10,8 @@ namespace Bumbodium.Data.Interfaces
 {
     public interface IEmployeeRepo
     {
-        Task<List<Employee>> GetEmployee(IdentityUser user);
-        Task InsertEmployee(Employee employee);
-        Task<List<IdentityUser>> GetUser(string email);
+        Employee GetEmployee(string id);
+        void InsertEmployee(Employee employee);
+        IdentityUser GetUser(string email);
     }
 }

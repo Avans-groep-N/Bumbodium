@@ -6,6 +6,9 @@ using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Bumbodium.Data.Repositories;
+using Bumbodium.WebApp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,16 +24,19 @@ builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddScoped<ForecastRepo>();
 builder.Services.AddScoped<DepartmentRepo>();
 builder.Services.AddScoped<StandardsRepo>();
+builder.Services.AddScoped<PresenceRepo>();
 
-builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
-builder.Services.AddTransient<IAvailablityRepo, AvailabilityRepo>();
+builder.Services.AddScoped<BLExcelExport>();
+
+builder.Services.AddTransient<IAvailabilityRepo, AvailabilityRepo>();
 builder.Services.AddTransient<IShiftRepo, ShiftRepo>();
 
 builder.Services.AddDbContext<BumbodiumContext>(options =>
                 options.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;")); //TODO: change back to azure db
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>{
     options.SignIn.RequireConfirmedAccount = false;
-    }).AddEntityFrameworkStores<BumbodiumContext>();
+    }).AddEntityFrameworkStores<BumbodiumContext>()
+    .AddRoles<IdentityRole>();
 
 var app = builder.Build();
 
@@ -51,12 +57,20 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
+var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+using (var scope = scopeFactory.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    // TODO move this to a more appropriate place 
+    UserAndRoleSeeder.SeedData(userManager, roleManager);
+}
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Index}/{id?}");
 app.MapBlazorHub();
 
 app.Run();

@@ -33,7 +33,7 @@
     <Template Context="data">
         <p>
             <!--TODO Change to something readable-->
-            @data.EmployeeId.ToString()
+            @data.Employee.FullName
             <RadzenButton Click=@(args => EditItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="edit" />
             <RadzenButton Click=@(args => DeleteItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="delete" />
         </p>
@@ -73,7 +73,7 @@
         {
             if (SelectedStartTime < args.End)
             {
-                await _db.InsertShift(new Shift()
+                _db.InsertShift(new Shift()
                     {
                         ShiftStartDateTime = SelectedStartTime.GetValueOrDefault(),
                         ShiftEndDateTime = args.End,
@@ -83,7 +83,7 @@
             }
             else
             {
-                await _db.InsertShift(new Shift()
+                _db.InsertShift(new Shift()
                     {
                         ShiftStartDateTime = args.Start,
                         ShiftEndDateTime = SelectedEndTime.GetValueOrDefault(),
@@ -101,18 +101,18 @@
         await DialogService.OpenAsync<EditShiftPage>("Aanpassen",
             new Dictionary<string, object>() { { "Shift", item } },
             new DialogOptions() { });
-        await _db.UpdateShift(item);
+        _db.UpdateShift(item);
         await scheduler.Reload();
     }
     async Task DeleteItem(Shift item)
     {
-        await _db.DeleteShift(item);
+        _db.DeleteShift(item);
         await scheduler.Reload();
     }
     async Task OnLoadData(SchedulerLoadDataEventArgs args)
     {
         //GET the appointments for between the Start and End
-        ShiftsData = await _db.GetShiftsInRange(args.Start, args.End);
+        ShiftsData = _db.GetShiftsInRange(args.Start, args.End);
     }
     void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Shift> args)
     {
@@ -148,8 +148,8 @@
         {
             newfilter = new string(args.Filter.Where(c => !Char.IsWhiteSpace(c)).ToArray()).ToLower();
         }
-        EmployeeData = await _db.GetEmployeesInRange((int)SelectedDepartmentId, newfilter, args.Skip.Value, args.Top.Value);
-        EmployeeCount = await _db.GetEmployeeCount((int)SelectedDepartmentId, newfilter);
+        EmployeeData = _db.GetEmployeesInRange((int)SelectedDepartmentId, newfilter, args.Skip.Value, args.Top.Value);
+        EmployeeCount = _db.GetEmployeeCount((int)SelectedDepartmentId, newfilter);
         await InvokeAsync(StateHasChanged);
     }
 }

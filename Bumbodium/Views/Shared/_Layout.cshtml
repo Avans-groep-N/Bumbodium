@@ -19,6 +19,7 @@
 <body>
     @if (User.Identity.IsAuthenticated)
     {
+
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container-fluid">
@@ -30,6 +31,7 @@
                         <ul class="navbar-nav flex-grow-1">
                             @if (User.IsInRole("Manager"))
                             {
+
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="WeekSchedule" asp-action="Index">Week rooster</a>
                                 </li>
@@ -45,6 +47,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Clocking" asp-action="Index">Kloktijden</a>
                                 </li>
+
                             }
                             @if (User.IsInRole("Employee"))
                             {

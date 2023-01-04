@@ -5,69 +5,68 @@ using System.Text;
 using System.Threading.Tasks;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bumbodium.Data
 {
     public class ShiftRepo : IShiftRepo
     {
-        private readonly ISqlDataAccess _db;
-        public ShiftRepo(ISqlDataAccess db)
+        private BumbodiumContext _ctx;
+
+        public ShiftRepo(BumbodiumContext ctx)
         {
-            _db = db;
+            _ctx = ctx;
         }
 
-        public Task<List<Shift>> GetShiftsInRange(DateTime start, DateTime end)
+        public List<Shift> GetShiftsInRange(DateTime start, DateTime end)
         {
-            string sql = "select * from dbo.Shift " + 
-                "where ShiftStartDateTime between '" + start.ToString("yyyy-MM-dd") + "' AND '" + end.ToString("yyyy-MM-dd") + "'";
-            return _db.LoadData<Shift, dynamic>(sql, new { });
+            return _ctx.Shift
+                .Where(s => s.ShiftStartDateTime > start && s.ShiftStartDateTime < end)
+                .Include(s => s.Employee)
+                .ToList();
         }
 
-        public Task InsertShift(Shift Shift)
+        public void InsertShift(Shift shift)
         {
-            string sql = @"insert into dbo.Shift (EmployeeId, DepartmentId, ShiftStartDateTime, ShiftEndDateTime) 
-                        values (@EmployeeId, @DepartmentId, @ShiftStartDateTime, @ShiftEndDateTime);";
-
-            return _db.SaveData(sql, Shift);
+            _ctx.Shift.Add(shift);
+            _ctx.SaveChanges();
         }
 
-        public Task DeleteShift(Shift Shift)
+        public void DeleteShift(Shift shift)
         {
-            string sql = @"delete from dbo.Shift where ShiftId = @ShiftId";
-
-            return _db.SaveData(sql, Shift);
+            _ctx.Shift.Remove(shift);
+            _ctx.SaveChanges();
         }
 
-        public Task UpdateShift(Shift Shift)
+        public void UpdateShift(Shift shift)
         {
-            string sql = @"update dbo.Shift 
-                        set ShiftStartDateTime = @ShiftStartDateTime, ShiftEndDateTime = @ShiftEndDateTime
-                        where ShiftId = @ShiftId";
-
-            return _db.SaveData(sql, Shift);
+            _ctx.Shift.Update(shift);
+            _ctx.SaveChanges();
         }
 
-        public Task<List<Employee>> GetEmployeesInRange(int departmentId, string? filter, int offset, int top)
+        public List<Employee> GetEmployeesInRange(int departmentId, string? filter, int offset, int top)
         {
             departmentId++;
-            string sql = @"SELECT * FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId" +
-                        " WHERE CONCAT(FirstName, MiddleName, LastName) LIKE '%" + filter + "%'" +
-                        " AND DateOutService IS NULL" +
-                        " AND de.DepartmentId = " + departmentId +
-                        " ORDER BY FirstName" +
-                        " OFFSET " + offset +  " ROWS" +
-                        " FETCH NEXT " + top + " ROWS ONLY";
-            return _db.LoadData<Employee, dynamic>(sql, new { });
+            return _ctx.Employee
+                .Where(e => string.Concat(e.FirstName, e.MiddleName, e.LastName).Contains(filter))
+                .Where(e => e.DateOutService == null)
+                .Include(e => e.PartOFDepartment)
+                .Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == departmentId))
+                .OrderBy(e => e.FirstName)
+                .Skip(offset)
+                .Take(top)
+                .ToList();
         }
 
-        public Task<int> GetEmployeeCount(int departmentId, string? filter)
+        public int GetEmployeeCount(int departmentId, string? filter)
         {
             departmentId++;
-            string sql = @"SELECT COUNT(*) FROM dbo.Employee AS e LEFT JOIN DepartmentEmployee AS de ON e.EmployeeId = de.EmployeeId" +
-                        " WHERE CONCAT(FirstName, MiddleName, LastName) LIKE '%" + filter + "%'" +
-                        " AND DateOutService IS NULL" +
-                        " AND de.DepartmentId = " + departmentId;
-            return _db.LoadSingleRecord<int, dynamic>(sql, new { });
+            return _ctx.Employee
+                .Where(e => string.Concat(e.FirstName, e.MiddleName, e.LastName).Contains(filter))
+                .Where(e => e.DateOutService == null)
+                .Include(e => e.PartOFDepartment)
+                .Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == departmentId))
+                .Count();
         }
     }
 }

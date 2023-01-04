@@ -8,49 +8,40 @@ using Bumbodium.Data.Interfaces;
 
 namespace Bumbodium.Data
 {
-    public class AvailabilityRepo : IAvailablityRepo
+    public class AvailabilityRepo : IAvailabilityRepo
     {
-        private readonly ISqlDataAccess _db;
-        public AvailabilityRepo(ISqlDataAccess db)
-        {
-            _db = db;
-        }
-        public Task<List<Availability>> GetAvailabilities()
-        {
-            string sql = "select * from dbo.Availability";
+        private BumbodiumContext _ctx;
 
-            return _db.LoadData<Availability, dynamic>(sql, new { });
-        }
-
-        public Task<List<Availability>> GetAvailabilitiesInRange(DateTime start, DateTime end)
+        public AvailabilityRepo(BumbodiumContext ctx)
         {
-            string sql = "select * from dbo.Availability " +
-                "where StartDateTime between '" + start.ToString("yyyy-MM-dd") + "' AND '" + end.ToString("yyyy-MM-dd") + "'";
-            return _db.LoadData<Availability, dynamic>(sql, new { });
+            _ctx = ctx;
+        }
+        public List<Availability> GetAvailabilities()
+        {
+            return _ctx.Availability.ToList();
         }
 
-        public Task InsertAvailability(Availability availability)
+        public List<Availability> GetAvailabilitiesInRange(DateTime start, DateTime end)
         {
-            string sql = @"insert into dbo.Availability (EmployeeId, StartDateTime, EndDateTime, Type) 
-                        values (@EmployeeId, @StartDateTime, @EndDateTime, @Type);";
-
-            return _db.SaveData(sql, availability);
+            return _ctx.Availability.Where(a => a.StartDateTime > start && a.StartDateTime < end).ToList();
         }
 
-        public Task DeleteAvailability(Availability availability)
+        public void InsertAvailability(Availability availability)
         {
-            string sql = @"delete from dbo.Availability where AvailabilityId = @AvailabilityId;";
-
-            return _db.SaveData(sql, availability);
+            _ctx.Availability.Add(availability);
+            _ctx.SaveChanges();
         }
 
-        public Task UpdateAvailability(Availability availability)
+        public void DeleteAvailability(Availability availability)
         {
-            string sql = @"update dbo.Availability 
-                        set StartDateTime = @StartDateTime, EndDateTime = @EndDateTime, Type = @Type
-                        where AvailabilityId = @AvailabilityId;";
+            _ctx.Availability.Remove(availability);
+            _ctx.SaveChanges();
+        }
 
-            return _db.SaveData(sql, availability);
+        public void UpdateAvailability(Availability availability)
+        {
+            _ctx.Availability.Update(availability);
+            _ctx.SaveChanges();
         }
     }
 }
