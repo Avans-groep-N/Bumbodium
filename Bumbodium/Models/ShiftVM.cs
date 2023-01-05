@@ -7,7 +7,7 @@ namespace Bumbodium.WebApp.Models
 {
     public class ShiftVM : IValidatableObject
     {
-        public string EmployeeName { get; set; }
+        public string EmployeeId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
@@ -18,9 +18,8 @@ namespace Bumbodium.WebApp.Models
                          .GetService(typeof(BumbodiumContext));
             ShiftRepo _shiftRepo = new ShiftRepo(_ctx);
             EmployeeRepo _employeeRepo = new EmployeeRepo(_ctx);
-            Employee employee = _employeeRepo.GetEmployeeByName(EmployeeName);
+            Employee employee = _employeeRepo.GetEmployee(EmployeeId);
 
-            var vacationWeeks = new[] { 1, 9, 18, 30, 31, 32, 33, 34, 35, 43, 52 };
             List<Shift> shiftsThisWeek = _shiftRepo.GetShiftsInRange(StartTime.StartOfWeek(), StartTime.EndOfWeek()).ToList(); 
             var hoursThisWeek = 0;
             foreach (Shift shift in shiftsThisWeek)
@@ -50,7 +49,7 @@ namespace Bumbodium.WebApp.Models
                     yield return new ValidationResult("Cannot add more than 60 hours a week for an employee", new[] { "TooManyShifts" });
             }
 
-            if (employee.Age < 18)
+            else
             {
                 //Verify that the user cannot add a shift over 9 hours (incl. school hours) on 1 day for an employee < 18 years old
                 Availability schoolTime = employee.Availability
@@ -68,29 +67,29 @@ namespace Bumbodium.WebApp.Models
 
                 if (hoursThisMonth / 7 > 40)
                     yield return new ValidationResult("Cannot add more than an average of 40 hours a week in 1 month for an underage employee", new[] { "TooManyShifts" });
-
-            }
-
-            if (employee.Age < 16)
-            {
-                //Verify that the user cannot add over 5 shifts in 1 week for an employee < 16 years old
-                if (shiftsThisWeek.Count >= 5)
-                    yield return new ValidationResult("Cannot add more than 5 shifts for an underage employee", new[] { "TooManyShifts" });
-
-                //Verify that the user cannot add shifts exceeding 12 hours in 1 school week for an employee < 16 years old
                 
-                if (!vacationWeeks.Contains(StartTime.DayOfYear / 7))
+                if (employee.Age < 16)
                 {
-                    
-                    if (hoursThisWeek > 12)
-                        yield return new ValidationResult("Cannot add more than 12 hours a school week for an underage employee", new[] { "TooManyShifts" });
-                }
+                    //Verify that the user cannot add over 5 shifts in 1 week for an employee < 16 years old
+                    if (shiftsThisWeek.Count >= 5)
+                        yield return new ValidationResult("Cannot add more than 5 shifts for an underage employee", new[] { "TooManyShifts" });
 
-                //Verify that the user cannot add shifts exceeding 40 hours in 1 Vacation week for an employee < 16 years old
-                else
-                {
-                    if (hoursThisWeek > 40)
-                        yield return new ValidationResult("Cannot add more than 40 hours a vacation week for an underage employee", new[] { "TooManyShifts" });
+                    //Verify that the user cannot add shifts exceeding 12 hours in 1 school week for an employee < 16 years old
+                    var vacationWeeks = new[] { 1, 9, 18, 30, 31, 32, 33, 34, 35, 43, 52 };
+
+                    if (!vacationWeeks.Contains(StartTime.DayOfYear / 7))
+                    {
+
+                        if (hoursThisWeek > 12)
+                            yield return new ValidationResult("Cannot add more than 12 hours a school week for an underage employee", new[] { "TooManyShifts" });
+                    }
+
+                    //Verify that the user cannot add shifts exceeding 40 hours in 1 Vacation week for an employee < 16 years old
+                    else
+                    {
+                        if (hoursThisWeek > 40)
+                            yield return new ValidationResult("Cannot add more than 40 hours a vacation week for an underage employee", new[] { "TooManyShifts" });
+                    }
                 }
             }
         }

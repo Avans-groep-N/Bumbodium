@@ -24,8 +24,6 @@ namespace Bumbodium.WebApp.Models
             var _ctx = (BumbodiumContext)validationContext
                          .GetService(typeof(BumbodiumContext));
             var _availabilityRepo = new AvailabilityRepo(_ctx);
-            var _employeeRepo = new EmployeeRepo(_ctx);
-            var _employee = _employeeRepo.GetEmployeeByName(EmployeeName);
 
             //Verify that availability can only be added if startTime is before EndTime
             if (EndTime.Subtract(StartTime) < TimeSpan.Zero)

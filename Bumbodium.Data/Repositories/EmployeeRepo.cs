@@ -21,10 +21,6 @@ namespace Bumbodium.Data
         {
             return _ctx.Employee.Where(e => e.EmployeeID == id).Single();
         }
-        public Employee GetEmployeeByName(string name)
-        {
-            return _ctx.Employee.Where(e => e.FullName == name).Single();
-        }
         public void InsertEmployee(Employee employee)
         {
             _ctx.Employee.Add(employee);
