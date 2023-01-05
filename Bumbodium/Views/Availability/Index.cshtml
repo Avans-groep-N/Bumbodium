@@ -37,44 +37,4 @@
             </form>
         </div>
     </div>
-    <div id='calendar'></div>
 </div>
-
-
-<link href='~/css/fullcal_main.css' rel='stylesheet' />
-<script src='~/js/fullcal_main.min.js'></script>
-@*uses the Dutch script for displaying days*@
-<script src='~/js/fullcal_nl.js'></script>
-
-<script>
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            SlotLabelFormat: {
-                hour: 'numeric',
-                minute: '2-digit',
-            },
-            headerToolbar: {
-                left: '',
-                center: 'prev,title,next',
-                right: 'today, dayGridMonth, timeGridWeek'
-            },
-            //determines the type of view
-            initialView: 'timeGridWeek',
-            weekNumbers: true,
-            navLinks: true,
-            editable: true,
-            selectable: true,
-            allDaySlot: false,
-            slotDuration: '00:30:00',
-            locale: 'nl',
-            //TODO: remove later. Test data for now
-            //events: 'https://fullcalendar.io/api/demo-feeds/events.json'
-            //TODO: make sure you can retrieve this data
-            events: '@Url.Action("GetEvents", "Availability")'
-        });
-        calendar.render();
-    });
-
-</script>
