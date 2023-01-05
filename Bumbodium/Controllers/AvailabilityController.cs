@@ -61,20 +61,6 @@ namespace Bumbodium.WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
-        public IActionResult getEvents(DateTime start, DateTime end)
-        {
-            IdentityUser user = _userManager.GetUserAsync(User).Result;
-
-            var availabilities = _ctx.Availability.Where(a => a.EmployeeId == user.Id && a.StartDateTime >= start && a.EndDateTime <= end).Select(a => new
-            {
-                id = a.AvailabilityId,
-                title = a.Type.ToString(),
-                start = a.StartDateTime,
-                end = a.EndDateTime
-            });
-
-            return View(availabilities);
-        }
 
         public IActionResult Delete(int id)
         {
