@@ -25,7 +25,7 @@ namespace Bumbodium.WebApp.Controllers
         }
         public IActionResult Index()
         {
-            return View(new AvailabilityViewModel());
+            return View();
         }
 
 
@@ -33,10 +33,10 @@ namespace Bumbodium.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateAvailability(AvailabilityViewModel model)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(new AvailabilityViewModel());
-            //}
+            if (!ModelState.IsValid)
+            {
+                return View(new AvailabilityViewModel());
+            }
             IdentityUser user = _userManager.GetUserAsync(User).Result;
 
             Availability availability = new Availability
@@ -47,10 +47,10 @@ namespace Bumbodium.WebApp.Controllers
                 Type = model.AvailabilityType
             };
 
-            //_ctx.Availability.Add(availability);
-            //_ctx.SaveChanges();
+            _ctx.Availability.Add(availability);
+            _ctx.SaveChanges();
 
-            //return View(model);
+            return View(model);
             try
             {
                 _availabilityRepo.InsertAvailability(availability);
