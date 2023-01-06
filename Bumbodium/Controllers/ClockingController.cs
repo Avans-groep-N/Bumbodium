@@ -1,13 +1,22 @@
 ﻿using Bumbodium.WebApp.Models;
+using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbodium.WebApp.Controllers
 {
     public class ClockingController : Controller
     {
+        private BLClocking _blclocking;
+
+        public ClockingController(BLClocking blclocking)
+        {
+            _blclocking = blclocking;
+        }
+
         public IActionResult Index()
         {
-            var clockingViewModel = new ClockingViewModel() { WeekNumber = 48 };
+
+            /*var clockingViewModel = new ClockingViewModel() { WeekNumber = 48 };
 
             var clockingFirstDayViewModel = new ClockingDayViewModel();
             var clockingSecondDayViewModel = new ClockingDayViewModel();
@@ -58,6 +67,9 @@ namespace Bumbodium.WebApp.Controllers
             clockingViewModel.ClockingDays.Add(clockingFirstDayViewModel);
             clockingViewModel.ClockingDays.Add(clockingSecondDayViewModel);
             clockingViewModel.ClockingDays.Add(clockingThirdDayViewModel);
+*/
+            var clockingViewModel = _blclocking.GetClockingViewModel("19f7d479-542a-408b-9016-0561e3e70f65", 53, 2020);
+
 
             return View(clockingViewModel);
         }

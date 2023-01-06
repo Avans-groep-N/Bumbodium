@@ -1,4 +1,5 @@
 ﻿using Bumbodium.Data.DBModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bumbodium.Data.Repositories
 {
@@ -28,6 +29,15 @@ namespace Bumbodium.Data.Repositories
         public string GetEmployeeName(string id)
         {
             return _ctx.Employee.First(e => e.EmployeeID.Equals(id)).FullName;
+        }
+
+        public List<Shift> GetShift(string id, DateTime dateTime)
+        {
+            return _ctx.Shift.Where(s => s.EmployeeId == id && s.ShiftStartDateTime.Day == dateTime.Day).ToList();
+        }
+        public List<Presence> GetWorkedHours(string id, DateTime dateTime)
+        {
+            return _ctx.Presence.Where(p => p.EmployeeId == id && p.ClockInDateTime.Day == dateTime.Day).ToList();
         }
     }
 }
