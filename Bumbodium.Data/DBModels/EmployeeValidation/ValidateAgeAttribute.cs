@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bumbodium.Data.Utilities.EmployeeValidation
+namespace Bumbodium.Data.DBModels.EmployeeValidation
 {
     public class ValidateAgeAttribute : ValidationAttribute
     {
 
         private static readonly int _allowedMinAge = 15;
-        private static readonly int _allowedMaxAge = 67;
 
         public override bool IsValid(object value)
         {
@@ -36,9 +35,19 @@ namespace Bumbodium.Data.Utilities.EmployeeValidation
 
             DateTime birthDate = Convert.ToDateTime(value);
 
-            int age = DateTime.Now.Year - birthDate.Year;
+            int age;
+            age = DateTime.Now.Year - birthDate.Year;
 
-            if (age > _allowedMinAge && age < _allowedMaxAge)
+            if (age > 0)
+            {
+                age -= Convert.ToInt32(DateTime.Now.Date < birthDate.Date.AddYears(age));
+            }
+            else
+            {
+                age = 0;
+            }
+
+            if (age > _allowedMinAge)
             {
                 return true;
             }

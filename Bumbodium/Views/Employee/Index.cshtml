@@ -2,7 +2,7 @@
 @using Bumbodium.Data.DBModels
 
 @{
-    ViewData["Title"] = "Normeringen";
+    ViewData["Title"] = "Normeringen"; 
 }
 
 <h1>Werknemers</h1>
@@ -16,19 +16,21 @@
                 <input asp-for="NameFilter" class="form-control" value=@Model.NameFilter />
             </div>
             <div class="col">
-                <label asp-for="DepartmentIdFiter">Afdeling filter:</label>
-                <input asp-for="DepartmentIdFiter" class="form-control" value=@Model.DepartmentIdFiter />
+                <label>Afdeling filter:</label>
+                <br />
+                @Html.RadioButtonFor(vm => vm.DepartmentFilter, 0)
+                <label>Geen</label>
+                <br />
+                @foreach (DepartmentType department in Enum.GetValues(typeof(DepartmentType)))
+                {
+                    @Html.RadioButtonFor(vm => vm.DepartmentFilter, (int)department+1)
+                    <label>@department.ToString()</label>
+                    <br />
+                }
             </div>
             <div class="col">
                 <label asp-for="ShowInactive">Toon inactief:</label>
-                @if (Model.ShowInactive)
-                {
-                    <input asp-for="ShowInactive" type="checkbox" checked>
-                }
-                else
-                {
-                    <input asp-for="ShowInactive" type="checkbox" value=@Model.ShowInactive />
-                }
+                @Html.CheckBoxFor(vm => vm.ShowInactive)
 
 
             </div>
@@ -39,7 +41,7 @@
     </div>
 </form>
 <br />
-@if (Model.PageCount > 0)
+@if (Model.PageCount > 1)
 {
     <div class="container">
         <div class="row">
@@ -49,7 +51,7 @@
                     <input hidden asp-for="CurrentPage" value=@(Model.CurrentPage - 1) />
                     <input hidden asp-for="EmployeesPerPage" />
                     <input hidden asp-for="NameFilter" value=@Model.NameFilter />
-                    <input hidden asp-for="DepartmentIdFiter" value="@Model.DepartmentIdFiter" />
+                    <input hidden asp-for="DepartmentFilter" value="@Model.DepartmentFilter" />
                     <input hidden asp-for="ShowInactive" value="@Model.ShowInactive" />
                     <button type="submit" class="btn col-2"> &lt; </button>
                 </form>
@@ -62,7 +64,7 @@
                     <input hidden asp-for="CurrentPage" value=@(Model.CurrentPage + 1) />
                     <input hidden asp-for="EmployeesPerPage" />
                     <input hidden asp-for="NameFilter" value=@Model.NameFilter />
-                    <input hidden asp-for="DepartmentIdFiter" value="@Model.DepartmentIdFiter" />
+                    <input hidden asp-for="DepartmentFilter" value="@Model.DepartmentFilter" />
                     <input hidden asp-for="ShowInactive" value="@Model.ShowInactive" />
                     <button type="submit" class="btn col-2"> &gt; </button>
                 </form>
@@ -126,6 +128,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(e => employee.Type)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@employee.EmployeeID">Aanpassen</a>
                     </td>
                 </tr>
             }

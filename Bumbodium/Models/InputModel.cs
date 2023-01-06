@@ -1,4 +1,4 @@
-﻿using Bumbodium.Data.Utilities.EmployeeValidation;
+﻿using Bumbodium.Data.DBModels.EmployeeValidation;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Bumbodium.Data.DBModels;
