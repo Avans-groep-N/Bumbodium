@@ -1,8 +1,45 @@
 ﻿@using Microsoft.AspNetCore.Components
+@using Bumbodium.WebApp.Models
 @using Bumbodium.Data.DBModels
 @using Bumbodium.Data.Interfaces
 @inject DialogService DialogService
 @inject IAvailabilityRepo _db
+
+<EditForm Model="@availabilityViewModel" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        Datum:
+        <label>
+            <InputDate @bind-Value="availabilityViewModel.Date" />
+        </label>
+    </p>
+    <p>
+        begin tijd:
+        <label>
+            <InputDate Type="InputDateType.Time" @bind-Value:format="hh:mm" @bind-Value="availabilityViewModel.StartTime" />
+        </label>
+    </p>
+    <p>
+        eind tijd:
+        <label>
+            <InputDate Type="InputDateType.Time" @bind-Value="availabilityViewModel.EndTime" />
+        </label>
+    </p>
+    <p>
+        Type beschikbaarheid:
+        <label>
+            <InputSelect @bind-Value="availabilityViewModel.AvailabilityType">
+                <option value="Schoolhours">School uren</option>
+                <option value="Leave">Verlof</option>
+                <option value="Holidays">Vakantie</option>
+            </InputSelect>
+        </label>
+    </p>
+
+    <button type="submit">Submit</button>
+</EditForm>
 
 <RadzenDialog />
 <RadzenSelectBar @bind-Value=@SelectedType TValue="AvailabilityType">
@@ -30,6 +67,7 @@
         <RadzenMonthView Text="Maand" />
     </ChildContent>
 </RadzenScheduler>
+
 
 @code {
     RadzenScheduler<Availability> scheduler;
@@ -121,5 +159,13 @@
         {
             args.Attributes["class"] = "rz-background-color-info-light";
         }
+    }
+    private AvailabilityViewModel availabilityViewModel = new AvailabilityViewModel();
+
+    private void HandleValidSubmit()
+    {
+        //Logger.LogInformation("HandleValidSubmit called");
+
+        // Process the valid form
     }
 }
