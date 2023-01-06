@@ -23,6 +23,19 @@ namespace Bumbodium.Data.Repositories
         {
             return _ctx.Shift.Where(s => s.ShiftStartDateTime >= startTime  && s.ShiftEndDateTime <= endTime).ToList();
         }
+
+        public List<Presence>GetPresenceFromWeek(string id, DateTime startTime, DateTime endTime)
+        {
+            return _ctx.Presence.Where(p =>
+                   (p.ClockInDateTime >= startTime && p.AlteredClockInDateTime == null && p.ClockOutDateTime <= endTime && p.AlteredClockOutDateTime == null) ||
+
+                   (p.ClockInDateTime >= startTime && p.AlteredClockInDateTime == null && p.AlteredClockOutDateTime <= endTime) ||
+
+                   (p.AlteredClockInDateTime >= startTime && p.ClockOutDateTime <= endTime && p.AlteredClockOutDateTime == null) ||
+
+                   (p.AlteredClockInDateTime >= startTime && p.AlteredClockOutDateTime <= endTime)
+                   ).ToList();
+        }
          
     }
 }

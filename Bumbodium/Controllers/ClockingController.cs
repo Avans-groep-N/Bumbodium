@@ -5,6 +5,7 @@ namespace Bumbodium.WebApp.Controllers
 {
     public class ClockingController : Controller
     {
+
         public IActionResult Index()
         {
             var clockingViewModel = new ClockingViewModel() { WeekNumber = 48 };
