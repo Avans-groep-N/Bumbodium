@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace Bumbodium.WebApp.Models
 {
-    public class EmployeeEditViewModel
+    public class EmployeeViewModel
     {
         public Employee Employee { get; set; }
 
@@ -15,12 +15,12 @@ namespace Bumbodium.WebApp.Models
         [AllowNull]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        public string? Password { get; set; }
+        public virtual string? Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string? ConfirmPassword { get; set; }
+        public virtual string? ConfirmPassword { get; set; }
 
         [ListHasItems(ErrorMessage = "Selecteer ten minste 1 afdeling")]
         public List<int> Departments { get; set; } = new();

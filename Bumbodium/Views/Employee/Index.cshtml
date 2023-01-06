@@ -1,8 +1,8 @@
-﻿@model EmployeeIndexViewModel
+﻿@model EmployeeListViewModel
 @using Bumbodium.Data.DBModels
 
 @{
-    ViewData["Title"] = "Normeringen"; 
+    ViewData["Title"] = "Normeringen";
 }
 
 <h1>Werknemers</h1>
@@ -31,11 +31,12 @@
             <div class="col">
                 <label asp-for="ShowInactive">Toon inactief:</label>
                 @Html.CheckBoxFor(vm => vm.ShowInactive)
-
-
             </div>
             <div class="col">
                 <button type="submit" class="btn">Filters toepassen</button>
+            </div>
+            <div class="col">
+                <a asp-action="Create" class="btn">Medewerker aanmaken</a>
             </div>
         </div>
     </div>
@@ -55,7 +56,6 @@
                     <input hidden asp-for="ShowInactive" value="@Model.ShowInactive" />
                     <button type="submit" class="btn col-2"> &lt; </button>
                 </form>
-
             }
             <h3 class="col-auto">Pagina @Model.CurrentPage / @Model.PageCount</h3>
             @if (Model.CurrentPage != Model.PageCount)
@@ -99,10 +99,11 @@
             </th>
         </tr>
     </thead>
-    <tbody>
-        @if (Model.Employees.Any())
-        {
-            foreach (var employee in Model.Employees)
+
+    @if (Model.Employees.Any())
+    {
+        <tbody>
+            @foreach (var employee in Model.Employees)
             {
                 <tr>
                     <td>
@@ -130,15 +131,15 @@
                         @Html.DisplayFor(e => employee.Type)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@employee.EmployeeID">Aanpassen</a>
+                        <a asp-action="Details" class="btn btn-sm" asp-route-id="@employee.EmployeeID">Details</a>
+                        <a asp-action="Edit" class="btn btn-sm" asp-route-id="@employee.EmployeeID">Aanpassen</a>
                     </td>
                 </tr>
             }
-        }
-        else
-        {
-            <h3>Geen werknemers gevonden</h3>
-        }
-
-    </tbody>
+        </tbody>
+    }
 </table>
+@if (!Model.Employees.Any())
+{
+    <h3>Geen werknemers gevonden</h3>
+}

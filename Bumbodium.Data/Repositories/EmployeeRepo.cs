@@ -47,6 +47,7 @@ namespace Bumbodium.Data
         {
             return _ctx.Users.Find(id);
         }
+
         public void UpdateUser(IdentityUser identityUser)
         {
             _ctx.Users.Update(identityUser);
@@ -57,9 +58,15 @@ namespace Bumbodium.Data
         {
             var objectsToDelete = _ctx.DepartmentEmployee.Where(de => de.EmployeeId.Equals(employeeID));
             _ctx.DepartmentEmployee.RemoveRange(objectsToDelete);
+            AddEmployeeToDepartments(employeeID, departmentIds);
+            _ctx.SaveChanges();
+        }
+        
+        public void AddEmployeeToDepartments(string employeeID, List<int> departmentIds)
+        {
             foreach(int id in departmentIds)
             {
-                _ctx.DepartmentEmployee.Add(new DepartmentEmployee() { EmployeeId = employeeID, DepartmentId = id});
+                _ctx.DepartmentEmployee.Add(new DepartmentEmployee() { EmployeeId = employeeID, DepartmentId = id });
             }
             _ctx.SaveChanges();
         }

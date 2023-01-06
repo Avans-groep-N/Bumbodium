@@ -47,7 +47,7 @@ namespace Bumbodium.Data.DBModels.EmployeeValidation
                 age = 0;
             }
 
-            if (age > _allowedMinAge)
+            if (age >= _allowedMinAge)
             {
                 return true;
             }

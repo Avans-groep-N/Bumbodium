@@ -1,11 +1,13 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
+using Bumbodium.Data.Migrations;
 using Bumbodium.WebApp.Models;
 using Bumbodium.WebApp.Models.ExcelExport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Common;
 using System.Data;
 
 namespace Bumbodium.WebApp.Controllers
@@ -29,8 +31,8 @@ namespace Bumbodium.WebApp.Controllers
                 .ThenInclude(pod => pod.Department)
                 .Where(e => e.DateOutService.HasValue == false)
                 .OrderBy(e => e.FirstName);
-            int employeesPerPage = 3;
-            return View(new EmployeeIndexViewModel()
+            int employeesPerPage = 10;
+            return View(new EmployeeListViewModel()
             {
                 CurrentPage = 1,
                 EmployeesPerPage = employeesPerPage,
@@ -40,7 +42,7 @@ namespace Bumbodium.WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(EmployeeIndexViewModel viewModel)
+        public IActionResult Index(EmployeeListViewModel viewModel)
         {
             IQueryable<Employee> employees = _employeeRepo.GetEmployees()
                 .Include(e => e.PartOFDepartment).ThenInclude(pod => pod.Department)
@@ -60,20 +62,52 @@ namespace Bumbodium.WebApp.Controllers
             return View(viewModel);
         }
 
+        // get create
+        public IActionResult Create()
+        {
+            Employee employee = new();
+            return View(new EmployeeCreateViewModel() { Employee = employee });
+        }
+
+        // post create
+        [HttpPost]
+        public IActionResult Create(EmployeeCreateViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+            else
+            {
+                IdentityUser user = new IdentityUser() { Email = viewModel.Employee.Email, UserName = viewModel.Employee.Email, PhoneNumber = viewModel.Employee.PhoneNumber };
+                var result =  _userManager.CreateAsync(user, viewModel.Password).Result;
+                if(!result.Succeeded)
+                {
+                    ModelState.AddModelError("UserCreateError", "Het aanmaken van de gebruiker ging fout, probeer het opnieuw");
+                    return View(viewModel);
+                }
+                viewModel.Employee.EmployeeID = user.Id;
+                _userManager.AddToRoleAsync(user, viewModel.Employee.Type.ToString());
+                _employeeRepo.InsertEmployee(viewModel.Employee);
+                _employeeRepo.AddEmployeeToDepartments(viewModel.Employee.EmployeeID, viewModel.Departments);
+                return RedirectToAction("Index");
+            }
+        }
+
         // get edit
-        public async Task<IActionResult> Edit(string id)
+        public IActionResult Edit(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
             Employee employee = _employeeRepo.GetEmployee(id);
-            return View(new EmployeeEditViewModel() { Employee = employee });
+            return View(new EmployeeViewModel() { Employee = employee });
         }
 
         // post edit
         [HttpPost]
-        public IActionResult Edit(EmployeeEditViewModel viewModel)
+        public IActionResult Edit(EmployeeViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -122,6 +156,17 @@ namespace Bumbodium.WebApp.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+        public IActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Employee employee = _employeeRepo.GetEmployee(id);
+            return View(employee);
+        }
+
 
         private void ReplaceRoleWith(string oldRole, string newRole, IdentityUser user)
         {

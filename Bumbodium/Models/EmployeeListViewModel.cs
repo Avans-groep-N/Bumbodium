@@ -2,7 +2,7 @@
 
 namespace Bumbodium.WebApp.Models
 {
-    public class EmployeeIndexViewModel
+    public class EmployeeListViewModel
     {
         public IEnumerable<Employee> Employees { get; set; }
         public int EmployeeCount { get; set; }

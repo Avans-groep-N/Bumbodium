@@ -1,12 +1,12 @@
-﻿@model EmployeeViewModel
+﻿@model EmployeeCreateViewModel
 @using Bumbodium.Data.DBModels
 
 <h1>Werknemer aanpassen</h1>
 <h4>Vakken met * zijn verplicht</h4>
 <div class="row">
     <div class="col-md-4">
-        <form action="/Employee/Edit" method="post">
-            <input hidden asp-for="Employee.EmployeeID" value=@Model.Employee.EmployeeID />
+        <form action="/Employee/Create" method="post">
+            <input hidden asp-for="Employee.EmployeeID" value="nieuw" />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="col-form-label-lg">
                 <label asp-for="Employee.Email">Email *</label>
@@ -14,12 +14,12 @@
                 <span asp-validation-for="Employee.Email" class="text-danger"></span>
             </div>
             <div class="col-form-label-lg">
-                <label asp-for="Password">Nieuw wachtwoord</label>
+                <label asp-for="Password">Wachtwoord *</label>
                 <input asp-for="Password" class="form-control" value="" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="col-form-label-lg">
-                <label asp-for="ConfirmPassword">Nieuw wachtwoord bevestigen</label>
+                <label asp-for="ConfirmPassword">Wachtwoord bevestigen *</label>
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
@@ -40,7 +40,7 @@
             </div>
             <div class="col-form-label-lg">
                 <label asp-for="Employee.Birthdate">Geboortedatum *</label>
-                <input asp-for="Employee.Birthdate" type="date" class="form-control" />
+                <input asp-for="Employee.Birthdate" type="date" value="null" class="form-control" />
                 <span asp-validation-for="Employee.Birthdate" class="text-danger"></span>
             </div>
             <div class="col-form-label-lg">
@@ -50,29 +50,17 @@
             </div>
             <div class="col-form-label-lg">
                 <label asp-for="Employee.DateInService">Werkt sinds *</label>
-                <input asp-for="Employee.DateInService" type="date" class="form-control" />
+                <input asp-for="Employee.DateInService" type="date" value="null" class="form-control" />
                 <span asp-validation-for="Employee.DateInService" class="text-danger"></span>
-            </div>
-            <div class="col-form-label-lg">
-                <label asp-for="Employee.DateOutService">Inactief sinds</label>
-                <input asp-for="Employee.DateOutService" type="date" class="form-control" />
-                <span asp-validation-for="Employee.DateOutService" class="text-danger"></span>
             </div>
             <div>
                 <label asp-for="Employee.Type">Type *</label>
                 <br />
-                @if (User.Identity.Name != Model.Employee.Email)
+                @foreach (TypeStaff type in Enum.GetValues(typeof(TypeStaff)))
                 {
-                    @foreach (TypeStaff type in Enum.GetValues(typeof(TypeStaff)))
-                    {
-                        @Html.RadioButtonFor(vm => vm.Employee.Type, type)
-                        <label>@type.ToString()</label>
-                        <br />
-                    }
-                }
-                else
-                {
-                    <p>Het type van de gebruiker kan niet door de gebruiker zelf worden aangepast</p>
+                    @Html.RadioButtonFor(vm => vm.Employee.Type, type)
+                    <label>@type.ToString()</label>
+                    <br />
                 }
             </div>
             <div>
@@ -80,22 +68,16 @@
                 <br />
                 @foreach (DepartmentType department in Enum.GetValues(typeof(DepartmentType)))
                 {
-                    @* Checks if employee is already part of the department of the checkbox, if true, checkbox is checked *@
-                    @if (Model.Employee.PartOFDepartment.Any(pod => pod.DepartmentId == (int)department + 1))
-                    {
-                        <input type="checkbox" name="Departments" value="@((int)department + 1)" checked />
-                    }
-                    else
-                    {
-                        <input type="checkbox" name="Departments" value="@((int)department + 1)" />
-                    }
+
+                    <input type="checkbox" name="Departments" value="@((int)department + 1)" />
+
                     <label>@department.ToString()</label>
                     <br />
                 }
                 <span asp-validation-for="Departments" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary">Aanpassen</button>
+            <button type="submit" class="btn btn-primary">Aanmaken</button>
         </form>
     </div>
 </div>
