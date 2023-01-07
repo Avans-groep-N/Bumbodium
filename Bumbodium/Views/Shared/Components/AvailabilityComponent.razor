@@ -2,10 +2,11 @@
 @using Bumbodium.WebApp.Models
 @using Bumbodium.Data.DBModels
 @using Bumbodium.Data.Interfaces
+@using Bumbodium.WebApp.Controllers;
 @inject DialogService DialogService
 @inject IAvailabilityRepo _db
 
-<EditForm Model="@availabilityViewModel" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@availabilityViewModel" OnValidSubmit="@SubmitAsync">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
@@ -18,7 +19,8 @@
     <p>
         begin tijd:
         <label>
-            <InputDate Type="InputDateType.Time" @bind-Value:format="hh:mm" @bind-Value="availabilityViewModel.StartTime" />
+            @*TODO: change to military time*@
+            <InputDate Type="InputDateType.Time" @bind-Value="availabilityViewModel.StartTime" />
         </label>
     </p>
     <p>
@@ -42,18 +44,11 @@
 </EditForm>
 
 <RadzenDialog />
-<RadzenSelectBar @bind-Value=@SelectedType TValue="AvailabilityType">
-    <Items>
-        <RadzenSelectBarItem Text="School uren" Value="AvailabilityType.Schoolhours" Style="color: red;" />
-        <RadzenSelectBarItem Text="Verlof" Value="AvailabilityType.Leave" Style="color: blue;" />
-        <RadzenSelectBarItem Text="Vakantie" Value="AvailabilityType.Holidays" Style="color: green;" />
-    </Items>
-</RadzenSelectBar>
 <RadzenScheduler @ref=@scheduler Data="@Data" TItem="Availability"
                  StartProperty="StartDateTime" EndProperty="EndDateTime" TextProperty="Text"
                  LoadData=@OnLoadData
                  style="height: 1010px;" TodayText="Vandaag"
-                 SlotRender=@OnSlotRender SlotSelect=@OnSlotSelect AppointmentRender=@OnAppointmentRender>
+                 SlotRender=@OnSlotRender AppointmentRender=@OnAppointmentRender>
     <Template Context="data">
         <p>
             @data.Text
@@ -72,49 +67,11 @@
 @code {
     RadzenScheduler<Availability> scheduler;
     public IEnumerable<Availability> Data { get; set; }
+    AvailabilityViewModel availabilityViewModel = new AvailabilityViewModel() { StartTime= TimeOnly.FromDateTime(DateTime.Now), Date = DateOnly.FromDateTime(DateTime.Now) };
 
     DateTime? SelectedStartTime;
     DateTime? SelectedEndTime;
     public AvailabilityType SelectedType { get; set; }
-
-
-    async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
-    {
-        //TODO single abscence per time constraint, somehow
-        if (SelectedStartTime == null && SelectedEndTime == null)
-        {
-            SelectedStartTime = args.Start;
-            SelectedEndTime = args.End;
-        }
-        else
-        {
-            if (SelectedStartTime < args.End)
-            {
-                _db.InsertAvailability(new Availability()
-                    {
-                        StartDateTime = SelectedStartTime.GetValueOrDefault(),
-                        EndDateTime = args.End,
-                        Type = SelectedType,
-                        // TODO replace with actual id
-                        EmployeeId = "b74ddd14-6340-4840-95c2-db12554843e5"
-                    });
-            }
-            else
-            {
-                _db.InsertAvailability(new Availability()
-                    {
-                        StartDateTime = args.Start,
-                        EndDateTime = SelectedEndTime.GetValueOrDefault(),
-                        Type = SelectedType,
-                        // TODO replace with actual id
-                        EmployeeId = "b74ddd14-6340-4840-95c2-db12554843e5"
-                    });
-            }
-            SelectedStartTime = null;
-            SelectedEndTime = null;
-            await scheduler.Reload();
-        }
-    }
 
     async Task EditItem(Availability item)
     {
@@ -160,12 +117,19 @@
             args.Attributes["class"] = "rz-background-color-info-light";
         }
     }
-    private AvailabilityViewModel availabilityViewModel = new AvailabilityViewModel();
 
-    private void HandleValidSubmit()
+    async Task SubmitAsync()
     {
-        //Logger.LogInformation("HandleValidSubmit called");
+        Availability availability = new Availability
+            {
+                //TODO: actual employee ID
+                EmployeeId = "b74ddd14-6340-4840-95c2-db12554843e5",
+                StartDateTime = availabilityViewModel.Date.ToDateTime(availabilityViewModel.StartTime),
+                EndDateTime = availabilityViewModel.Date.ToDateTime(availabilityViewModel.EndTime),
+                Type = availabilityViewModel.AvailabilityType
+            };
+        _db.InsertAvailability(availability);
+        await scheduler.Reload();
 
-        // Process the valid form
     }
 }
