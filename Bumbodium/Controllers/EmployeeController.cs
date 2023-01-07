@@ -26,39 +26,27 @@ namespace Bumbodium.WebApp.Controllers
 
         public IActionResult Index()
         {
-            IQueryable<Employee> employees = _employeeRepo.GetEmployees()
-                .Include(e => e.PartOFDepartment)
-                .ThenInclude(pod => pod.Department)
-                .Where(e => e.DateOutService.HasValue == false)
-                .OrderBy(e => e.FirstName);
             int employeesPerPage = 10;
+            int employeeCount = _employeeRepo.GetEmployeesFiltered(null, null).Count();
+            IEnumerable<Employee> employees = _employeeRepo.GetEmployeesList(null, null, 0, employeesPerPage);
             return View(new EmployeeListViewModel()
             {
                 CurrentPage = 1,
                 EmployeesPerPage = employeesPerPage,
-                Employees = employees.Take(employeesPerPage),
-                EmployeeCount = employees.Count()
+                Employees = employees,
+                EmployeeCount = employeeCount
             });
         }
 
         [HttpPost]
         public IActionResult Index(EmployeeListViewModel viewModel)
         {
-            IQueryable<Employee> employees = _employeeRepo.GetEmployees()
-                .Include(e => e.PartOFDepartment).ThenInclude(pod => pod.Department)
-                .Where(e => e.DateOutService.HasValue == viewModel.ShowInactive);
-            if (!string.IsNullOrEmpty(viewModel.NameFilter))
-            {
-                employees = employees.Where(e => (e.FirstName + " " + e.MiddleName + " " + e.LastName).ToLower().Contains(viewModel.NameFilter.ToLower()));
-            }
-            if (viewModel.DepartmentFilter > 0)
-            {
-                employees = employees.Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == viewModel.DepartmentFilter));
-            }
-            viewModel.EmployeeCount = employees.Count();
-            viewModel.Employees = employees.OrderBy(e => e.FirstName)
-                .Skip(viewModel.EmployeesPerPage * (viewModel.CurrentPage - 1))
-                .Take(viewModel.EmployeesPerPage);
+            viewModel.EmployeeCount = _employeeRepo.GetEmployeesFiltered(viewModel.NameFilter,
+                viewModel.DepartmentFilter).Count();
+            viewModel.Employees = _employeeRepo.GetEmployeesList(viewModel.NameFilter, 
+                viewModel.DepartmentFilter,
+                viewModel.EmployeesPerPage * (viewModel.CurrentPage - 1), 
+                viewModel.EmployeesPerPage); 
             return View(viewModel);
         }
 
