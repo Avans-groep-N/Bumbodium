@@ -26,6 +26,11 @@ namespace Bumbodium.Data
             return _ctx.Availability.Where(a => a.StartDateTime > start && a.StartDateTime < end).ToList();
         }
 
+        public List<Availability> GetUnconfirmedAvailabilities()
+        {
+            return _ctx.Availability.Where(a => a.IsConfirmed == false && a.Type != AvailabilityType.Schoolhours).ToList();
+        }
+
         public void InsertAvailability(Availability availability)
         {
             _ctx.Availability.Add(availability);

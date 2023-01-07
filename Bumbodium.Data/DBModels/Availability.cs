@@ -21,6 +21,9 @@ namespace Bumbodium.Data.DBModels
         [Required]
         public AvailabilityType Type { get; set; }
 
+        [Required]
+        public bool IsConfirmed { get; set; } = false;
+
         [NotMapped]
         public string Text
         {
