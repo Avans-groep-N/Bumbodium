@@ -59,7 +59,7 @@ namespace Bumbodium.WebApp.Controllers
 
         // post create
         [HttpPost]
-        public IActionResult Create(EmployeeCreateViewModel viewModel)
+        public async Task<IActionResult> Create(EmployeeCreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -68,14 +68,14 @@ namespace Bumbodium.WebApp.Controllers
             else
             {
                 IdentityUser user = new IdentityUser() { Email = viewModel.Employee.Email, UserName = viewModel.Employee.Email, PhoneNumber = viewModel.Employee.PhoneNumber };
-                var result =  _userManager.CreateAsync(user, viewModel.Password).Result;
+                var result =  await _userManager.CreateAsync(user, viewModel.Password);
                 if(!result.Succeeded)
                 {
                     ModelState.AddModelError("UserCreateError", "Het aanmaken van de gebruiker ging fout, probeer het opnieuw");
                     return View(viewModel);
                 }
                 viewModel.Employee.EmployeeID = user.Id;
-                _userManager.AddToRoleAsync(user, viewModel.Employee.Type.ToString());
+                await _userManager.AddToRoleAsync(user, viewModel.Employee.Type.ToString());
                 _employeeRepo.InsertEmployee(viewModel.Employee);
                 _employeeRepo.AddEmployeeToDepartments(viewModel.Employee.EmployeeID, viewModel.Departments);
                 return RedirectToAction("Index");
