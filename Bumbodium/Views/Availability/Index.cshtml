@@ -1,8 +1,4 @@
-﻿@*@model AvailabilityViewModel
-@{
-    ViewData["Title"] = "Index";
-}*@
-@model Bumbodium.Data.DBModels.Availability[]
+﻿@model Bumbodium.Data.DBModels.Availability[]
 @{
     ViewData["Title"] = "Index";
 }
@@ -11,37 +7,3 @@
     <h1>Beschikbaarheid</h1>
     @(await Html.RenderComponentAsync<Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent>(RenderMode.ServerPrerendered))
 </div>
-
-@*<div class="text-center">
-    <h1>Beschikbaarheid</h1>
-    <div class="card">
-        <div class="card-body">
-            @*TODO: make a pop-up*@
-@*follows the same structure as register.cshtml
-            <form asp-action="CreateAvailability" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="col-form-label-lg">
-                    <label asp-for="Date">Datum</label>
-                    <input asp-for="Date" class="form-control" />
-                </div>
-                <div class="form-group">
-                <label asp-for="StartTime">Start tijd</label>
-                    <input asp-for="StartTime" class="form-control" />
-                    <span asp-validation-for="StartTime" class="text-danger"></span>
-                </div>
-                <div class="col-form-label-lg">
-                    <label asp-for="EndTime">Eind tijd</label>
-                    <input asp-for="EndTime" class="form-control" />
-                    <span asp-validation-for="EndTime" class="text-danger"></span>
-                </div>
-                <div class="col-form-label-lg">
-                    <label asp-for="AvailabilityType">Type beschikbaarheid</label>
-                    <input asp-for="AvailabilityType" class="form-control" />
-                    <span asp-validation-for="AvailabilityType" class="text-danger"></span>
-                </div>
-                <button type="submit" class="btn btn-primary">Beschikbaarheid toevoegen</button>
-                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-            </form>
-        </div>
-    </div>
-</div>*@
