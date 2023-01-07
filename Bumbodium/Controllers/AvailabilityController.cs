@@ -51,15 +51,6 @@ namespace Bumbodium.WebApp.Controllers
             _ctx.SaveChanges();
 
             return View(model);
-            try
-            {
-                _availabilityRepo.InsertAvailability(availability);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return RedirectToAction(nameof(Index));
-            }
         }
 
         public IActionResult Delete(int id)
