@@ -1,5 +1,6 @@
 ﻿@model Bumbodium.WebApp.Models.ClockingView.ClockingViewModel
 
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="row">
     <div class="col" style="padding: 5px;">Gebruiker: @Model.EmployeeName</div>
@@ -13,19 +14,6 @@
 
 <br />
 
-@using (Html.BeginForm("SaveNewTimes", "Clocking", FormMethod.Post))
-{
-            @Html.EditorFor(m => m)
-    for (int i = 0; i < Model.ClockingDays.Count; i++)
-    {
-        for (var j = 0; j < Model.ClockingDays[i].ManagerClocking.Count; j++)
-        {
-            @Html.TextBoxFor(m => m.ClockingDays[i].ManagerClocking[j].ClockStartTime)
-        }
-
-    }
-    <input type="submit" value="Save" />
-}
 
 <div class="row">
     <div class="col" style="padding: 5px;"><strong>Kloktijden</strong></div>
@@ -33,6 +21,7 @@
 </div>
 
 <form asp-action="SaveNewTimes" method="post">
+    <input type="hidden" id="employeeId" name="employeeId" value="@Model.EmployeeId" />
     @for (int i = 0; i < Model.ClockingDays.Count; i++)
     {
         <div class="row" style="background-color:cornflowerblue; color: white; padding: 15px;">
@@ -43,16 +32,23 @@
 
                 @for (var j = 0; j < Model.ClockingDays[i].ManagerClocking.Count; j++)
                 {
+                    <input type="hidden" id="day" name="day" value="@Model.ClockingDays[i].Day.ToString("dd/MM/yyyy")" />
                     <div class="row">
                         <div class="col justify-content-md-start">
-                            <input asp-for="@Model.ClockingDays[i].ManagerClocking[j].AlterdClockStartTime" type="time" class="form-control-plaintext accordion-button" value="@Model.ClockingDays[i].ManagerClocking[j].ClockStartTime.GetValueOrDefault().TimeOfDay">
+                            <input type="hidden" id="timestart" name="timestart"
+                           value="@Model.ClockingDays[i].ManagerClocking[j].ClockStartTime.GetValueOrDefault().TimeOfDay">
+
+                            <input type="time" id="alterdtimestart" name="alterdtimestart"
+                           class="form-control-plaintext accordion-button" value="@Model.ClockingDays[i].ManagerClocking[j].ClockStartTime.GetValueOrDefault().TimeOfDay">
                         </div>
                         <div class="col"></div>
                         <div class="col">@Model.ClockingDays[i].ManagerClocking[j].ScheduleStartTime.GetValueOrDefault().TimeOfDay</div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <input asp-for="@Model.ClockingDays[i].ManagerClocking[j].AlterdClockEndTime" type="time" class="form-control-plaintext accordion-button"  value="@Model.ClockingDays[i].ManagerClocking[j].ClockEndTime.GetValueOrDefault().TimeOfDay">
+
+                            <input type="hidden" id="timeend" name="timeend" value="@Model.ClockingDays[i].ManagerClocking[j].ClockEndTime.GetValueOrDefault().TimeOfDay">
+                            <input type="time" id="alterdtimeend" name="alterdtimeend" class="form-control-plaintext accordion-button" value="@Model.ClockingDays[i].ManagerClocking[j].ClockEndTime.GetValueOrDefault().TimeOfDay">
                         </div>
                         <div class="col"></div>
                         <div class="col">@Model.ClockingDays[i].ManagerClocking[j].ScheduleEndTime.GetValueOrDefault().TimeOfDay</div>

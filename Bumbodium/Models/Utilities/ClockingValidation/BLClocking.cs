@@ -3,6 +3,7 @@ using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp.Models.ClockingView;
+using Microsoft.Extensions.Primitives;
 using System.Globalization;
 
 namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
@@ -19,21 +20,27 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             _employeeRepo = employeeRepo;
         }
 
-        public void Save(ClockingViewModel newClockTime)
-        {
-            
-        }
+        
         public ClockingViewModel GetClockingViewModel(string id, int weekNr, int year)
         {
-            ClockingViewModel clockingVW = new ClockingViewModel() { YearNumber = year, WeekNumber = weekNr, EmployeeName = _employeeRepo.GetEmployee(id).FullName };
+            ClockingViewModel clockingVW = new ClockingViewModel() { YearNumber = year, WeekNumber = weekNr, EmployeeName = _employeeRepo.GetEmployee(id).FullName, EmployeeId = id};
 
-            clockingVW.ClockingDays = GetAllDaysOfWeek(id, weekNr, year);
+            clockingVW.ClockingDays = GetAllDaysOfWeekManager(id, weekNr, year);
 
             return clockingVW;
         }
 
+        public void Save(string employeeId, ManagerClockingItem mCItem)
+        {
+            var alterdPresence = _presenceRepo.GetStartToEndPresence(employeeId, mCItem.ClockStartTime, mCItem.ClockEndTime);
 
-        private List<ClockingDayViewModel> GetAllDaysOfWeek(string id, int weekNr, int year)
+            alterdPresence.AlteredClockInDateTime = mCItem.AlterdClockStartTime;
+            alterdPresence.AlteredClockOutDateTime = mCItem.AlterdClockEndTime;
+
+            _presenceRepo.Save(alterdPresence);
+        }
+
+        private List<ClockingDayViewModel> GetAllDaysOfWeekManager(string id, int weekNr, int year)
         {
             var clockday = new List<ClockingDayViewModel>();
 
@@ -43,8 +50,8 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             for (int i = 0; i < DaysOftheWeek; i++)
             {
                 var dayVW = new ClockingDayViewModel() { Day = day.AddDays(i) };
-                dayVW.EmployeeClocking = GetAllShiftsOfDay(id, day.AddDays(i));
-                if (dayVW.EmployeeClocking != null)
+                dayVW.ManagerClocking = GetAllShiftsOfDay(id, day.AddDays(i));
+                if (dayVW.ManagerClocking != null)
                     clockday.Add(dayVW);
 
             }
@@ -52,7 +59,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             return clockday;
         }
 
-        private List<MedewerkerClockingItem>? GetAllShiftsOfDay(string id, DateTime dateTime)
+        private List<ManagerClockingItem>? GetAllShiftsOfDay(string id, DateTime dateTime)
         {
             List<Presence> listPresence = _presenceRepo.GetWorkedHours(id, dateTime);
             List<Shift> shifts = _presenceRepo.GetShift(id, dateTime);
@@ -60,19 +67,34 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             if (listPresence.Count == 0)
                 return null;
 
-            var dayItems = new List<MedewerkerClockingItem>();
+            var dayItems = new List<ManagerClockingItem>();
 
             for (int i = 0; i < listPresence.Count; i++)
             {
                 if (shifts.Count > i)
-                    dayItems.Add(GetItem(listPresence[i], shifts[i]));
+                    dayItems.Add(ManagerGetItem(listPresence[i], shifts[i]));
                 else
-                    dayItems.Add(GetItem(listPresence[i], null));
+                    dayItems.Add(ManagerGetItem(listPresence[i], null));
             }
             return dayItems;
         }
 
-        private MedewerkerClockingItem GetItem(Presence presence, Shift? shift)
+        private ManagerClockingItem ManagerGetItem(Presence presence, Shift? shift)
+        {
+            var item = new ManagerClockingItem();
+            if (shift != null)
+            {
+                item.ScheduleStartTime = shift.ShiftStartDateTime;
+                item.ScheduleEndTime = shift.ShiftEndDateTime;
+            }
+
+            item.ClockStartTime = presence.AlteredClockInDateTime == null ? presence.ClockInDateTime : presence.AlteredClockInDateTime;
+            item.ClockEndTime = presence.AlteredClockOutDateTime == null ? presence.ClockOutDateTime : presence.AlteredClockOutDateTime;
+
+            return item;
+        }
+
+        private MedewerkerClockingItem MedewerkerGetItem(Presence presence, Shift? shift)
         {
             var item = new MedewerkerClockingItem();
 

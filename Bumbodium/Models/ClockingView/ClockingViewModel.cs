@@ -5,6 +5,8 @@
 
         public List<ClockingDayViewModel> ClockingDays { get; set; }
 
+        public string EmployeeId { get; set; }
+
         public string EmployeeName { get; set; }
 
         public int WeekNumber { get; set; }
