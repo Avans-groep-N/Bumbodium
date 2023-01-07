@@ -1,4 +1,4 @@
-﻿namespace Bumbodium.WebApp.Models
+﻿namespace Bumbodium.WebApp.Models.ClockingView
 {
     public class ClockingViewModel
     {

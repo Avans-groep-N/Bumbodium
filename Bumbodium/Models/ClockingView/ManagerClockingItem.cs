@@ -1,14 +1,14 @@
-﻿namespace Bumbodium.WebApp.Models
+﻿namespace Bumbodium.WebApp.Models.ClockingView
 {
-    public class ClockingItemViewModel
+    public class ManagerClockingItem
     {
-
         public DateTime? ClockStartTime { get; set; }
         public DateTime? ClockEndTime { get; set; }
+        public DateTime? AlterdClockStartTime { get; set; }
+        public DateTime? AlterdClockEndTime { get; set; }
         public bool IsOnGoing { get; set; }
         public bool IsChanged { get; set; }
         public DateTime? ScheduleStartTime { get; set; }
         public DateTime? ScheduleEndTime { get; set; }
-
     }
 }

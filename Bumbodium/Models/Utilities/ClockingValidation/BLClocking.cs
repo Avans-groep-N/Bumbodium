@@ -2,6 +2,7 @@
 using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Repositories;
+using Bumbodium.WebApp.Models.ClockingView;
 using System.Globalization;
 
 namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
@@ -18,6 +19,10 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             _employeeRepo = employeeRepo;
         }
 
+        public void Save(ClockingViewModel newClockTime)
+        {
+            
+        }
         public ClockingViewModel GetClockingViewModel(string id, int weekNr, int year)
         {
             ClockingViewModel clockingVW = new ClockingViewModel() { YearNumber = year, WeekNumber = weekNr, EmployeeName = _employeeRepo.GetEmployee(id).FullName };
@@ -26,6 +31,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
 
             return clockingVW;
         }
+
 
         private List<ClockingDayViewModel> GetAllDaysOfWeek(string id, int weekNr, int year)
         {
@@ -37,8 +43,8 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             for (int i = 0; i < DaysOftheWeek; i++)
             {
                 var dayVW = new ClockingDayViewModel() { Day = day.AddDays(i) };
-                dayVW.ClockingItems = GetAllShiftsOfDay(id, day.AddDays(i));
-                if (dayVW.ClockingItems != null)
+                dayVW.EmployeeClocking = GetAllShiftsOfDay(id, day.AddDays(i));
+                if (dayVW.EmployeeClocking != null)
                     clockday.Add(dayVW);
 
             }
@@ -46,7 +52,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             return clockday;
         }
 
-        private List<ClockingItemViewModel>? GetAllShiftsOfDay(string id, DateTime dateTime)
+        private List<MedewerkerClockingItem>? GetAllShiftsOfDay(string id, DateTime dateTime)
         {
             List<Presence> listPresence = _presenceRepo.GetWorkedHours(id, dateTime);
             List<Shift> shifts = _presenceRepo.GetShift(id, dateTime);
@@ -54,7 +60,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             if (listPresence.Count == 0)
                 return null;
 
-            var dayItems = new List<ClockingItemViewModel>();
+            var dayItems = new List<MedewerkerClockingItem>();
 
             for (int i = 0; i < listPresence.Count; i++)
             {
@@ -66,9 +72,9 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             return dayItems;
         }
 
-        private ClockingItemViewModel GetItem(Presence presence, Shift? shift)
+        private MedewerkerClockingItem GetItem(Presence presence, Shift? shift)
         {
-            var item = new ClockingItemViewModel();
+            var item = new MedewerkerClockingItem();
 
             item.ClockStartTime = presence.AlteredClockInDateTime == null ? presence.ClockInDateTime : presence.AlteredClockInDateTime;
             item.ClockEndTime = presence.AlteredClockOutDateTime == null ? presence.ClockOutDateTime : presence.AlteredClockOutDateTime;
