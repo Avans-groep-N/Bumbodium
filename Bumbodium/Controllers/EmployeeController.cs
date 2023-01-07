@@ -107,7 +107,7 @@ namespace Bumbodium.WebApp.Controllers
 
         // post edit
         [HttpPost]
-        public IActionResult Edit(EmployeeViewModel viewModel)
+        public async Task<IActionResult> Edit(EmployeeViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -119,8 +119,8 @@ namespace Bumbodium.WebApp.Controllers
                 IdentityUser user = _userManager.FindByIdAsync(viewModel.Employee.EmployeeID).Result;
                 if (viewModel.Employee.Email != user.Email)
                 {
-                    string token = _userManager.GenerateChangeEmailTokenAsync(user, viewModel.Employee.Email).Result;
-                    var result = _userManager.ChangeEmailAsync(user, viewModel.Employee.Email, token).Result;
+                    string token = await _userManager.GenerateChangeEmailTokenAsync(user, viewModel.Employee.Email);
+                    var result = await _userManager.ChangeEmailAsync(user, viewModel.Employee.Email, token);
                     if(!result.Succeeded)
                     {
                         ModelState.AddModelError("EmailInvalid", "De opgegeven Email was misvormd");
@@ -130,8 +130,8 @@ namespace Bumbodium.WebApp.Controllers
                 }
                 if (!string.IsNullOrEmpty(viewModel.Password))
                 {
-                    string token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
-                    var result = _userManager.ResetPasswordAsync(user, token, viewModel.Password).Result;
+                    string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var result =  await _userManager.ResetPasswordAsync(user, token, viewModel.Password);
                     if(!result.Succeeded)
                     {
                         ModelState.AddModelError("PasswordInvalid", "Wachtwoord moet minimaal een hoofdletter en een nummer hebben en uit meer dan 5 characters bestaan");
@@ -141,11 +141,11 @@ namespace Bumbodium.WebApp.Controllers
                 }
                 if (viewModel.Employee.Type == TypeStaff.Manager)
                 {
-                    ReplaceRoleWith("Employee", "Manager", user);
+                    await ReplaceRoleWith("Employee", "Manager", user);
                 }
                 if (viewModel.Employee.Type == TypeStaff.Employee)
                 {
-                    ReplaceRoleWith("Manager", "Employee", user);
+                    await ReplaceRoleWith("Manager", "Employee", user);
                 }
 
                 _employeeRepo.ReplaceDepartmentsOfEmployee(viewModel.Employee.EmployeeID, viewModel.Departments);
@@ -168,12 +168,12 @@ namespace Bumbodium.WebApp.Controllers
         }
 
 
-        private void ReplaceRoleWith(string oldRole, string newRole, IdentityUser user)
+        private async Task ReplaceRoleWith(string oldRole, string newRole, IdentityUser user)
         {
-            if (!_userManager.GetRolesAsync(user).Result.Contains(newRole))
+            if (!(await _userManager.GetRolesAsync(user)).Contains(newRole))
             {
-                _userManager.RemoveFromRoleAsync(user, oldRole);
-                _userManager.AddToRoleAsync(user, newRole);
+                await _userManager.RemoveFromRoleAsync(user, oldRole);
+                await _userManager.AddToRoleAsync(user, newRole);
             }
         }
     }

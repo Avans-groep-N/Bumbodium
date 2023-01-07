@@ -58,8 +58,8 @@ namespace Bumbodium.Data
         {
             var objectsToDelete = _ctx.DepartmentEmployee.Where(de => de.EmployeeId.Equals(employeeID));
             _ctx.DepartmentEmployee.RemoveRange(objectsToDelete);
-            AddEmployeeToDepartments(employeeID, departmentIds);
             _ctx.SaveChanges();
+            AddEmployeeToDepartments(employeeID, departmentIds);
         }
         
         public void AddEmployeeToDepartments(string employeeID, List<int> departmentIds)
