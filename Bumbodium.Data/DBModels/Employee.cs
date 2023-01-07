@@ -29,6 +29,7 @@ namespace Bumbodium.Data.DBModels
 
         [Required]
         [StringLength(16)]
+        [Phone(ErrorMessage = "Het opgegeven telfoonnummer is ongeldig")]
         public string PhoneNumber { get; set; }
 
         [Required]
