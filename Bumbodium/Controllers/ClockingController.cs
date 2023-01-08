@@ -92,6 +92,9 @@ namespace Bumbodium.WebApp.Controllers
 
             }
             DateTime date = DateTime.Parse(day[0]);
+            while(date.DayOfWeek != DayOfWeek.Monday)
+                date = date.AddDays(-1);
+
             int[] yearAndWeek = new int[] { date.Year, ISOWeek.GetWeekOfYear(date) };
 
             var clockingViewModel = _blclocking.GetClockingViewModel(employeeId, yearAndWeek[1], yearAndWeek[0]);
