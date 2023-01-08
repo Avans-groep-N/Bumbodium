@@ -1,20 +1,30 @@
 ﻿@model Bumbodium.WebApp.Models.ForecastWeekViewModel
 
-<div class="container-fluid">
-    <div class="col-md-4 p-3">
-        <h2>Prognose</h2>
-        <form asp-action="CreateNewForcast" class="col-md-4 p-3">
+<h2>Prognose</h2>
 
-            @for (var i = 0; i < Model.DaysOfTheWeek.Length; i++)
-            {
-                <label asp-for="@Model.DaysOfTheWeek[i].Date"></label>
-                <input asp-for="@Model.DaysOfTheWeek[i].Date" placeholder="Date" />
-                <label asp-for="@Model.DaysOfTheWeek[i].AmountExpectedColis"></label>
-                <input asp-for="@Model.DaysOfTheWeek[i].AmountExpectedColis" placeholder="AmountExpectedColis" />
-                <label asp-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers"></label>
-                <input asp-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers" placeholder="AmountExpectedCustomers" />
-            }
-            <input type="submit" class="btn" />
-        </form>
+<form asp-action="Create" method="post">
+    <div class="row">
+        @for (var i = 0; i < Model.DaysOfTheWeek.Length; i++)
+        {
+            <div class="col-5" >   
+                <div class="col-form-label-lg">
+                    <label asp-for="@Model.DaysOfTheWeek[i].Date"></label>
+                    <input asp-for="@Model.DaysOfTheWeek[i].Date" placeholder="Date" type="date" class="form-control" />
+                    <span asp-validation-for="@Model.DaysOfTheWeek[i].Date" class="text-danger"></span>
+                </div>
+                <div class="col-form-label-lg">
+                    <label asp-for="@Model.DaysOfTheWeek[i].AmountExpectedColis"></label>
+                    <input asp-for="@Model.DaysOfTheWeek[i].AmountExpectedColis" placeholder="AmountExpectedColis" class="form-control" />
+                    <span asp-validation-for="@Model.DaysOfTheWeek[i].AmountExpectedColis" class="text-danger"></span>
+                </div>
+                <div class="col-form-label-lg">
+                    <label asp-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers"></label>
+                    <input asp-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers" placeholder="AmountExpectedCustomers" class="form-control" />
+                    <span asp-validation-for="@Model.DaysOfTheWeek[i].AmountExpectedCustomers" class="text-danger"></span>
+                </div>
+                <hr />
+            </div>
+        }
     </div>
-</div>
+    <input type="submit" class="btn" />
+</form>

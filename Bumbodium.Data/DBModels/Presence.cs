@@ -18,5 +18,7 @@ namespace Bumbodium.Data.DBModels
 
         public DateTime? AlteredClockInDateTime { get; set; }
         public DateTime? AlteredClockOutDateTime { get; set; }
+
+        public bool IsSick { get; set; }
     }
 }
