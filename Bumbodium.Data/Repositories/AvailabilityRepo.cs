@@ -23,7 +23,11 @@ namespace Bumbodium.Data
 
         public List<Availability> GetAvailabilitiesInRange(DateTime start, DateTime end)
         {
-            return _ctx.Availability.Where(a => a.StartDateTime > start && a.StartDateTime < end).ToList();
+            return _ctx.Availability.Where(a => 
+            (a.StartDateTime > start && a.StartDateTime < end) ||
+            (a.EndDateTime > start && a.EndDateTime < end) ||
+            (a.StartDateTime < start && a.EndDateTime > end)
+            ).ToList();
         }
 
         public List<Availability> GetUnconfirmedAvailabilities()
