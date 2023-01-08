@@ -76,7 +76,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             return clockday;
         }
 
-        private List<MedewerkerClockingItem> GetAllShiftsOfDayEmployee(string id, DateTime dateTime)
+        private List<EmployeeClockingItem> GetAllShiftsOfDayEmployee(string id, DateTime dateTime)
         {
             List<Presence> listPresence = _presenceRepo.GetWorkedHours(id, dateTime);
             List<Shift> shifts = _presenceRepo.GetShift(id, dateTime);
@@ -84,7 +84,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             if (listPresence.Count == 0)
                 return null;
 
-            var dayItems = new List<MedewerkerClockingItem>();
+            var dayItems = new List<EmployeeClockingItem>();
 
             for (int i = 0; i < listPresence.Count; i++)
             {
@@ -116,9 +116,9 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             return dayItems;
         }
 
-        private MedewerkerClockingItem EmployeeGetItem(Presence presence, Shift shift)
+        private EmployeeClockingItem EmployeeGetItem(Presence presence, Shift shift)
         {
-            var item = new MedewerkerClockingItem();
+            var item = new EmployeeClockingItem();
 
             item.ClockStartTime = presence.AlteredClockInDateTime == null ? presence.ClockInDateTime : presence.AlteredClockInDateTime;
             item.ClockEndTime = presence.AlteredClockOutDateTime == null ? presence.ClockOutDateTime : presence.AlteredClockOutDateTime;

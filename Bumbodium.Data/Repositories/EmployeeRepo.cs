@@ -32,6 +32,11 @@ namespace Bumbodium.Data
             return _ctx.Users.Where(u => u.Email == email).Single();
         }
 
+        public IdentityUser GetUserByName(string name)
+        {
+            return _ctx.Users.Where(u => u.UserName == name).Single();
+        }
+
         public IdentityUser GetUserById(string id)
         {
             return _ctx.Users.Find(id);
