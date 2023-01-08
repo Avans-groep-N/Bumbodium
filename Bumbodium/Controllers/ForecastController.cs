@@ -13,17 +13,23 @@ namespace Bumbodium.WebApp.Controllers
     public class ForecastController : Controller
     {
         private readonly ForecastRepo _forecastRepo;
+        private readonly DepartmentRepo _departmentRepo;
 
-        public ForecastController(ForecastRepo forecastRepo)
+        public ForecastController(ForecastRepo forecastRepo, DepartmentRepo departmentRepo)
         {
             _forecastRepo = forecastRepo;
+            _departmentRepo = departmentRepo;
         }
 
         // GET: ForecastController
         public ActionResult Index()
         {
-            
-            return View(_forecastRepo.GetAll());
+            var forecasts = _forecastRepo.GetAll();
+            foreach(var forecast in forecasts)
+            {
+                forecast.Department = _departmentRepo.GetDepartmentById(forecast.DepartmentId);
+            }
+            return View(forecasts);
         }
 
         // GET: ForecastController/Details/5
@@ -41,17 +47,36 @@ namespace Bumbodium.WebApp.Controllers
         // POST: ForecastController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateNewForcast(ForecastWeekViewModel forecast)
+        public ActionResult Create(ForecastWeekViewModel forecastVM)
         {
-            try
+            if (ModelState.IsValid)
             {
-                _forecastRepo.CreateForecast(forecast.DaysOfTheWeek);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    Forecast[] forecasts = new Forecast[7];
+
+                    //Transitioning VMs to dbmodels
+                    for (int index = 0; index < forecasts.Length; index++)
+                    {
+                        var model = forecastVM.DaysOfTheWeek[index];
+                        forecasts[index] = new Forecast()
+                        {
+                            Date = model.Date.Value,
+                            AmountExpectedColis = model.AmountExpectedColis.Value,
+                            AmountExpectedCustomers = model.AmountExpectedCustomers.Value
+                        };
+                    }
+
+                    _forecastRepo.CreateForecast(forecasts);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            catch
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            return View(new ForecastWeekViewModel());
+
         }
 
         // GET: ForecastController/Edit/5

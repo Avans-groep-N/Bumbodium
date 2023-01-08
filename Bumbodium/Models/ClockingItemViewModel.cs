@@ -1,6 +1,9 @@
-﻿namespace Bumbodium.WebApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Bumbodium.WebApp.Models
 {
-    public class ClockingItemViewModel
+    public class ClockingItemViewModel : IValidatableObject
     {
+
     }
 }
