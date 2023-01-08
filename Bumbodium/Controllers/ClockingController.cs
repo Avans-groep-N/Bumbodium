@@ -1,16 +1,14 @@
 ﻿using Bumbodium.Data;
-using Bumbodium.Data.DBModels;
-using Bumbodium.WebApp.Models;
 using Bumbodium.WebApp.Models.ClockingView;
 using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Primitives;
 using System.Globalization;
 
 namespace Bumbodium.WebApp.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class ClockingController : Controller
     {
 
@@ -23,8 +21,6 @@ namespace Bumbodium.WebApp.Controllers
             _employeeRepo = employeeRepo;
         }
 
-        [Authorize(Roles = "Manager")]
-
         public IActionResult Index()
         {
             var employeeList = _blclocking.GetEmployees();
@@ -36,7 +32,6 @@ namespace Bumbodium.WebApp.Controllers
             return View(clockingViewModel);
         }
 
-        [Authorize(Roles = "Manager")]
         [HttpPost]
         public IActionResult SelectWeek()
         {
