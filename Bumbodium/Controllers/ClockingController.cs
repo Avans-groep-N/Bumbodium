@@ -1,7 +1,13 @@
-﻿using Bumbodium.WebApp.Models.ClockingView;
+﻿using Bumbodium.Data;
+using Bumbodium.Data.DBModels;
+using Bumbodium.WebApp.Models;
+using Bumbodium.WebApp.Models.ClockingView;
 using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Primitives;
+using System.Globalization;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -9,65 +15,56 @@ namespace Bumbodium.WebApp.Controllers
     {
 
         private BLClocking _blclocking;
+        private EmployeeRepo _employeeRepo;
 
-        public ClockingController(BLClocking blclocking)
+        public ClockingController(BLClocking blclocking, EmployeeRepo employeeRepo)
         {
             _blclocking = blclocking;
+            _employeeRepo = employeeRepo;
         }
 
         [Authorize(Roles = "Manager")]
 
         public IActionResult Index()
         {
-
-            /*var clockingViewModel = new ClockingViewModel() { EmployeeName = "sukkel", EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65", WeekNumber = 48, YearNumber = 2022 };
-
-            var clockingFirstDayViewModel = new ClockingDayViewModel() { Day = new DateTime(2022, 12, 1, 12, 54, 0) };
-            var clockingSecondDayViewModel = new ClockingDayViewModel() { Day = new DateTime(2022, 12, 4, 12, 57, 0) };
-            var clockingThirdDayViewModel = new ClockingDayViewModel() { Day = new DateTime(2022, 12, 5, 12, 51, 0) };
-
-            clockingFirstDayViewModel.ManagerClocking.Add(new ManagerClockingItem()
-            {
-                ClockStartTime = new DateTime(2022, 12, 1, 12, 54, 0),
-                ClockEndTime = new DateTime(2022, 12, 1, 18, 12, 0),
-                ScheduleStartTime = new DateTime(2022, 12, 1, 13, 00, 0),
-                ScheduleEndTime = new DateTime(2022, 12, 1, 18, 00, 0)
-            });
-
-            clockingSecondDayViewModel.ManagerClocking.Add(new ManagerClockingItem()
-            {
-                ClockStartTime = new DateTime(2022, 12, 4, 12, 57, 0),
-                ClockEndTime = new DateTime(2022, 12, 4, 19, 00, 0),
-                ScheduleStartTime = new DateTime(2022, 12, 4, 13, 00, 0),
-                ScheduleEndTime = new DateTime(2022, 12, 4, 18, 00, 0)
-
-            });
-
-            clockingThirdDayViewModel.ManagerClocking.Add(new ManagerClockingItem()
-            {
-                ClockStartTime = new DateTime(2022, 12, 5, 12, 51, 0),
-                ClockEndTime = new DateTime(2022, 12, 5, 15, 04, 0),
-                ScheduleStartTime = new DateTime(2022, 12, 5, 12, 00, 0),
-                ScheduleEndTime = new DateTime(2022, 12, 5, 15, 00, 0)
-
-            });
-
-            clockingThirdDayViewModel.ManagerClocking.Add(new ManagerClockingItem()
-            {
-                ClockStartTime = new DateTime(2022, 12, 5, 17, 53, 0),
-                ClockEndTime = new DateTime(2022, 12, 5, 21, 13, 0),
-                ScheduleStartTime = new DateTime(2022, 12, 5, 18, 00, 0),
-                ScheduleEndTime = new DateTime(2022, 12, 5, 21, 00, 0)
-            });
-
-            clockingViewModel.ClockingDays.Add(clockingFirstDayViewModel);
-            clockingViewModel.ClockingDays.Add(clockingSecondDayViewModel);
-            clockingViewModel.ClockingDays.Add(clockingThirdDayViewModel);*/
-
-            var clockingViewModel = _blclocking.GetClockingViewModel("19f7d479-542a-408b-9016-0561e3e70f65", 53, 2020);
-
-
+            var employeeList = _blclocking.GetEmployees();
+            ViewBag.EmployeeList = new SelectList(employeeList, "Id", "Name");
+            string id = "";
+            if (employeeList.Count > 0)
+                id = employeeList[0].Id;
+            var clockingViewModel = _blclocking.GetClockingViewModel(id, ISOWeek.GetWeekOfYear(DateTime.Now), DateTime.Now.Year);
             return View(clockingViewModel);
+        }
+
+        [Authorize(Roles = "Manager")]
+        [HttpPost]
+        public IActionResult SelectWeek()
+        {
+            var id = Request.Form["Id"];
+
+            if (id.Equals(""))
+                return RedirectToAction(nameof(Index));
+
+            var week = Request.Form["weeknumber"].First().Split("-W");
+            int[] yearAndWeek = { Int32.Parse(week[0]), Int32.Parse(week[1]) };
+
+
+            var clockingViewModel = _blclocking.GetClockingViewModel(id, yearAndWeek[1], yearAndWeek[0]);
+            AddEmployeeToViewBag(id);
+
+            return View("../Clocking/Index", clockingViewModel);
+        }
+
+        private void AddEmployeeToViewBag(string id)
+        {
+            var employeeList = _blclocking.GetEmployees();
+            var temp = employeeList.Find(e => e.Id == id);
+            if (temp != null)
+            {
+                employeeList.Remove(temp);
+                employeeList.Insert(0, temp);
+            }
+            ViewBag.EmployeeList = new SelectList(employeeList, "Id", "Name");
         }
 
         [Authorize(Roles = "Manager")]
@@ -94,7 +91,14 @@ namespace Bumbodium.WebApp.Controllers
                     _blclocking.Save(employeeId, mCItem);
 
             }
-            return Redirect(nameof(Index));
+            DateTime date = DateTime.Parse(day[0]);
+            int[] yearAndWeek = new int[] { date.Year, ISOWeek.GetWeekOfYear(date) };
+
+            var clockingViewModel = _blclocking.GetClockingViewModel(employeeId, yearAndWeek[1], yearAndWeek[0]);
+            AddEmployeeToViewBag(employeeId);
+
+
+            return View("../Clocking/Index", clockingViewModel);
         }
     }
 }

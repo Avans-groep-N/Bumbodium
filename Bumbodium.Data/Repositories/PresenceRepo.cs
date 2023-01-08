@@ -51,7 +51,7 @@ namespace Bumbodium.Data.Repositories
 
         public List<Presence> GetWorkedHours(string id, DateTime dateTime)
         {
-            return _ctx.Presence.Where(p => p.EmployeeId == id && p.ClockInDateTime.Day == dateTime.Day).ToList();
+            return _ctx.Presence.Where(p => p.EmployeeId == id && p.ClockInDateTime.Date == dateTime.Date).ToList();
         }
 
         public void Save(Presence alterdPresence)

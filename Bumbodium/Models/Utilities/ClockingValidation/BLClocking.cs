@@ -20,12 +20,30 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             _employeeRepo = employeeRepo;
         }
 
-        
+        public List<EmployeeView> GetEmployees()
+        {
+            var employees = _employeeRepo.GetAllEmployees();
+
+            var employeeList = new List<EmployeeView>();
+
+            foreach (var employee in employees)
+            {
+                employeeList.Add(new EmployeeView() {Id = employee.EmployeeID, Name = employee.FullName });
+            }
+
+            return employeeList;
+        }
+
+
         public ClockingViewModel GetClockingViewModel(string id, int weekNr, int year)
         {
-            ClockingViewModel clockingVW = new ClockingViewModel() { YearNumber = year, WeekNumber = weekNr, EmployeeName = _employeeRepo.GetEmployee(id).FullName, EmployeeId = id};
+            ClockingViewModel clockingVW = new ClockingViewModel() { YearNumber = year, WeekNumber = weekNr, EmployeeName = id, EmployeeId = id };
+            if (id != "" && id != null)
+                clockingVW = new ClockingViewModel() { YearNumber = year, WeekNumber = weekNr, EmployeeName = _employeeRepo.GetEmployee(id).FullName, EmployeeId = id};
 
-            clockingVW.ClockingDays = GetAllDaysOfWeekManager(id, weekNr, year);
+            DateTime date = ISOWeek.ToDateTime(Convert.ToInt32(year), Convert.ToInt32(weekNr), DayOfWeek.Monday);
+
+            clockingVW.ClockingDays = GetAllDaysOfWeekManager(id, date);
 
             return clockingVW;
         }
@@ -33,6 +51,8 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
         public void Save(string employeeId, ManagerClockingItem mCItem)
         {
             var alterdPresence = _presenceRepo.GetStartToEndPresence(employeeId, mCItem.ClockStartTime, mCItem.ClockEndTime);
+            if (alterdPresence == null)
+                return;
 
             alterdPresence.AlteredClockInDateTime = mCItem.AlterdClockStartTime;
             alterdPresence.AlteredClockOutDateTime = mCItem.AlterdClockEndTime;
@@ -40,12 +60,9 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
             _presenceRepo.Save(alterdPresence);
         }
 
-        private List<ClockingDayViewModel> GetAllDaysOfWeekManager(string id, int weekNr, int year)
+        private List<ClockingDayViewModel> GetAllDaysOfWeekManager(string id, DateTime day)
         {
             var clockday = new List<ClockingDayViewModel>();
-
-
-            DateTime day = ISOWeek.ToDateTime(Convert.ToInt32(year), Convert.ToInt32(weekNr), DayOfWeek.Monday);
 
             for (int i = 0; i < DaysOftheWeek; i++)
             {

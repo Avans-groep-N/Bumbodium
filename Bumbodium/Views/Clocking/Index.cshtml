@@ -1,19 +1,22 @@
 ﻿@model Bumbodium.WebApp.Models.ClockingView.ClockingViewModel
 
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<div class="row">
-    <div class="col" style="padding: 5px;">Gebruiker: @Model.EmployeeName</div>
-</div>
-
 <br />
 
-<div class="row">
-    <div class="col" style="padding: 5px;">Year: @Model.YearNumber Week: @Model.WeekNumber</div>
-</div>
+@{
+    string calanderVal = Model.YearNumber +"-W";
+    if (Model.WeekNumber < 10)
+        calanderVal += "0" + Model.WeekNumber;
+    else
+        calanderVal += Model.WeekNumber;
+}
 
-<br />
 
+@using (Html.BeginForm("SelectWeek", "Clocking", FormMethod.Post))
+{
+    @Html.DropDownList("Id", (IEnumerable<SelectListItem>)ViewBag.EmployeeList)
+    <input type="week" name="weekNumber" value="@calanderVal" required />
+    <input type="submit" value="Submit" />
+}
 
 <div class="row">
     <div class="col" style="padding: 5px;"><strong>Kloktijden</strong></div>
@@ -59,7 +62,10 @@
         </div>
         <br />
     }
+    @if(Model.ClockingDays.Count > 0){
+
     <div class="form-group">
         <input type="submit" value="Save" class="btn btn-lg btn-primary btn-outline-warning" />
     </div>
+    }
 </form>

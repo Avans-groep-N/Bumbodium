@@ -57,5 +57,10 @@ namespace Bumbodium.Data
         {
             return _ctx.Employee.FirstOrDefault(e => e.FirstName == name)?.EmployeeID;
         }
+
+        public List<Employee> GetAllEmployees()
+        {
+            return _ctx.Employee.Where(e => e.DateOutService == null || e.DateOutService > DateTime.Now).ToList();
+        }
     }
 }
