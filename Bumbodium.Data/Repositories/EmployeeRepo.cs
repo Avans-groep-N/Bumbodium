@@ -93,6 +93,5 @@ namespace Bumbodium.Data
             }
             _ctx.SaveChanges();
         }
-
     }
 }

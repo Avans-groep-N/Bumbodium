@@ -14,7 +14,7 @@ namespace Bumbodium.Data.DBModels
         public DateTime ClockInDateTime { get; set; }
 
         [Required]
-        public DateTime? ClockOutDateTime { get; set; }
+        public DateTime ClockOutDateTime { get; set; }
 
         public DateTime? AlteredClockInDateTime { get; set; }
         public DateTime? AlteredClockOutDateTime { get; set; }

@@ -1,4 +1,9 @@
-﻿using Bumbodium.Data.DBModels;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -63,7 +68,5 @@ namespace Bumbodium.Data
                 .Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == departmentId))
                 .Count();
         }
-
-        
     }
 }

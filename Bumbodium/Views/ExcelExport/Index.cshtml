@@ -1,12 +1,9 @@
 ﻿@model Bumbodium.WebApp.Models.ExcelExport.ExcelExportEmployeesHours
 
 @{
-    string calanderVal = Model.Year + "-W";
-    if (Model.WeekNr < 10)
-        calanderVal += "0" + Model.WeekNr;
-    else
-        calanderVal += Model.WeekNr;
+    string calanderVal = Model.Year + "-W" + Model.WeekNr;
 }
+
 
 <h1>Excel export werknemers uren</h1>
 

@@ -9,7 +9,6 @@ using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
-using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +28,6 @@ builder.Services.AddScoped<PresenceRepo>();
 builder.Services.AddScoped<EmployeeRepo>();
 
 builder.Services.AddScoped<BLExcelExport>();
-builder.Services.AddScoped<BLClocking>();
 
 builder.Services.AddTransient<IAvailabilityRepo, AvailabilityRepo>();
 builder.Services.AddTransient<IShiftRepo, ShiftRepo>();
