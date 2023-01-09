@@ -6,7 +6,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bumbodium.Data.Utilities.EmployeeValidation
+namespace Bumbodium.Data.DBModels.EmployeeValidation
 {
     public class ValidateDateInServiceAttribute : ValidationAttribute
     {

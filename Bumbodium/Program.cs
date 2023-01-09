@@ -38,8 +38,10 @@ builder.Services.AddDbContext<BumbodiumContext>(options =>
                 options.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;")); //TODO: change back to azure db
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>{
     options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireNonAlphanumeric = false;
     }).AddEntityFrameworkStores<BumbodiumContext>()
-    .AddRoles<IdentityRole>();
+    .AddRoles<IdentityRole>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
 
 var app = builder.Build();
 
