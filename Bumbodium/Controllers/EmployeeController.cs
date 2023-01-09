@@ -1,6 +1,5 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
-using Bumbodium.Data.Migrations;
 using Bumbodium.WebApp.Models;
 using Bumbodium.WebApp.Models.ExcelExport;
 using Microsoft.AspNetCore.Authorization;

@@ -94,5 +94,10 @@ namespace Bumbodium.Data
             _ctx.SaveChanges();
         }
 
+        public List<Employee> GetAllEmployees()
+        {
+            return _ctx.Employee.Where(e => e.DateOutService == null || e.DateOutService > DateTime.Now).OrderBy(e => e.FirstName).ToList();
+        }
+
     }
 }
