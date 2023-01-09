@@ -37,6 +37,9 @@ namespace Bumbodium.Data.Migrations
                     b.Property<DateTime>("EndDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
 
