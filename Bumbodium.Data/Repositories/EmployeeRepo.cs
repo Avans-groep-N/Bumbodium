@@ -31,5 +31,36 @@ namespace Bumbodium.Data
         {
             return _ctx.Users.Where(u => u.Email == email).Single();
         }
+
+        public IdentityUser GetUserById(string id)
+        {
+            return _ctx.Users.Find(id);
+        }
+        public void UpdateUser(IdentityUser identityUser)
+        {
+            _ctx.Users.Update(identityUser);
+            _ctx.SaveChanges();
+        }
+
+        public void ReplaceDepartmentsOfEmployee(string employeeID, List<int> departmentIds)
+        {
+            var objectsToDelete = _ctx.DepartmentEmployee.Where(de => de.EmployeeId.Equals(employeeID));
+            _ctx.DepartmentEmployee.RemoveRange(objectsToDelete);
+            foreach(int id in departmentIds)
+            {
+                _ctx.DepartmentEmployee.Add(new DepartmentEmployee() { EmployeeId = employeeID, DepartmentId = id});
+            }
+            _ctx.SaveChanges();
+        }
+
+        public string GetEmployeeId(string name)
+        {
+            return _ctx.Employee.FirstOrDefault(e => e.FirstName == name)?.EmployeeID;
+        }
+
+        public List<Employee> GetAllEmployees()
+        {
+            return _ctx.Employee.Where(e => e.DateOutService == null || e.DateOutService > DateTime.Now).ToList();
+        }
     }
 }
