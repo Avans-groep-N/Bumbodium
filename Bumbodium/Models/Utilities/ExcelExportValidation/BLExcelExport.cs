@@ -1,9 +1,6 @@
-﻿using Bumbodium.Data;
-using Bumbodium.Data.Repositories;
+﻿using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp.Models.ExcelExport;
-using System;
 using System.Globalization;
-using System.Xml.Linq;
 
 namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
 {
@@ -50,7 +47,9 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
             foreach (var item in allWorkedHours)
             {
                 var clockIn = item.ClockInDateTime;
-                var clockOut = item.ClockOutDateTime;
+                if (item.ClockOutDateTime == null)
+                    continue;
+                var clockOut = item.ClockOutDateTime.GetValueOrDefault();
 
                 if (item.AlteredClockInDateTime != null)
                     clockIn = item.AlteredClockInDateTime.GetValueOrDefault();
