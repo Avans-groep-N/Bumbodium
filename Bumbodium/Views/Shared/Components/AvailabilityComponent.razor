@@ -67,7 +67,7 @@
 @code {
     RadzenScheduler<Availability> scheduler;
     public IEnumerable<Availability> Data { get; set; }
-    AvailabilityViewModel availabilityViewModel = new AvailabilityViewModel() { StartTime= TimeOnly.FromDateTime(DateTime.Now), Date = DateOnly.FromDateTime(DateTime.Now) };
+    AvailabilityViewModel availabilityViewModel = new AvailabilityViewModel() { StartTime= TimeOnly.FromDateTime(DateTime.Now), Date = DateOnly.FromDateTime(DateTime.Now.AddDays(14)) };
 
     DateTime? SelectedStartTime;
     DateTime? SelectedEndTime;
