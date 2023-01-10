@@ -6,6 +6,9 @@ using Bumbodium.Data.Repositories;
 using Bumbodium.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
+using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
+using System.Globalization;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -13,10 +16,12 @@ namespace Bumbodium.WebApp.Controllers
     public class ForecastController : Controller
     {
         private readonly ForecastRepo _forecastRepo;
+        private readonly BLForecast _blForecast;
         private readonly DepartmentRepo _departmentRepo;
 
-        public ForecastController(ForecastRepo forecastRepo, DepartmentRepo departmentRepo)
+        public ForecastController(ForecastRepo forecastRepo, DepartmentRepo departmentRepo, BLForecast bLForecast)
         {
+            _blForecast = bLForecast;
             _forecastRepo = forecastRepo;
             _departmentRepo = departmentRepo;
         }
@@ -24,24 +29,117 @@ namespace Bumbodium.WebApp.Controllers
         // GET: ForecastController
         public ActionResult Index()
         {
-            var forecasts = _forecastRepo.GetAll();
-            foreach(var forecast in forecasts)
+            #region !!moet weg
+            /*var fw = new ForecastWeekViewModel() { WeekNr = 1, YearNr = 2023 };
+            fw.DaysOfTheWeek[0] = (new ForecastViewModel()
             {
-                forecast.Department = _departmentRepo.GetDepartmentById(forecast.DepartmentId);
+                Date = new DateTime(2020, 8, 23),
+                AmountExpectedEmployees = 8,
+                AmountExpectedColis = 8,
+                AmountExpectedCustomers = 8,
+                AmountExpectedHours = 8
+            });
+            fw.DaysOfTheWeek[1] = (new ForecastViewModel()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountExpectedEmployees = 8,
+                AmountExpectedColis = 8,
+                AmountExpectedCustomers = 8,
+                AmountExpectedHours = 8
+            });
+            fw.DaysOfTheWeek[2] = (new ForecastViewModel()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountExpectedEmployees = 8,
+                AmountExpectedColis = 8,
+                AmountExpectedCustomers = 8,
+                AmountExpectedHours = 8
+            });
+            fw.DaysOfTheWeek[3] = (new ForecastViewModel()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountExpectedEmployees = 8,
+                AmountExpectedColis = 8,
+                AmountExpectedCustomers = 8,
+                AmountExpectedHours = 8
+            });
+            fw.DaysOfTheWeek[4] = (new ForecastViewModel()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountExpectedEmployees = 8,
+                AmountExpectedColis = 8,
+                AmountExpectedCustomers = 8,
+                AmountExpectedHours = 8
+            });
+            fw.DaysOfTheWeek[5] = (new ForecastViewModel()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountExpectedEmployees = 8,
+                AmountExpectedColis = 8,
+                AmountExpectedCustomers = 8,
+                AmountExpectedHours = 8
+            });
+            fw.DaysOfTheWeek[6] = (new ForecastViewModel()
+            {
+                Date = new DateTime(2020, 8, 23),
+                AmountExpectedEmployees = 8,
+                AmountExpectedColis = 8,
+                AmountExpectedCustomers = 8,
+                AmountExpectedHours = 8
+            });*/
+            #endregion
+
+
+            return View(GetForecastWeek(DateTime.Now));
+        }
+
+        [HttpPost]
+        public ActionResult SaveNewForecast()
+        {
+            var datestring = Request.Form["weeknumber"].First().Split("-W");
+            var date = ISOWeek.ToDateTime(Convert.ToInt32(datestring[0]), Convert.ToInt32(datestring[1]), DayOfWeek.Monday);
+            var amountExpectedEmployees = Request.Form["amountEmployees"];
+            var amountExpectedHours = Request.Form["amountHours"];
+            var amountExpectedCustomers = Request.Form["amountCustomers"];
+            var amountExpectedColis = Request.Form["amountColis"];
+
+            var forecastweek = new ForecastWeekViewModel() { WeekNr = ISOWeek.GetWeekOfYear(date), YearNr = date.Year};
+            for (int i = 0; i < amountExpectedEmployees.Count; i++)
+            {
+                var fVW = new ForecastViewModel();
+                fVW.Date = date.AddDays(i);
+                fVW.AmountExpectedEmployees = Convert.ToInt32(amountExpectedEmployees[i]);
+                fVW.AmountExpectedHours = Convert.ToInt32(amountExpectedHours[i]);
+                fVW.AmountExpectedCustomers = Convert.ToInt32(amountExpectedCustomers[i]);
+                fVW.AmountExpectedColis = Convert.ToInt32(amountExpectedColis[i]);
+                forecastweek.DaysOfTheWeek[i] = fVW;
             }
-            return View(forecasts);
+            _blForecast.SaveForecast(forecastweek);
+
+
+            var fw = GetForecastWeek();
+            return View($"../{nameof(ForecastController).Replace(nameof(Controller), "")}/{nameof(Index)}", fw);
         }
 
-        // GET: ForecastController/Details/5
-        public ActionResult Details(int id)
+        [Authorize(Roles = "Manager")]
+        [HttpPost]
+        public IActionResult SelectWeek()
         {
-            return View();
+            var fw = GetForecastWeek();
+            return View($"../{nameof(ForecastController).Replace(nameof(Controller), "")}/{nameof(Index)}", fw);
         }
 
-        // GET: ForecastController/Create
-        public ActionResult Create()
+        private ForecastWeekViewModel GetForecastWeek(DateTime? day = null)
         {
-            return View(new ForecastWeekViewModel());
+            string[] week = new string[2];
+
+            if (day == null)
+                week = Request.Form["weeknumber"].First().Split("-W");
+            else
+                week = new string[] { day.Value.Year.ToString(), ISOWeek.GetWeekOfYear(day.Value).ToString() };
+            int[] yearAndWeek = { Int32.Parse(week[0]), Int32.Parse(week[1]) };
+            var fw = _blForecast.GetForecastWeek(yearAndWeek[0], yearAndWeek[1]);
+            return fw;
         }
 
         // POST: ForecastController/Create
@@ -61,13 +159,13 @@ namespace Bumbodium.WebApp.Controllers
                         var model = forecastVM.DaysOfTheWeek[index];
                         forecasts[index] = new Forecast()
                         {
-                            Date = model.Date.Value,
-                            AmountExpectedColis = model.AmountExpectedColis.Value,
-                            AmountExpectedCustomers = model.AmountExpectedCustomers.Value
+                            Date = model.Date,
+                            AmountExpectedColis = model.AmountExpectedColis,
+                            AmountExpectedCustomers = model.AmountExpectedCustomers
                         };
                     }
 
-                    _forecastRepo.CreateForecast(forecasts);
+                    //_forecastRepo.CreateForecast(forecasts);
                     return RedirectToAction(nameof(Index));
                 }
                 catch
@@ -77,48 +175,6 @@ namespace Bumbodium.WebApp.Controllers
             }
             return View(new ForecastWeekViewModel());
 
-        }
-
-        // GET: ForecastController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: ForecastController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ForecastController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ForecastController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

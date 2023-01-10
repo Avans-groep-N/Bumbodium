@@ -1,57 +1,119 @@
-﻿@model IEnumerable<Bumbodium.Data.DBModels.Forecast>
+﻿@using System.Globalization;
+@model ForecastWeekViewModel
+
+<h1>Prognose</h1>
+<br/>
+@{
+    string calanderVal = Model.YearNr + "-W";
+    if (Model.WeekNr < 10)
+        calanderVal += "0" + Model.WeekNr;
+    else
+        calanderVal += Model.WeekNr;
+}
+@using (Html.BeginForm("SelectWeek", "Forecast", FormMethod.Post))
+{
+    <input type="week" name="weekNumber" value="@calanderVal" required />
+    <input type="submit" value="Submit" />
+}
+<br/>
 
 @{
-    ViewData["Title"] = "Index";
+    int AmountOfDaysInAWeek = Model.DaysOfTheWeek.Length;
 }
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Department.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountExpectedEmployees)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountExpectedHours)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountExpectedCustomers)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountExpectedColis)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Department.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountExpectedEmployees)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountExpectedHours)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountExpectedCustomers)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountExpectedColis)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<form asp-action="SaveNewForecast" method="post">
+    <input type="hidden" name="weeknumber" value="@calanderVal" />
+    <table class="table table-striped text-center table-responsive">
+        <thead>
+            <tr>
+                <th class="row-cols-md-4" />
+                @for (int i = 0; i < AmountOfDaysInAWeek; i++)
+                {
+                    if (Model != null && Model.DaysOfTheWeek[i] != null)
+                    {
+                        <th class="row-cols-md-4">@Model.DaysOfTheWeek[i].Date.ToString("dddd", new CultureInfo("nl-NL"))<br />@Model.DaysOfTheWeek[i].Date.ToString("dd-MM")</th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody class="">
+            <tr>
+                <td>
+                    <i title="Benodigd Personeel" class="material-icons">groups</i>
+                </td>
+                @for (int i = 0; i < AmountOfDaysInAWeek; i++)
+                {
+                    <td class="row-cols-md-1">
+                        @if (Model != null && Model.DaysOfTheWeek[i] != null)
+                        {
+                            <input class="forecast-textbox" type="number" name="AmountEmployees" value="@Model.DaysOfTheWeek[i].AmountExpectedEmployees">
+                        }
+                        else
+                        {
+                            <input class="forecast-textbox" type="number" name="AmountEmployees" value="0">
+                        }
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td>
+                    <i title="Aantal Uren" class="material-icons">event</i>
+                </td>
+                @for (int i = 0; i < AmountOfDaysInAWeek; i++)
+                {
+                    <td class="row-cols-md-1">
+                        @if (Model != null && Model.DaysOfTheWeek[i] != null)
+                        {
+                            <input class="forecast-textbox" type="number" name="AmountHours" value="@Model.DaysOfTheWeek[i].AmountExpectedHours">
+                        }
+                        else
+                        {
+                            <input class="forecast-textbox" type="number" name="AmountHours" value="0">
+                        }
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td>
+                    <i title="Verwacht Aantal Klanten" class="material-icons">shopping_basket</i>
+                </td>
+                @for (int i = 0; i < AmountOfDaysInAWeek; i++)
+                {
+                    <td class="row-cols-md-1">
+                        @if (Model != null && Model.DaysOfTheWeek[i] != null)
+                        {
+                            <input class="forecast-textbox" type="number" name="amountCustomers" value="@Model.DaysOfTheWeek[i].AmountExpectedCustomers">
+                        }
+                        else
+                        {
+                            <input class="forecast-textbox" type="number" name="amountCustomers" value="0">
+                        }
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td>
+                    <i title="Verwacht Aantal Tolleys" class="material-icons">trolley</i>
+                </td>
+                @for (int i = 0; i < AmountOfDaysInAWeek; i++)
+                {
+                    <td class="row-cols-md-1">
+                        @if (Model != null && Model.DaysOfTheWeek[i] != null)
+                        {
+                            <input class="forecast-textbox" type="number" name="AmountColis" value="@Model.DaysOfTheWeek[i].AmountExpectedColis">
+                        }
+                        else
+                        {
+                            <input class="forecast-textbox" type="number" name="AmountColis" value="0">
+                        }
+                    </td>
+                }
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-lg btn-primary btn-outline-warning" />
+    </div>
+</form>
+<br/>
+<a class="btn btn-primary text-dark" asp-area="" asp-controller="Standard" asp-action="Index"><span class="inline-icon material-icons"> info</span>Normering</a>

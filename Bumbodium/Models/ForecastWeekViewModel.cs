@@ -1,19 +1,20 @@
-﻿using Bumbodium.Data.DBModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.WebApp.Models
 {
     public class ForecastWeekViewModel
     {
         public ForecastViewModel[] DaysOfTheWeek { get; set; } = new ForecastViewModel[7];
+    
+        public int WeekNr { get; set; }
+        public int YearNr { get; set; }
     }
 
     public class ForecastViewModel : IValidatableObject
     {
         [Key]
         [Required]
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
 
         public int? DepartmentId { get; set; }
 
@@ -22,10 +23,10 @@ namespace Bumbodium.WebApp.Models
         public int? AmountExpectedHours { get; set; }
 
         [Required]
-        public int? AmountExpectedCustomers { get; set; }
+        public int AmountExpectedCustomers { get; set; }
 
         [Required]
-        public int? AmountExpectedColis { get; set; }
+        public int AmountExpectedColis { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

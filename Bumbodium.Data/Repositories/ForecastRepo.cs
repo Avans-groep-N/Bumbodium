@@ -27,18 +27,18 @@ namespace Bumbodium.Data.Repositories
             _departmentRepo = departmentRepo;
         }
 
-        public List<Forecast> GetAll() => _ctx.Forecast.ToList();
+        public List<Forecast> GetAllInRange(DateTime startDate, DateTime endDate, List<int> departmentIds) => _ctx.Forecast.Where(f => startDate <= f.Date && f.Date >= endDate && departmentIds.Contains(f.DepartmentId)).ToList();
 
-        public void CreateForecast(Forecast[] forecasts)
+        /*public void CreateForecast(Forecast[] forecasts)
         {
             //TODO Make Country relative to the forecast
             _standards = _ctx.Standards.Where(s => s.Country == Country.Netherlands).ToList();
             var weekprognose = WeekCalEmployes(forecasts);
-            foreach(var prognosis in weekprognose)
+            foreach (var prognosis in weekprognose)
                 _ctx.Forecast.Add(prognosis);
             _ctx.SaveChanges();
 
-        }
+        }*/
 
         private List<Forecast> WeekCalEmployes(Forecast[] forecast)
         {
@@ -126,6 +126,26 @@ namespace Bumbodium.Data.Repositories
                    Hours;
 
             return (int)(workTimeNotWithCustomers + timeNeededToHelpCustomers) / Hours;
+        }
+
+        public List<Forecast> GetForecastOfDate(DateTime startDate, DateTime endDate) => _ctx.Forecast.Where(f => f.Date >= startDate && f.Date <= endDate).ToList();
+
+        public void SaveNewForecast(List<Forecast> weakForecast)
+        {
+            _ctx.Forecast.AddRange(weakForecast);
+            _ctx.SaveChanges();
+        }
+
+        public void SaveUpdateForecast(List<Forecast> weakForecast)
+        {
+            _ctx.Forecast.UpdateRange(weakForecast);
+            _ctx.SaveChanges();
+        }
+
+        public void RemoveForecast(List<Forecast> dbForecast)
+        {
+            _ctx.RemoveRange(dbForecast);
+            _ctx.SaveChanges();
         }
     }
 }
