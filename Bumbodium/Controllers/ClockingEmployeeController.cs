@@ -45,7 +45,7 @@ namespace Bumbodium.WebApp.Controllers
 
             var clockingViewModel = _blclocking.GetClockingViewModel(id, yearAndWeek[1], yearAndWeek[0]);
 
-            return View("../Clocking/Index", clockingViewModel);
+            return View("../ClockingEmployee/Index", clockingViewModel);
         }
     }
 }

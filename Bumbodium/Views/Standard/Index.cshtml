@@ -6,35 +6,42 @@
 
 <h1>Normeringen</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Value)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Country)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+@using (Html.BeginForm("SelectCountry", "Standard", FormMethod.Post))
+{
+    <select id="country" name="country" onchange="this.form.submit()">
+        <option value="default"> --Select land--</option>
+        @foreach (var coutnry in ViewBag.Countrys)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Value)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Country)
-                </td>
-            </tr>
+            <option value="@coutnry.ToString()">@coutnry.ToString()</option>
         }
-    </tbody>
-</table>
+    </select>
+}
+
+
+@if (Model.Count() > 0)
+{
+
+    <table class="table table-striped text-center table-responsive">
+        <thead>
+            <tr>
+                <th class="row-cols-md-4">Onderwerp</th>
+                <th class="row-cols-md-4">Norming</th>
+                <th class="row-cols-md-4">Waarders voor de aantallen</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Subject</td>
+                    <td>@item.Description</td>
+                    <td>@item.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h1>Dit land heeft nog geen normeringen</h1>
+}
