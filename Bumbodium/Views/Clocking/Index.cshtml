@@ -14,7 +14,7 @@
 @using (Html.BeginForm("SelectWeek", "Clocking", FormMethod.Post))
 {
     @Html.DropDownList("Id", (IEnumerable<SelectListItem>)ViewBag.EmployeeList)
-    <input type="week" name="weekNumber" value="@calanderVal" required />
+    <input type="week" name="weekNumber" value="@calanderVal" onchange="this.form.submit()" required />
     <input type="submit" value="Submit" />
 }
 

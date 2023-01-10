@@ -9,6 +9,18 @@
 }
 
 <h1>Excel export werknemers uren</h1>
+<br />
+
+
+<div class="card-header">
+    <h3 class="card-title">select week</h3>
+</div>
+<br />
+@using (Html.BeginForm("SelectWeek", "ExcelExport", FormMethod.Post))
+{
+    <input class="form-label" type="week" name="week" id="week" value="@calanderVal" onchange="this.form.submit()" required>
+}
+
 
 <div class="col-md-12">
 
@@ -19,7 +31,7 @@
     <div class="card-body register-card-body">
         <div class="form-row">
             <br />
-            <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-success">Export to Excel</button>
+            <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-lg btn-primary btn-outline-warning">Export to Excel</button>
         </div>
     </div>
     <div class="card-footer">
@@ -29,35 +41,32 @@
 
 <br />
 
-<form asp-controller="ExcelExport" asp-action="SelectWeek" method="post">
-    <div class="mb-3">
-        <label class="form-label">select week</label>
-        <input class="form-label" type="week" name="week" id="week" value="@calanderVal" required>
-        <input type="submit" name="submit" , id="submit" />
-    </div>
-
-</form>
-
-<table class="table table-striped text-center table-responsive">
-    <thead>
-        <tr>
-            <th class="row-cols-md-4">BID</th>
-            <th class="row-cols-md-4">Naam</th>
-            <th class="row-cols-md-4">Uren</th>
-            <th class="row-cols-md-4">Toeslag</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.EmployeeHours)
-        {
+@if (Model.EmployeeHours.Count > 0)
+{
+    <table class="table table-striped text-center table-responsive">
+        <thead>
             <tr>
-                <td>@item.EmployeeId</td>
-                <td>@item.EmployeeName</td>
-                <td>@item.WorkedHours</td>
-                <td>@item.SurchargeRate %</td>
+                <th class="row-cols-md-4">BID</th>
+                <th class="row-cols-md-4">Naam</th>
+                <th class="row-cols-md-4">Uren</th>
+                <th class="row-cols-md-4">Toeslag</th>
             </tr>
-        }
-    </tbody>
-</table>
-
+        </thead>
+        <tbody>
+            @foreach (var item in Model.EmployeeHours)
+            {
+                <tr>
+                    <td>@item.EmployeeId</td>
+                    <td>@item.EmployeeName</td>
+                    <td>@item.WorkedHours</td>
+                    <td>@item.SurchargeRate %</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h1>Deze week is niet gewerkt</h1>
+}
 
