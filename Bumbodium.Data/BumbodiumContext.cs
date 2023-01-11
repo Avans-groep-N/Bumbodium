@@ -67,9 +67,6 @@ namespace Bumbodium.Data
             modelBuilder.Entity<Forecast>()
                 .HasKey(t => new { t.Date, t.DepartmentId });
 
-            modelBuilder.Entity<Presence>()
-                .HasKey(t => new { t.PresenceId, t.EmployeeId });
-
             #region seedData
             InsertBranchData(modelBuilder);
             InsertDepartmentData(modelBuilder);

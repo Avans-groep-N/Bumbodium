@@ -28,15 +28,15 @@ namespace Bumbodium.Data
             return _ctx.Employee.Include(e => e.PartOFDepartment).ThenInclude(pod => pod.Department).AsQueryable();
         }
 
-        public IEnumerable<Employee> GetEmployeesList(string? nameFilter, int? departmentFilter, int skip, int take)
+        public IEnumerable<Employee> GetEmployeesList(string? nameFilter, int? departmentFilter, bool? showInactive, int skip, int take)
         {
-            IQueryable<Employee> employees = GetEmployeesFiltered(nameFilter, departmentFilter);
+            IQueryable<Employee> employees = GetEmployeesFiltered(nameFilter, departmentFilter, showInactive);
             return employees.OrderBy(e => e.FirstName)
                 .Skip(skip)
                 .Take(take);
         }
 
-        public IQueryable<Employee> GetEmployeesFiltered(string? nameFilter, int? departmentFilter)
+        public IQueryable<Employee> GetEmployeesFiltered(string? nameFilter, int? departmentFilter, bool? showInactive)
         {
             IQueryable<Employee> employees = GetEmployees();
             if (!string.IsNullOrEmpty(nameFilter))
@@ -46,6 +46,10 @@ namespace Bumbodium.Data
             if (departmentFilter > 0)
             {
                 employees = employees.Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == departmentFilter));
+            }
+            if(showInactive != null)
+            {
+                employees = employees.Where(e => e.DateOutService.HasValue == showInactive);
             }
             return employees;
         }

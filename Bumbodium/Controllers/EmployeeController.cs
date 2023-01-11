@@ -26,8 +26,8 @@ namespace Bumbodium.WebApp.Controllers
         public IActionResult Index()
         {
             int employeesPerPage = 10;
-            int employeeCount = _employeeRepo.GetEmployeesFiltered(null, null).Count();
-            IEnumerable<Employee> employees = _employeeRepo.GetEmployeesList(null, null, 0, employeesPerPage);
+            int employeeCount = _employeeRepo.GetEmployeesFiltered(null, null, false).Count();
+            IEnumerable<Employee> employees = _employeeRepo.GetEmployeesList(null, null, false, 0, employeesPerPage);
             return View(new EmployeeListViewModel()
             {
                 CurrentPage = 1,
@@ -41,9 +41,10 @@ namespace Bumbodium.WebApp.Controllers
         public IActionResult Index(EmployeeListViewModel viewModel)
         {
             viewModel.EmployeeCount = _employeeRepo.GetEmployeesFiltered(viewModel.NameFilter,
-                viewModel.DepartmentFilter).Count();
+                viewModel.DepartmentFilter, viewModel.ShowInactive).Count();
             viewModel.Employees = _employeeRepo.GetEmployeesList(viewModel.NameFilter, 
                 viewModel.DepartmentFilter,
+                viewModel.ShowInactive,
                 viewModel.EmployeesPerPage * (viewModel.CurrentPage - 1), 
                 viewModel.EmployeesPerPage); 
             return View(viewModel);

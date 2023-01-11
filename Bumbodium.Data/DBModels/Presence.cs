@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.Data.DBModels
 {
@@ -13,7 +14,6 @@ namespace Bumbodium.Data.DBModels
         [Required]
         public DateTime ClockInDateTime { get; set; }
 
-        [Required]
         public DateTime? ClockOutDateTime { get; set; }
 
         public DateTime? AlteredClockInDateTime { get; set; }

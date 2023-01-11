@@ -10,8 +10,12 @@ using Bumbodium.WebApp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
 using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+var configbuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+var config = configbuilder.Build();
 
 // Add services to the container.
 
@@ -35,7 +39,7 @@ builder.Services.AddTransient<IAvailabilityRepo, AvailabilityRepo>();
 builder.Services.AddTransient<IShiftRepo, ShiftRepo>();
 
 builder.Services.AddDbContext<BumbodiumContext>(options =>
-                options.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;")); //TODO: change back to azure db
+                options.UseSqlServer(config.GetConnectionString("Default"))); //TODO: change back to azure db
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>{
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireNonAlphanumeric = false;
@@ -68,7 +72,7 @@ using (var scope = scopeFactory.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    // TODO move this to a more appropriate place 
+    scope.ServiceProvider.GetRequiredService<BumbodiumContext>().Database.Migrate();
     UserAndRoleSeeder.SeedData(userManager, roleManager);
 }
 app.UseAuthorization();
