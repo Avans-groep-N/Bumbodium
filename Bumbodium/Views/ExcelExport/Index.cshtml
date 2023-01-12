@@ -1,0 +1,72 @@
+﻿@model Bumbodium.WebApp.Models.ExcelExport.ExcelExportEmployeesHours
+
+@{
+    string calanderVal = Model.Year + "-W";
+    if (Model.WeekNr < 10)
+        calanderVal += "0" + Model.WeekNr;
+    else
+        calanderVal += Model.WeekNr;
+}
+
+<h1>Excel export werknemers uren</h1>
+<br />
+
+
+<div class="card-header">
+    <h3 class="card-title">select week</h3>
+</div>
+<br />
+@using (Html.BeginForm("SelectWeek", "ExcelExport", FormMethod.Post))
+{
+    <input class="form-label" type="week" name="week" id="week" value="@calanderVal" onchange="this.form.submit()" required>
+}
+
+
+<div class="col-md-12">
+
+    <div class="card-header">
+        <h3 class="card-title">Download Excel</h3>
+    </div>
+
+    <div class="card-body register-card-body">
+        <div class="form-row">
+            <br />
+            <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-lg btn-primary btn-outline-warning">Export to Excel</button>
+        </div>
+    </div>
+    <div class="card-footer">
+    </div>
+
+</div>
+
+<br />
+
+@if (Model.EmployeeHours.Count > 0)
+{
+    <table class="table table-striped text-center table-responsive">
+        <thead>
+            <tr>
+                <th class="row-cols-md-4">BID</th>
+                <th class="row-cols-md-4">Naam</th>
+                <th class="row-cols-md-4">Uren</th>
+                <th class="row-cols-md-4">Toeslag</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.EmployeeHours)
+            {
+                <tr>
+                    <td>@item.EmployeeId</td>
+                    <td>@item.EmployeeName</td>
+                    <td>@item.WorkedHours</td>
+                    <td>@item.SurchargeRate %</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h1>Deze week is niet gewerkt</h1>
+}
+

@@ -1,0 +1,75 @@
+﻿@model Employee
+@using Bumbodium.Data.DBModels
+
+<h1>Werknemer Details</h1>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Naam
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(e => e.FullName)
+        </dd>
+        <dt class="col-sm-2">
+            Leeftijd
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(e => e.Age)
+        </dd>
+        <dt class="col-sm-2">
+            Geboortedatum
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(e => e.Birthdate)
+        </dd>
+        <dt class="col-sm-2">
+            Telefoon
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(e => e.PhoneNumber)
+        </dd>
+        <dt class="col-sm-2">
+            Email
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(e => e.Email)
+        </dd>
+        <dt class="col-sm-2">
+            Werkt sinds
+        </dt>
+        <dd class="col-sm-10">
+           @Html.DisplayFor(e => e.DateInService)
+        </dd>
+        <dt class="col-sm-2">
+            Inactief sinds
+        </dt>
+        <dd class="col-sm-10">
+            @if(Model.DateOutService.HasValue) {
+                @Html.DisplayFor(e => e.DateOutService)
+            } else {
+                <p>-</p>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            Type
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(e => e.Type)
+        </dd>
+        <dt class="col-sm-2">
+            Afdelingen
+        </dt>
+        @foreach(DepartmentEmployee departmentEmployee in Model.PartOFDepartment) {
+            <dd class="col-sm-10">
+                @departmentEmployee.Department.Name
+            </dd>
+            <dt class="col-sm-2">
+            </dt>
+        }
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.EmployeeID" class="btn">Aanpassen</a>
+    <a asp-action="Index" class="btn">Terug</a>
+</div>

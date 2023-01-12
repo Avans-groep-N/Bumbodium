@@ -1,9 +1,0 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welkom bij Bumbodium</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    @(await Html.RenderComponentAsync<Bumbodium.WebApp.Views.Shared.Components.Example>(RenderMode.ServerPrerendered, new { Data = " Test " }))
-</div>
