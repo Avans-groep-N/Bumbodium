@@ -2,10 +2,25 @@
 @using System.Globalization;
 
 <table>
-     @foreach (var shift in Model.Planning)
-    {
-        // (Model.OpenTime - shift.StartTime) * 2 -> make cells white (employee not working)
-        // (shift.EndTime - shift.StartTime) * 2 -> Color cells based on department (employee working)
-        // (Model.ClosedTime - shift.EndTime) * 2 -> make cells white (employee not working)
-    }
+
+
+        <tr>
+        @*// int NotWorkingBefore = (Model.OpenTime - shift.StartTime) * 2 -> make cells white (employee not working)*@
+        int NotWorkingBefore = 5; 
+        for(int i = 0; i < NotWorkingBefore; i++) {
+        <td style="background: white;"></td>4
+        } 
+        @*int WorkingHours = (shift.EndTime - shift.StartTime) * 2 -> Color cells based on department (employee working)*@ 
+        
+        for(int j = 0; j < WorkingHours; j++) {
+        <td style="background: blue;"></td>
+        }
+        int NotWorkingHoursAfter = 
+        @*// int NotWorkingHoursAfter (Model.ClosedTime - shift.EndTime) * 2 -> make cells white (employee not working)*@
+        for(int k = 0; k < NotWorkingHoursAfter; k++) {
+            <td style="background: white;"></td>
+        }
+        </tr>
+
+
 </table>
