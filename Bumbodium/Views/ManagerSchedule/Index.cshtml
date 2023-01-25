@@ -1,0 +1,11 @@
+﻿@model Bumbodium.WebApp.Models.DayShiftsViewModel
+@using System.Globalization;
+
+<table>
+     @foreach (var shift in Model.Planning)
+    {
+        // (Model.OpenTime - shift.StartTime) * 2 -> make cells white (employee not working)
+        // (shift.EndTime - shift.StartTime) * 2 -> Color cells based on department (employee working)
+        // (Model.ClosedTime - shift.EndTime) * 2 -> make cells white (employee not working)
+    }
+</table>
