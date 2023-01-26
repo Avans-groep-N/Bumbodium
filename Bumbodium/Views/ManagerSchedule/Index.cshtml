@@ -2,7 +2,24 @@
 @using System.Globalization;
 
 <table class="scheduletable">
-
+        
+    <tr style="background-color: red;">
+        <th>08:00</th>
+        <th>09:00</th>
+        <th>10:00</th>
+        <th>11:00</th>
+        <th>12:00</th>
+        <th>13:00</th>
+        <th>14:00</th>
+        <th>15:00</th>
+        <th>16:00</th>
+        <th>17:00</th>
+        <th>18:00</th>
+        <th>19:00</th>
+        <th>20:00</th>
+        <th>21:00</th>
+        <th>22:00</th>
+    </tr>
 
         <tr>
         @for(int i = 0; i < 3; i++) {
@@ -13,10 +30,11 @@
         <td style="background: blue;"></td>
         }
        
-        @for(int k = 0; k < 5; k++) {
+        @for(int k = 0; k < 4; k++) {
             <td style="background: white;"></td>
         }
         </tr>
+
 
 
 </table>
