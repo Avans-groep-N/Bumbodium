@@ -32,6 +32,7 @@ namespace Bumbodium.WebApp.Controllers
             DateTime d = viewModel.SelectedDate;
             DateTime st = viewModel.SelectedStartTime;
             DateTime et = viewModel.SelectedEndTime;
+            // Swap StartTime and EndTime if StartTime is after EndTime
             if(st < et)
             {
                 viewModel.SelectedStartTime = new(d.Year, d.Month, d.Day, st.Hour, st.Minute, 0);
@@ -42,9 +43,11 @@ namespace Bumbodium.WebApp.Controllers
                 viewModel.SelectedStartTime = new(d.Year, d.Month, d.Day, et.Hour, et.Minute, 0);
             }
             
-
+            // Dirty db get
             IQueryable<Employee> employees = _employeeRepo.GetEmployees();
+            // Department filter
             employees = employees.Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == (int)(viewModel.SelectedDepartment + 1)));
+            // Availability filter
             employees = employees.Include(e => e.Availability);
             employees = employees.Where(e => !e.Availability.Any(a =>
             (a.StartDateTime > viewModel.SelectedStartTime && a.StartDateTime < viewModel.SelectedEndTime) ||
