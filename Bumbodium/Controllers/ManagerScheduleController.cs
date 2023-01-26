@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Bumbodium.WebApp.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -6,7 +7,7 @@ namespace Bumbodium.WebApp.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return View(new DayShiftsViewModel());
         }
     }
 }
