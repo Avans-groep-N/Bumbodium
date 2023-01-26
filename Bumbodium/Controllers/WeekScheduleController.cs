@@ -22,7 +22,11 @@ namespace Bumbodium.WebApp.Controllers
         public ActionResult Index()
         {
             ScheduleEmployeeListViewModel viewModel = new();
-            viewModel.SelectedDate = DateTime.Today;
+            DateTime t = DateTime.Today;
+            viewModel.SelectedDate = t;
+            viewModel.SelectedStartTime = new DateTime(t.Year, t.Month, t.Day, 8, 0, 0);
+            viewModel.SelectedEndTime = new DateTime(t.Year, t.Month, t.Day, 22, 0, 0);
+            // Do Employee get from post method
             return View(viewModel);
         }
 
