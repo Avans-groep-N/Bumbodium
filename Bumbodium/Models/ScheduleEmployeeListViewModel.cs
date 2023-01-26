@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.WebApp.Models
 {
-    public class ScheduleEmployeeListViewModel : IValidatableObject
+    public class ScheduleEmployeeListViewModel 
     {
         public List<Employee> AvailableEmployees { get; set; }
         public string SelectedEmployeeId { get; set; }
@@ -12,13 +12,5 @@ namespace Bumbodium.WebApp.Models
         public DateTime SelectedStartTime { get; set; }
         public DateTime SelectedEndTime { get; set; }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if(SelectedDate < DateTime.Now)
-            {
-                yield return new ValidationResult("Je kunt niet het verleden inplannen");
-            }
-            
-        }
     }
 }

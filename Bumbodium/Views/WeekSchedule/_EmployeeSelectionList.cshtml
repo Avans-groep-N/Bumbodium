@@ -8,9 +8,21 @@
         <h4>Selecteer afdeling</h4>
         @Html.DropDownListFor(vm => vm.SelectedDepartment, Html.GetEnumSelectList<DepartmentType>(), new {@onchange="this.form.submit()"})
         <h4>Selecteer tijd</h4>
-        <input onchange="this.form.submit()" asp-for="SelectedStartTime" step="900" type="time" value="@Model.SelectedStartTime.ToShortTimeString()"/>
-        -
-        <input onchange="this.form.submit()" asp-for="SelectedEndTime" step="900" type="time" value="@Model.SelectedEndTime.ToShortTimeString()" />
+        <div style="display:flex;">
+            <div>
+                <label>Begintijd</label>
+                <br />
+                <input onchange="this.form.submit()" asp-for="SelectedStartTime" step="900" type="time" value="@Model.SelectedStartTime.ToShortTimeString()" />
+            </div>
+            <div>
+                <label>Eindtijd</label>
+                <br />
+                <input onchange="this.form.submit()" asp-for="SelectedEndTime" step="900" type="time" value="@Model.SelectedEndTime.ToShortTimeString()" />
+            </div>
+        </div>
+        
+        
+        
         <h4>Selecteer medewerker</h4>
         <div style="height: 700px; overflow:auto;">
             @if (Model.AvailableEmployees == null || !Model.AvailableEmployees.Any())
