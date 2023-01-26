@@ -2,8 +2,8 @@
 @using System.Globalization;
 
 <table class="scheduletable">
-        
-    <tr style="background-color: red;">
+
+    <tr style="background-color: darkblue;">
         <th>08:00</th>
         <th>09:00</th>
         <th>10:00</th>
@@ -21,24 +21,50 @@
         <th>22:00</th>
     </tr>
 
-        <tr>
-        @for(int i = 0; i < 3; i++) {
-        <td style="background: white;"></td>
-        } 
-     
-        @for(int j = 0; j < 8; j++) {
-        <td style="background: blue;"></td>
-        }
-       
-        @for(int k = 0; k < 4; k++) {
+    <tr>
+
+        @for (int i = 0; i < 3; i++)
+        {
             <td style="background: white;"></td>
         }
-        </tr>
+
+        @for (int j = 0; j < 8; j++)
+        {
+            <td style="background: Green;"></td>
+        }
+
+        @for (int k = 0; k < 4; k++)
+        {
+            <td style="background: white;"></td>
+        }
+
+    </tr>
+    <tr>
+
+        @for (int i = 0; i < 3; i++)
+        {
+            <td style="background: white;"></td>
+        }
+
+        @for (int j = 0; j < 8; j++)
+        {
+
+            <td style="background: Green;"></td>
+
+        }
+
+        @for (int k = 0; k < 4; k++)
+        {
+            <td style="background: white;"></td>
+        }
+
+    </tr>
+
 
 
 
 </table>
-    @* int NotWorkingBefore = (Model.OpenTime - shift.StartTime) * 2 -> make cells white (employee not working)
+@* int NotWorkingBefore = (Model.OpenTime - shift.StartTime) * 2 -> make cells white (employee not working)
     int WorkingHours = (shift.EndTime - shift.StartTime) * 2 -> Color cells based on department (employee working)
-    int NotWorkingHoursAfter (Model.ClosedTime - shift.EndTime) * 2 -> make cells white (employee not working) *@ 
-    
+    int NotWorkingHoursAfter (Model.ClosedTime - shift.EndTime) * 2 -> make cells white (employee not working) *@
+
