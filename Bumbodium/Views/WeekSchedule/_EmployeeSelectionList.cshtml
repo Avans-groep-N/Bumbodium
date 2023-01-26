@@ -3,33 +3,42 @@
 <div>
 
     <form asp-action="Index" method="post">
+        <h4>Selecteer datum</h4>
+        <input onchange="this.form.submit()" asp-for="SelectedDate" type="date" />
         <h4>Selecteer afdeling</h4>
         @Html.DropDownListFor(vm => vm.SelectedDepartment, Html.GetEnumSelectList<DepartmentType>(), new {@onchange="this.form.submit()"})
         <h4>Selecteer tijd</h4>
-        <input onchange="this.form.submit()" asp-for="SelectedStartTime" type="time" />
+        <input onchange="this.form.submit()" asp-for="SelectedStartTime" step="900" type="time" value="@Model.SelectedStartTime.ToShortTimeString()"/>
         -
-        <input onchange="this.form.submit()" asp-for="SelectedEndTime" type="time" />
+        <input onchange="this.form.submit()" asp-for="SelectedEndTime" step="900" type="time" value="@Model.SelectedEndTime.ToShortTimeString()" />
         <h4>Selecteer medewerker</h4>
-        @if (Model.AvailableEmployees == null || !Model.AvailableEmployees.Any())
-        {
-            <div>
-                Geen werknemers gevonden die op dit moment in deze afdeling kunnen werken
-            </div>
-        }
-        else
-        {
-            foreach (Employee employee in Model.AvailableEmployees)
+        <div style="height: 700px; overflow:auto;">
+            @if (Model.AvailableEmployees == null || !Model.AvailableEmployees.Any())
             {
-                if (employee.EmployeeID == Model.SelectedEmployeeId)
-                {
-                    <div>
-                        <button>@employee.FullName</button>
-                    </div>
-                }
                 <div>
-                    <button asp-route-SelectedEmployeeId="@employee.EmployeeID" type="submit">@employee.FullName</button>
+                    Geen werknemers gevonden die op dit moment in deze afdeling kunnen werken
                 </div>
             }
-        }
+            else
+            {
+                foreach (Employee employee in Model.AvailableEmployees)
+                {
+                    if (employee.EmployeeID == Model.SelectedEmployeeId)
+                    {
+                        <div>
+                            <button type="button" style="background-color: blue; color: white;">@employee.FullName</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            <button asp-route-SelectedEmployeeId="@employee.EmployeeID" type="submit">@employee.FullName</button>
+                        </div>
+                    }
+
+                }
+            }
+        </div>
+
     </form>
 </div>
