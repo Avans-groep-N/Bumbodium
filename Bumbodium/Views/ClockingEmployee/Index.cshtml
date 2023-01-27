@@ -1,5 +1,5 @@
 ﻿@model Bumbodium.WebApp.Models.ClockingView.ClockingViewModel
-
+@using System.Globalization;
 <br />
 
 @{
@@ -9,60 +9,65 @@
     else
         calanderVal += Model.WeekNumber;
 }
+@using (Html.BeginForm("SelectWeek", "ClockingEmployee", FormMethod.Post))
+{
+    <input type="hidden" name="id" value="@Model.EmployeeId" />
+    <input type="week" name="weekNumber" value="@calanderVal" onchange="this.form.submit()"  required />
+}
+<br />
 
 <div class="row">
     <div class="col" style="padding: 5px;"><strong>Kloktijden</strong></div>
     <div class="col" style="padding: 5px;"><strong>Roostertijden</strong></div>
 </div>
 
-<form asp-action="SaveNewTimes" method="post">
-    <input type="hidden" id="employeeId" name="employeeId" value="@Model.EmployeeId" />
-    @for (int i = 0; i < Model.ClockingDays.Count; i++)
-    {
-        <div class="row" style="background-color:cornflowerblue; color: white; padding: 15px; ">
-            <div class="row m-auto">
-                <div class="bg-light text-dark rounded-2 mb-3 p-1">
-                    <p class="mb-0 p-0 bold">@Model.ClockingDays[i].Day.ToString("dd/MM/yyyy")</p>
-                </div>
-
-                @for (var j = 0; j < Model.ClockingDays[i].ManagerClocking.Count; j++)
-                {
-                    <input type="hidden" id="day" name="day" value="@Model.ClockingDays[i].Day.ToString("dd/MM/yyyy")" />
-                    <div class="bg-light mb-2 text-dark rounded-1">
-                        <div class="row">
-                            <div class="col justify-content-md-start">
-                                <input type="hidden" id="timestart" name="timestart"
-                               value="@Model.ClockingDays[i].ManagerClocking[j].ClockStartTime.GetValueOrDefault().TimeOfDay">
-
-                                <input type="time" id="alterdtimestart" name="alterdtimestart"
-                               class="form-control-plaintext accordion-button" value="@Model.ClockingDays[i].ManagerClocking[j].ClockStartTime.GetValueOrDefault().TimeOfDay">
-                            </div>
-                            <div class="col"></div>
-                            <div class="col">@Model.ClockingDays[i].ManagerClocking[j].ScheduleStartTime.GetValueOrDefault().TimeOfDay</div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-
-                                <input type="hidden" id="timeend" name="timeend" value="@Model.ClockingDays[i].ManagerClocking[j].ClockEndTime.GetValueOrDefault().TimeOfDay">
-                                <input type="time" id="alterdtimeend" name="alterdtimeend" class="form-control-plaintext accordion-button" value="@Model.ClockingDays[i].ManagerClocking[j].ClockEndTime.GetValueOrDefault().TimeOfDay">
-                            </div>
-                            <div class="col"></div>
-                            <div class="col">@Model.ClockingDays[i].ManagerClocking[j].ScheduleEndTime.GetValueOrDefault().TimeOfDay</div>
-                        </div>
-                    </div>
-                }
+@for (int i = 0; i < Model.ClockingDays.Count; i++)
+{
+    <div class="row" style="background-color:cornflowerblue; color: white; padding: 15px; ">
+        <div class="row m-auto">
+            <div class="bg-light text-dark rounded-2 mb-3 p-1">
+                <p class="mb-1 pb-0 bold">@Model.ClockingDays[i].Day.ToString("dd/MM/yyyy")</p>
             </div>
+
+            @for (var j = 0; j < Model.ClockingDays[i].EmployeeClocking.Count; j++)
+            {
+                <input type="hidden" id="day" name="day" value="@Model.ClockingDays[i].Day.ToString("dd/MM/yyyy")" />
+                <div class="bg-light mb-2 text-dark rounded-1">
+                    <div class="row">
+                        <div class="col justify-content-md-start">
+                            <div class="col">@Model.ClockingDays[i].EmployeeClocking[j].ClockStartTime.GetValueOrDefault().TimeOfDay</div>
+                            @if (Model.ClockingDays[i].EmployeeClocking[j].IsChanged)
+                            {
+                                <p>tijd is aangepast</p>
+                                
+                            }
+                            else if (Model.ClockingDays[i].EmployeeClocking[j].IsOnGoing)
+                            {
+                                <p>je Bent nog bezig</p>
+                            }
+                        </div>
+                        <div class="col"></div>
+                        <div class="col">@Model.ClockingDays[i].EmployeeClocking[j].ScheduleStartTime.GetValueOrDefault().TimeOfDay</div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="col">@Model.ClockingDays[i].EmployeeClocking[j].ClockEndTime.GetValueOrDefault().TimeOfDay</div>
+                            @if (@Model.ClockingDays[i].EmployeeClocking[j].IsChanged)
+                            {
+                                <p>tijd is aangepast</p>
+                                
+                            }
+                        </div>
+                        <div class="col"></div>
+                        <div class="col">@Model.ClockingDays[i].EmployeeClocking[j].ScheduleEndTime.GetValueOrDefault().TimeOfDay</div>
+                    </div>
+                </div>
+            }
         </div>
-        <br />
-    }
-    @if (Model.ClockingDays.Count > 0)
-    {
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-lg btn-primary btn-outline-warning" />
-        </div>
-    }
-    else
-    {
-        <h1>Er zijn geen in geklokte uren deze week van @Model.EmployeeName</h1>
-    }
-</form>
+    </div>
+    <br />
+}
+@if (Model.ClockingDays.Count == 0)
+{
+    <h1>Je hebt deze week geen uren gemaakt</h1>
+}

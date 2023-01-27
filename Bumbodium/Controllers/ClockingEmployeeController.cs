@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data; 
 using System.Globalization;
 using Bumbodium.Data.DBModels;
-using Bumbodium.Data.Migrations;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bumbodium.WebApp.Controllers
@@ -45,7 +44,7 @@ namespace Bumbodium.WebApp.Controllers
 
             var clockingViewModel = _blclocking.GetClockingViewModel(id, yearAndWeek[1], yearAndWeek[0]);
 
-            return View("../Clocking/Index", clockingViewModel);
+            return View("../ClockingEmployee/Index", clockingViewModel);
         }
     }
 }
