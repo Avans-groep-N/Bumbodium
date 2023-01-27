@@ -43,7 +43,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
             for (int dayOff = 0; dayOff < 7; dayOff++)
             {
                 List<Forecast> forPerDay = forecasts.Where(f => f.Date.DayOfWeek == startDate.AddDays(dayOff).DayOfWeek).ToList();
-                ForecastViewModel fi;
+                ForecastDayViewModel fi;
                 if (forPerDay.Count != 0)
                     fi = FillForecastDay(startDate.AddDays(dayOff), forPerDay);
                 else
@@ -52,9 +52,9 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
             }
         }
 
-        private ForecastViewModel FillEmptyForecastDay(DateTime dayOfWeek)
+        private ForecastDayViewModel FillEmptyForecastDay(DateTime dayOfWeek)
         {
-            return new ForecastViewModel()
+            return new ForecastDayViewModel()
             {
                 Date = dayOfWeek,
                 AmountExpectedColis = 0,
@@ -65,9 +65,9 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
             };
         }
 
-        private ForecastViewModel FillForecastDay(DateTime dayOfWeek, IEnumerable<Forecast> forPerDay)
+        private ForecastDayViewModel FillForecastDay(DateTime dayOfWeek, IEnumerable<Forecast> forPerDay)
         {
-            return new ForecastViewModel()
+            return new ForecastDayViewModel()
             {
                 Date = dayOfWeek,
                 AmountExpectedColis = forPerDay.Sum(f => f.AmountExpectedColis),
@@ -102,7 +102,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
             _forcastRepo.SaveNewForecast(newForecasts);
         }
 
-        private List<Forecast> UpdateForecastDay(ForecastViewModel forecast, List<Forecast> dbForecast, int day)
+        private List<Forecast> UpdateForecastDay(ForecastDayViewModel forecast, List<Forecast> dbForecast, int day)
         {
 
             if (dbForecast.Count == 0)
@@ -122,23 +122,23 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
             else if (forecast.AmountExpectedHours != dbForecast.Sum(f => f.AmountExpectedHours) || forecast.AmountExpectedEmployees != dbForecast.Sum(f => f.AmountExpectedEmployees))
             {
 
-               /* var smallest = dbForecast.First();
-                foreach (var dbFo in dbForecast)
-                {
-                    if (dbFo.AmountExpectedEmployees < smallest.AmountExpectedEmployees)
-                        smallest = dbFo;
+                /* var smallest = dbForecast.First();
+                 foreach (var dbFo in dbForecast)
+                 {
+                     if (dbFo.AmountExpectedEmployees < smallest.AmountExpectedEmployees)
+                         smallest = dbFo;
 
-                }
-                smallest.AmountExpectedEmployees += forecast.AmountExpectedEmployees.Value;
+                 }
+                 smallest.AmountExpectedEmployees += forecast.AmountExpectedEmployees.Value;
 
-                smallest = dbForecast.First();
-                foreach (var dbFo in dbForecast)
-                {
-                    if (dbFo.AmountExpectedEmployees < smallest.AmountExpectedEmployees)
-                        smallest = dbFo;
+                 smallest = dbForecast.First();
+                 foreach (var dbFo in dbForecast)
+                 {
+                     if (dbFo.AmountExpectedEmployees < smallest.AmountExpectedEmployees)
+                         smallest = dbFo;
 
-                }
-                smallest.AmountExpectedEmployees += forecast.AmountExpectedEmployees*/
+                 }
+                 smallest.AmountExpectedEmployees += forecast.AmountExpectedEmployees*/
             }
             return dbForecast;
         }
@@ -149,7 +149,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
             _forcastRepo.SaveNewForecast(weekprognose);
         }
 
-        private List<Forecast> WeekCalEmployes(ForecastViewModel[] forecast)
+        private List<Forecast> WeekCalEmployes(ForecastDayViewModel[] forecast)
         {
             List<Forecast> allDepForecastsOfWeek = new List<Forecast>();
 
@@ -163,7 +163,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
             return allDepForecastsOfWeek;
         }
 
-        private void ForecastDay(ForecastViewModel forecast, List<Forecast> allDepForecasts, int surfaceAreaOfBranch, int day)
+        private void ForecastDay(ForecastDayViewModel forecast, List<Forecast> allDepForecasts, int surfaceAreaOfBranch, int day)
         {
             int amountWorkingHours = DayCalcuWorkHours(workHours:
                                 DayCalcuSpiegelen(amountMeters: surfaceAreaOfBranch) +
@@ -229,6 +229,82 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
                    3600;
 
             return (int)(workTimeNotWithCustomers + timeNeededToHelpCustomers) / 3600;
+        }
+
+
+        public ForecastViewModel GetForecast(DateTime date)
+        {
+            while (date.DayOfWeek != DayOfWeek.Monday)
+            {
+                date = date.AddDays(-1);
+            }
+             
+            var forecastVW = new ForecastViewModel();
+            forecastVW.MakeDictionary(date.Date);
+
+            var forecastsDB = _forcastRepo.GetForecastInRange(date.Date, date.Date.AddDays(7));
+            if (forecastsDB == null)
+                return forecastVW;
+
+            foreach (var forecast in forecastsDB)
+            {
+                if (forecastVW.ForecastWeek.ContainsKey(forecast.Date.Date))
+                {
+                    forecastVW.ForecastWeek[forecast.Date.Date].AmountExpectedCustomers = forecast.AmountExpectedCustomers;
+                    forecastVW.ForecastWeek[forecast.Date.Date].AmountExpectedColis = forecast.AmountExpectedColis;
+
+                    forecastVW.AddToDict(forecast.Date.Date, new ForecastDepartment() { DepartmentType = forecast.Department.Name, AmountExpectedEmployees = forecast.AmountExpectedEmployees, AmountExpectedHours = forecast.AmountExpectedHours });
+                }
+            }
+
+            return forecastVW;
+        }
+
+        public void ChangeDB(ForecastViewModel ForecastVW)
+        {
+            List<Forecast> forecastsDB = _forcastRepo.GetForecastInRange(ForecastVW.StartOfWeekDate.Date, ForecastVW.StartOfWeekDate.Date.AddDays(7));
+
+            foreach (var forecastDay in ForecastVW.ForecastWeek)
+            {
+                foreach (var forecastDepartment in forecastDay.Value.forecastDepartments)
+                {
+                    var foreDB = forecastsDB.FirstOrDefault(f => f.Date.Date == forecastDay.Key.Date && f.Department.Name == forecastDepartment.Key);
+
+                    if (foreDB != null)
+                    {
+                        foreDB.AmountExpectedColis = forecastDay.Value.AmountExpectedColis;
+                        foreDB.AmountExpectedCustomers = forecastDay.Value.AmountExpectedCustomers;
+                        foreDB.AmountExpectedEmployees = forecastDepartment.Value.AmountExpectedEmployees;
+                        foreDB.AmountExpectedHours = forecastDepartment.Value.AmountExpectedHours;
+                        _forcastRepo.SaveUpdateForecast(foreDB);
+                    }
+                    else
+                    {
+                        _forcastRepo.SaveNewForecast(new Forecast()
+                        {
+                            Date = forecastDay.Key.Date,
+                            DepartmentId = (int)forecastDepartment.Key + 1,
+                            AmountExpectedColis = forecastDay.Value.AmountExpectedColis,
+                            AmountExpectedCustomers = forecastDay.Value.AmountExpectedCustomers,
+                            AmountExpectedEmployees = forecastDepartment.Value.AmountExpectedEmployees,
+                            AmountExpectedHours = forecastDepartment.Value.AmountExpectedHours
+                        });
+                    }
+                }
+            }
+
+            /*foreach (var forecastDB in forecastsDB)
+            {
+                ForecastVW.ForecastWeek.TryGetValue(forecastDB.Date.Date, out ForecastDay? value);
+                if (value != null)
+                {
+
+                }
+                else
+                {
+
+                }
+            }*/
         }
     }
 }

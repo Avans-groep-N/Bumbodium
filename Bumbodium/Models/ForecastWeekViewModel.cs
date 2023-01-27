@@ -4,13 +4,13 @@ namespace Bumbodium.WebApp.Models
 {
     public class ForecastWeekViewModel
     {
-        public ForecastViewModel[] DaysOfTheWeek { get; set; } = new ForecastViewModel[7];
+        public ForecastDayViewModel[] DaysOfTheWeek { get; set; } = new ForecastDayViewModel[7];
     
         public int WeekNr { get; set; }
         public int YearNr { get; set; }
     }
 
-    public class ForecastViewModel : IValidatableObject
+    public class ForecastDayViewModel : IValidatableObject
     {
         [Key]
         [Required]

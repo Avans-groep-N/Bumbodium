@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Bumbodium.WebApp.Models;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Repositories;
-using Bumbodium.Data;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
-using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
 using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
 using System.Globalization;
 
@@ -29,71 +25,69 @@ namespace Bumbodium.WebApp.Controllers
         // GET: ForecastController
         public ActionResult Index()
         {
-            #region !!moet weg
-            /*var fw = new ForecastWeekViewModel() { WeekNr = 1, YearNr = 2023 };
-            fw.DaysOfTheWeek[0] = (new ForecastViewModel()
-            {
-                Date = new DateTime(2020, 8, 23),
-                AmountExpectedEmployees = 8,
-                AmountExpectedColis = 8,
-                AmountExpectedCustomers = 8,
-                AmountExpectedHours = 8
-            });
-            fw.DaysOfTheWeek[1] = (new ForecastViewModel()
-            {
-                Date = new DateTime(2020, 8, 23),
-                AmountExpectedEmployees = 8,
-                AmountExpectedColis = 8,
-                AmountExpectedCustomers = 8,
-                AmountExpectedHours = 8
-            });
-            fw.DaysOfTheWeek[2] = (new ForecastViewModel()
-            {
-                Date = new DateTime(2020, 8, 23),
-                AmountExpectedEmployees = 8,
-                AmountExpectedColis = 8,
-                AmountExpectedCustomers = 8,
-                AmountExpectedHours = 8
-            });
-            fw.DaysOfTheWeek[3] = (new ForecastViewModel()
-            {
-                Date = new DateTime(2020, 8, 23),
-                AmountExpectedEmployees = 8,
-                AmountExpectedColis = 8,
-                AmountExpectedCustomers = 8,
-                AmountExpectedHours = 8
-            });
-            fw.DaysOfTheWeek[4] = (new ForecastViewModel()
-            {
-                Date = new DateTime(2020, 8, 23),
-                AmountExpectedEmployees = 8,
-                AmountExpectedColis = 8,
-                AmountExpectedCustomers = 8,
-                AmountExpectedHours = 8
-            });
-            fw.DaysOfTheWeek[5] = (new ForecastViewModel()
-            {
-                Date = new DateTime(2020, 8, 23),
-                AmountExpectedEmployees = 8,
-                AmountExpectedColis = 8,
-                AmountExpectedCustomers = 8,
-                AmountExpectedHours = 8
-            });
-            fw.DaysOfTheWeek[6] = (new ForecastViewModel()
-            {
-                Date = new DateTime(2020, 8, 23),
-                AmountExpectedEmployees = 8,
-                AmountExpectedColis = 8,
-                AmountExpectedCustomers = 8,
-                AmountExpectedHours = 8
-            });*/
-            #endregion
-
-
-            return View(GetForecastWeek(DateTime.Now));
+            return View(_blForecast.GetForecast(DateTime.Now));
         }
 
         [HttpPost]
+        public IActionResult SelectWeek()
+        {
+            var datestring = Request.Form["weeknumber"].First().Split("-W");
+            var date = ISOWeek.ToDateTime(Convert.ToInt32(datestring[0]), Convert.ToInt32(datestring[1]), DayOfWeek.Monday);
+            
+            var fw = _blForecast.GetForecast(date);
+            return View($"../{nameof(ForecastController).Replace(nameof(Controller), "")}/{nameof(Index)}", fw);
+        }
+
+
+        public IActionResult ChangeInput(string id)
+        {
+            var datestring = id.Split("-W");
+            var date = ISOWeek.ToDateTime(Convert.ToInt32(datestring[0]), Convert.ToInt32(datestring[1]), DayOfWeek.Monday);
+
+            ForecastViewModel forecastVW = _blForecast.GetForecast(date);
+
+            return View(forecastVW);
+        }
+
+        public IActionResult ChangeOutput(string id)
+        {
+            var datestring = id.Split("-W");
+            var date = ISOWeek.ToDateTime(Convert.ToInt32(datestring[0]), Convert.ToInt32(datestring[1]), DayOfWeek.Monday);
+
+            ForecastViewModel forecastVW = _blForecast.GetForecast(date);
+            
+            return View(forecastVW);
+        }
+
+        [HttpPost]
+        public IActionResult ChangeOutput(ForecastViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+            else
+            {
+                _blForecast.ChangeDB(viewModel);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpPost]
+        public IActionResult ChangeInput(ForecastViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+            else
+            {
+                //_blForecast.ChangeDB(viewModel);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        /*[HttpPost]
         public ActionResult SaveNewForecast()
         {
             var datestring = Request.Form["weeknumber"].First().Split("-W");
@@ -103,10 +97,10 @@ namespace Bumbodium.WebApp.Controllers
             var amountExpectedCustomers = Request.Form["amountCustomers"];
             var amountExpectedColis = Request.Form["amountColis"];
 
-            var forecastweek = new ForecastWeekViewModel() { WeekNr = ISOWeek.GetWeekOfYear(date), YearNr = date.Year};
+            var forecastweek = new ForecastWeekViewModel() { WeekNr = ISOWeek.GetWeekOfYear(date), YearNr = date.Year };
             for (int i = 0; i < amountExpectedEmployees.Count; i++)
             {
-                var fVW = new ForecastViewModel();
+                var fVW = new ForecastDayViewModel();
                 fVW.Date = date.AddDays(i);
                 fVW.AmountExpectedEmployees = Convert.ToInt32(amountExpectedEmployees[i]);
                 fVW.AmountExpectedHours = Convert.ToInt32(amountExpectedHours[i]);
@@ -117,14 +111,6 @@ namespace Bumbodium.WebApp.Controllers
             _blForecast.SaveForecast(forecastweek);
 
 
-            var fw = GetForecastWeek();
-            return View($"../{nameof(ForecastController).Replace(nameof(Controller), "")}/{nameof(Index)}", fw);
-        }
-
-        [Authorize(Roles = "Manager")]
-        [HttpPost]
-        public IActionResult SelectWeek()
-        {
             var fw = GetForecastWeek();
             return View($"../{nameof(ForecastController).Replace(nameof(Controller), "")}/{nameof(Index)}", fw);
         }
@@ -175,6 +161,6 @@ namespace Bumbodium.WebApp.Controllers
             }
             return View(new ForecastWeekViewModel());
 
-        }
+        }*/
     }
 }

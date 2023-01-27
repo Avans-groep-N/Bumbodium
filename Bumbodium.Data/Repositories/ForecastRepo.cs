@@ -130,6 +130,20 @@ namespace Bumbodium.Data.Repositories
 
         public List<Forecast> GetForecastOfDate(DateTime startDate, DateTime endDate) => _ctx.Forecast.Where(f => f.Date >= startDate && f.Date <= endDate).ToList();
 
+        public void SaveNewForecast(Forecast forecast)
+        {
+            _ctx.Forecast.Add(forecast);
+            _ctx.SaveChanges();
+        }
+
+        public void SaveUpdateForecast(Forecast forecast)
+        {
+            _ctx.Forecast.Update(forecast);
+            _ctx.SaveChanges();
+        }
+
+
+
         public void SaveNewForecast(List<Forecast> weakForecast)
         {
             _ctx.Forecast.AddRange(weakForecast);
@@ -147,5 +161,7 @@ namespace Bumbodium.Data.Repositories
             _ctx.RemoveRange(dbForecast);
             _ctx.SaveChanges();
         }
+
+        public List<Forecast> GetForecastInRange(DateTime startDate, DateTime endDate) => _ctx.Forecast.Include(f => f.Department).Where(f => f.Date >= startDate && f.Date <= endDate).ToList();
     }
 }
