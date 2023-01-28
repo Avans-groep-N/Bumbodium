@@ -18,25 +18,14 @@
 
 <br />
 <div class="container justify-content-center">
-    <div class="row ">
-        <div class="col-md-2 p-0 bg-white">
+    <div class="row shadow-lg">
+        <div class="col-sm-3 p-0 bg-white">
             <ul class="list-group-flush p-0">
                 <li class="list-group-item bg-black text-black"> - </li>
-                <li class="list-group-item">verwachte klanten</li>
-                <li class="list-group-item mb-2">verwachte colis</li>
-
-                @foreach (var departments in Model.DepartmentTypes)
-                {
-                    <li class="list-group-item mb-0">
-                        <p class="mb-1">@departments :</p>
-                    </li>
-                    <li class="list-group-item mb-0">
-                        <p class="mb-1">verwachte medewerkers</p>
-                    </li>
-                    <li class="list-group-item">
-                        <p class="mb-2">verwachte uren</p>
-                    </li>
-                }
+                <li class="list-group-item mb-1">Verwachte klanten</li>
+                <li class="list-group-item mb-3">Verwachte colis</li>
+                <li class="list-group-item mb-1">Totaal verwachte medewerkers</li>
+                <li class="list-group-item mb-1">Totaal verwachte uren</li>
             </ul>
         </div>
         @foreach (var forecastDay in Model.ForecastWeek)
@@ -44,31 +33,22 @@
             <div class="col text-center p-0 bg-light ">
                 <ul class="list-group-flush p-0">
                     <li class="list-group-item bg-black text-light">@forecastDay.Key.ToString("dd/MM")</li>
-                    <li class="list-group-item">@forecastDay.Value.AmountExpectedCustomers</li>
-                    <li class="list-group-item mb-2">@forecastDay.Value.AmountExpectedColis</li>
-
-                    @foreach (var department in forecastDay.Value.forecastDepartments)
-                    {
-                        <br class="mb-1" />
-                        <li class="list-group-item mb-1">
-                            @Model.ForecastWeek[forecastDay.Key].forecastDepartments[department.Key].AmountExpectedEmployees
-                        </li>
-                        <li class="list-group-item">
-                            @Model.ForecastWeek[forecastDay.Key].forecastDepartments[department.Key].AmountExpectedHours
-                        </li>
-                    }
+                    <li class="list-group-item mb-1">@forecastDay.Value.AmountExpectedCustomers</li>
+                    <li class="list-group-item mb-3">@forecastDay.Value.AmountExpectedColis</li>
+                    <li class="list-group-item mb-1">@Model.CountTotaalEmplyeesPerDay(forecastDay.Key)</li>
+                    <li class="list-group-item mb-1">@Model.CountTotaalHoursPerDay(forecastDay.Key)</li>
                 </ul>
             </div>
         }
         <br />
     </div>
-        <br />
+    <br />
     <div class="row pb-0">
         <div class="col text-center p-0 ">
             <a asp-action="ChangeInput" class="btn btn-lg btn-primary btn-outline-warning" asp-route-id="@calanderVal">Verander de prognose dag</a>
         </div>
         <div class="col text-center p-0">
-            <a asp-action="ChangeOutput" class="btn btn-lg btn-primary btn-outline-warning" asp-route-id="@calanderVal">veranderen de uitkomst velden</a>
+            <a asp-action="ChangeOutput" class="btn btn-lg btn-primary btn-outline-warning" asp-route-id="@calanderVal">Veranderen de uitkomst velden</a>
         </div>
     </div>
 </div>

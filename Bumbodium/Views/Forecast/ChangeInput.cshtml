@@ -6,12 +6,12 @@
 <form action="/Forecast/ChangeInput" method="post">
     <input hidden asp-for="StartOfWeekDate" />
     <div class="container">
-        <div class="row">
+        <div class="row shadow-lg">
             <div class="col-md-3 p-0 bg-white">
                 <ul class="list-group-flush p-0">
                     <li class="list-group-item mb-1 bg-black text-black"> - </li>
-                    <li class="list-group-item mb-1">verwachte klanten</li>
-                    <li class="list-group-item mb-4">verwachte colis</li>
+                    <li class="list-group-item mb-1">Verwachte klanten</li>
+                    <li class="list-group-item mb-4">Verwachte colis</li>
                     <li class="list-group-item mb-0">
                         <p class="mb-1">Totaal verwachte medewerkers</p>
                     </li>
@@ -45,8 +45,10 @@
         <br />
         <div class="row pb-0">
             <div class="col text-center p-0 ">
-                <button type="submit" class="btn btn-primary btn-outline-warning">Maakt een nieuwe prognose aan!</button>
+                <button type="submit" class="btn btn-lg btn-primary btn-outline-warning">Maakt een nieuwe prognose aan!</button>
             </div>
         </div>
     </div>
 </form>
+<br />
+<a asp-action="Index" class="btn btn-lg btn-primary btn-outline-danger">Terug naar prognose overzicht.</a>

@@ -6,12 +6,12 @@
 <form action="/Forecast/ChangeOutput" method="post">
     <input hidden asp-for="StartOfWeekDate" />
     <div class="container">
-        <div class="row ">
+        <div class="row shadow-lg">
             <div class="col-md-2 p-0 bg-white">
                 <ul class="list-group-flush p-0">
                     <li class="list-group-item bg-black text-black"> - </li>
-                    <li class="list-group-item">verwachte klanten</li>
-                    <li class="list-group-item mb-2">verwachte colis</li>
+                    <li class="list-group-item">Verwachte klanten</li>
+                    <li class="list-group-item mb-2">Verwachte colis</li>
 
                     @foreach (var departments in Model.DepartmentTypes)
                     {
@@ -19,16 +19,19 @@
                             <p class="mb-1">@departments :</p>
                         </li>
                         <li class="list-group-item mb-0">
-                            <p class="mb-1">verwachte medewerkers</p>
+                            <p class="mb-1">Verwachte medewerkers</p>
                         </li>
                         <li class="list-group-item">
-                            <p class="mb-2">verwachte uren</p>
+                            <p class="mb-2">Verwachte uren</p>
                         </li>
                     }
                 </ul>
             </div>
             @foreach (var forecastDay in Model.ForecastWeek)
             {
+                <input hidden asp-for="ForecastWeek[forecastDay.Key].AmountExpectedColis"/>
+                <input hidden asp-for="ForecastWeek[forecastDay.Key].AmountExpectedCustomers"/>
+
                 <div class="col text-center p-0 bg-light ">
                     <ul class="list-group-flush p-0">
                         <li class="list-group-item bg-black text-light">@forecastDay.Key.ToString("dd/MM")</li>
@@ -53,9 +56,15 @@
         </div>
         <br />
         <div class="row pb-0">
+            <div class="row pb-0">
+                <div class="col text-center p-0">
+                    <button type="submit" class="btn btn-lg btn-primary btn-outline-warning">Pas de bestaande prognose aan!</button>
+                </div>
+            </div>
             <div class="col text-center p-0 ">
-                <button type="submit" class="btn btn-primary btn-outline-warning">pas de bestaande prognose aan!</button>
             </div>
         </div>
     </div>
 </form>
+<br/>
+<a asp-action="Index" class="btn btn-lg btn-primary btn-outline-danger">Terug naar prognose overzicht.</a>

@@ -142,8 +142,6 @@ namespace Bumbodium.Data.Repositories
             _ctx.SaveChanges();
         }
 
-
-
         public void SaveNewForecast(List<Forecast> weakForecast)
         {
             _ctx.Forecast.AddRange(weakForecast);
