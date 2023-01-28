@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bumbodium.Data
 {
@@ -55,6 +56,21 @@ namespace Bumbodium.Data
         {
             _ctx.Availability.Update(availability);
             _ctx.SaveChanges();
+        }
+
+        public IQueryable<Employee> GetAvailableEmployees(int departmentId, DateTime startTime, DateTime endTime)
+        {
+            IQueryable<Employee> employees = _ctx.Employee.AsQueryable();
+            employees = employees.Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == (int)(departmentId)));
+
+            employees = employees.Include(e => e.Availability);
+            employees = employees.Where(e => !e.Availability.Any(a =>
+            (a.StartDateTime >= startTime && a.StartDateTime <= endTime) ||
+            (a.EndDateTime >= startTime && a.EndDateTime <= endTime) ||
+            (a.StartDateTime <= startTime && a.EndDateTime >= endTime)
+            ));
+            employees = employees.OrderBy(e => e.FirstName);
+            return employees;
         }
     }
 }

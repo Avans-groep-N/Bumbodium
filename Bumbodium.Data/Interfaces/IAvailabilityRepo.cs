@@ -10,5 +10,6 @@ namespace Bumbodium.Data.Interfaces
         void InsertAvailability(Availability availability);
         void DeleteAvailability(Availability availability);
         void UpdateAvailability(Availability availability);
+        IQueryable<Employee> GetAvailableEmployees(int departmentId, DateTime startTime, DateTime endTime);
     }
 }

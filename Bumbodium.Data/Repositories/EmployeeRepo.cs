@@ -20,7 +20,10 @@ namespace Bumbodium.Data
         }
         public Employee GetEmployee(string id)
         {
-            return _ctx.Employee.Include(e => e.PartOFDepartment).ThenInclude(pod => pod.Department).FirstOrDefault(e => e.EmployeeID == id);
+            return _ctx.Employee
+                .Include(e => e.PartOFDepartment)
+                .ThenInclude(pod => pod.Department)
+                .FirstOrDefault(e => e.EmployeeID == id);
         }
 
         public IQueryable<Employee> GetEmployees()

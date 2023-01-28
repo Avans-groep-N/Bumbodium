@@ -5,6 +5,9 @@ using Bumbodium.WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Bumbodium.Data;
+using System.Security.Cryptography.X509Certificates;
+using Bumbodium.Data.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -12,10 +15,14 @@ namespace Bumbodium.WebApp.Controllers
     public class WeekScheduleController : Controller
     {
         private readonly EmployeeRepo _employeeRepo;
+        private readonly IAvailabilityRepo _availabilityRepo;
+        private readonly IShiftRepo _shiftRepo;
 
-        public WeekScheduleController(EmployeeRepo employeeRepo)
+        public WeekScheduleController(EmployeeRepo employeeRepo, IAvailabilityRepo availabilityRepo, IShiftRepo shiftRepo)
         {
             _employeeRepo = employeeRepo;
+            _availabilityRepo = availabilityRepo;
+            _shiftRepo = shiftRepo;
         }
 
         // GET: WeekRoosterController
@@ -26,7 +33,7 @@ namespace Bumbodium.WebApp.Controllers
             viewModel.SelectedDate = t;
             viewModel.SelectedStartTime = new DateTime(t.Year, t.Month, t.Day, 8, 0, 0);
             viewModel.SelectedEndTime = new DateTime(t.Year, t.Month, t.Day, 22, 0, 0);
-            // Do Employee get from post method
+            viewModel.AvailableEmployees = _availabilityRepo.GetAvailableEmployees(1, viewModel.SelectedStartTime, viewModel.SelectedEndTime).ToList();
             return View(viewModel);
         }
 
@@ -37,29 +44,27 @@ namespace Bumbodium.WebApp.Controllers
             DateTime st = viewModel.SelectedStartTime;
             DateTime et = viewModel.SelectedEndTime;
             // Swap StartTime and EndTime if StartTime is after EndTime
-            if(st < et)
+            if(st != et)
             {
-                viewModel.SelectedStartTime = new(d.Year, d.Month, d.Day, st.Hour, st.Minute, 0);
-                viewModel.SelectedEndTime = new(d.Year, d.Month, d.Day, et.Hour, et.Minute, 0);
-            } else
-            {
-                viewModel.SelectedEndTime = new(d.Year, d.Month, d.Day, st.Hour, st.Minute, 0);
-                viewModel.SelectedStartTime = new(d.Year, d.Month, d.Day, et.Hour, et.Minute, 0);
+                if (st < et)
+                {
+                    viewModel.SelectedStartTime = new(d.Year, d.Month, d.Day, st.Hour, st.Minute, 0);
+                    viewModel.SelectedEndTime = new(d.Year, d.Month, d.Day, et.Hour, et.Minute, 0);
+                }
+                else
+                {
+                    viewModel.SelectedEndTime = new(d.Year, d.Month, d.Day, st.Hour, st.Minute, 0);
+                    viewModel.SelectedStartTime = new(d.Year, d.Month, d.Day, et.Hour, et.Minute, 0);
+                }
             }
-            
-            // Dirty db get
-            IQueryable<Employee> employees = _employeeRepo.GetEmployees();
-            // Department filter
-            employees = employees.Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == (int)(viewModel.SelectedDepartment + 1)));
-            // Availability filter
-            employees = employees.Include(e => e.Availability);
-            employees = employees.Where(e => !e.Availability.Any(a =>
-            (a.StartDateTime > viewModel.SelectedStartTime && a.StartDateTime < viewModel.SelectedEndTime) ||
-            (a.EndDateTime > viewModel.SelectedStartTime && a.EndDateTime < viewModel.SelectedEndTime) ||
-            (a.StartDateTime < viewModel.SelectedStartTime && a.EndDateTime > viewModel.SelectedEndTime)
-            ));
-            employees = employees.OrderBy(e => e.FirstName);
-            viewModel.AvailableEmployees = employees.ToList();
+            viewModel.AvailableEmployees = _availabilityRepo.GetAvailableEmployees(((int)viewModel.SelectedDepartment + 1), viewModel.SelectedStartTime, viewModel.SelectedEndTime).ToList();
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult AddShift(ScheduleEmployeeListViewModel viewModel)
+        {
+
             return View(viewModel);
         }
     }
