@@ -26,6 +26,7 @@
                     <input hidden asp-for="Standards[i].Description" />
                     <input hidden asp-for="Standards[i].Subject" />
                     <input asp-for="Standards[i].Value" class="m-3 text-lg text-center" />
+                    <span asp-validation-for="Standards[i].Value" class="text-danger"></span>
                 </div>
             </div>
         }

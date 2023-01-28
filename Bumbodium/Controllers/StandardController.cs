@@ -40,7 +40,7 @@ namespace Bumbodium.WebApp.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(standardsVM);
+                return View(_blStandards.GetStandardsViewModel(standardsVM.Country));
             }
             else
             {
