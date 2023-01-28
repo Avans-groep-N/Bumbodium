@@ -35,6 +35,9 @@
     RadzenScheduler<Availability> scheduler;
     public IEnumerable<Availability> Data { get; set; }
 
+    [Parameter]
+    public string UserID { get; set; }
+
     DateTime? SelectedStartTime;
     DateTime? SelectedEndTime;
     public AvailabilityType SelectedType { get; set; }
@@ -57,8 +60,7 @@
                         StartDateTime = SelectedStartTime.GetValueOrDefault(),
                         EndDateTime = args.End,
                         Type = SelectedType,
-                        // TODO replace with actual id
-                        EmployeeId = "b74ddd14-6340-4840-95c2-db12554843e5"
+                        EmployeeId = UserID
                     });
             }
             else
@@ -68,8 +70,7 @@
                         StartDateTime = args.Start,
                         EndDateTime = SelectedEndTime.GetValueOrDefault(),
                         Type = SelectedType,
-                        // TODO replace with actual id
-                        EmployeeId = "b74ddd14-6340-4840-95c2-db12554843e5"
+                        EmployeeId = UserID
                     });
             }
             SelectedStartTime = null;
@@ -95,7 +96,7 @@
     async Task OnLoadData(SchedulerLoadDataEventArgs args)
     {
         //GET the appointments for between the Start and End
-        Data = _db.GetAvailabilitiesInRange(args.Start, args.End);
+        Data = _db.GetAvailabilitiesInRange(args.Start, args.End, UserID);
     }
 
     void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Availability> args)

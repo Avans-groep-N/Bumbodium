@@ -1,9 +1,9 @@
-﻿@model Bumbodium.Data.DBModels.Availability[]
+﻿@model string
 @{
     ViewData["Title"] = "Index";
 }
 
 <div class="text-center">
     <h1>Beschikbaarheid</h1>
-    @(await Html.RenderComponentAsync<Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent>(RenderMode.ServerPrerendered))
+    @(await Html.RenderComponentAsync<Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent>(RenderMode.ServerPrerendered, new { UserID = Model }))
 </div> 

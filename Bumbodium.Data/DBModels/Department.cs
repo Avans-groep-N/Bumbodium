@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.Data.DBModels
 {
@@ -25,14 +26,11 @@ namespace Bumbodium.Data.DBModels
 
     public enum DepartmentType
     {
-        Vegetables_Fruit,
-        Meat,
-        Fish,
-        Cheese_Milk,
-        Bread,
-        Cosmetics,
-        Checkout,
-        Stockroom,
-        InformationDesk
+        [Display(Name ="Vers")]
+        Fresh,
+        [Display(Name = "Vak")]
+        Shelves,
+        [Display(Name = "Kassa")]
+        Checkout
     }
 }

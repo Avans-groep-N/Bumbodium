@@ -1,10 +1,12 @@
-﻿@model Bumbodium.Data.DBModels.Shift[]
+﻿@using Bumbodium.WebApp.Views
+@model ScheduleEmployeeListViewModel
 @{
     ViewData["Title"] = "Index";
     //var shiftList = Model.ToArray();
     //var len = shiftList.Length;
 }
-
+<partial name="_EmployeeSelectionList" model="Model"></partial>
 <div class="text-center">
-    @(await Html.RenderComponentAsync<Bumbodium.WebApp.Views.Shared.Components.ScheduleComponent>(RenderMode.ServerPrerendered))
+    
+    @*@(await Html.RenderComponentAsync<Bumbodium.WebApp.Views.Shared.Components.ScheduleComponent>(RenderMode.ServerPrerendered))*@
 </div>
