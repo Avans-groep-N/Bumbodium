@@ -32,7 +32,7 @@ namespace Bumbodium.WebApp.Controllers
             {
                 if (User.IsInRole("Manager"))
                 {
-                    return RedirectToAction("Index", "WeekSchedule");
+                    return RedirectToAction("Index", "ManagerSchedule");
                 }
                 if (User.IsInRole("Employee"))
                 {

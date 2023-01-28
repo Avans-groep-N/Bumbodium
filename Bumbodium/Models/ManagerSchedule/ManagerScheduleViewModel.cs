@@ -1,26 +1,22 @@
-﻿namespace Bumbodium.WebApp.Models
+﻿using Bumbodium.Data.DBModels;
+
+namespace Bumbodium.WebApp.Models.ManagerSchedule
 {
-    public class DayShiftsViewModel
+    public class ManagerScheduleViewModel
     {
+        // EmployeeSelectionList
+        public List<Employee>? AvailableEmployees { get; set; }
+        public string? SelectedEmployeeId { get; set; }
+        public DepartmentType SelectedDepartment { get; set; }
+        public DateTime SelectedDate { get; set; }
+        public DateTime SelectedStartTime { get; set; }
+        public DateTime SelectedEndTime { get; set; }
 
-        public List<ShiftVM> Planning;
+        // Shifts list
+        public List<Shift> Shifts;
         public DateTime Day;
-        public DateTime OpenTime;
-        public DateTime ClosingTime;
-
-        public DayShiftsViewModel()
-        {
-            Day = new DateTime(2023, 01, 26);
-            OpenTime = new DateTime(2023, 01, 26, 08, 00, 00);
-            ClosingTime = new DateTime(2023, 01, 26, 22, 00, 00);
-            Planning = new List<ShiftVM>
-            {
-                new ShiftVM() { EmployeeId = "1", StartTime = new DateTime(2023, 01, 26, 10, 00, 00), EndTime = new DateTime(2023, 01, 26, 13, 00, 00) },
-                new ShiftVM() { EmployeeId = "2", StartTime = new DateTime(2023, 01, 26, 12, 30, 00), EndTime = new DateTime(2023, 01, 26, 18, 00, 00) },
-                new ShiftVM() { EmployeeId = "3", StartTime = new DateTime(2023, 01, 26, 12, 30, 00), EndTime = new DateTime(2023, 01, 26, 18, 00, 00) },
-                new ShiftVM() { EmployeeId = "4", StartTime = new DateTime(2023, 01, 26, 18, 00, 00), EndTime = new DateTime(2023, 01, 26, 21, 30, 00) },
-            };
-        }
+        public TimeOnly OpenTime = new(08, 00, 00);
+        public TimeOnly ClosingTime = new(22, 00, 00);
 
         public int GetEmptyStart(DateTime input)
         {

@@ -20,6 +20,14 @@ namespace Bumbodium.Data
                 .Include(s => s.Employee)
                 .ToList();
         }
+        public List<Shift> GetShiftsInRange(DateTime start, DateTime end, int departmentId)
+        {
+            return _ctx.Shift
+                .Where(s => s.DepartmentId == departmentId)
+                .Where(s => s.ShiftStartDateTime > start && s.ShiftStartDateTime < end)
+                .Include(s => s.Employee)
+                .ToList();
+        }
 
         public void InsertShift(Shift shift)
         {
@@ -29,6 +37,13 @@ namespace Bumbodium.Data
 
         public void DeleteShift(Shift shift)
         {
+            _ctx.Shift.Remove(shift);
+            _ctx.SaveChanges();
+        }
+        
+        public void DeleteShift(int shiftId)
+        {
+            Shift shift = _ctx.Shift.Where(e => e.ShiftId == shiftId).FirstOrDefault();
             _ctx.Shift.Remove(shift);
             _ctx.SaveChanges();
         }

@@ -31,7 +31,7 @@
                             @if (User.IsInRole("Manager"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="WeekSchedule" asp-action="Index">Week rooster</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="ManagerSchedule" asp-action="Index">Week rooster</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Standard" asp-action="Index">Normering</a>
@@ -47,11 +47,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Werknemers</a>
-                                </li>      
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="ManagerSchedule" asp-action="Index">Manager rooster</a>
                                 </li>
-
 
                             }
                             @if (User.IsInRole("Employee"))

@@ -1,37 +1,110 @@
-﻿@model Bumbodium.WebApp.Models.DayShiftsViewModel
-@using System.Globalization;
+﻿@using Bumbodium.WebApp.Views;
+@using Bumbodium.WebApp.Models.ManagerSchedule;
+@using Bumbodium.Data.DBModels;
+@model ManagerScheduleViewModel;
 
-<table class="scheduletable">
-        @foreach (var shift in Model.Planning)
-        {
-            <tr>
-                <td style="width: 400px;">@shift.EmployeeId, @shift.StartTime.ToString("HH:mm")-@shift.EndTime.ToString("HH:mm")</td>
-                @{int empty = Model.GetEmptyStart(shift.StartTime);
-                int workhours = Model.GetWorkHours(shift.StartTime, shift.EndTime);
-                int emptyend = ((Model.ClosingTime.Hour - Model.OpenTime.Hour)*2) - workhours - empty;}
+<!-- Employee selection-->
+<form asp-action="Index" method="post">
+    <div class="row">
+        <div class="col-6">
+            <div asp-validation-summary="All"></div>
+            <h4>Selecteer datum</h4>
+            <input onchange="this.form.submit()" asp-for="SelectedDate" type="date" />
+            <h4>Selecteer afdeling</h4>
+            @Html.DropDownListFor(vm => vm.SelectedDepartment, Html.GetEnumSelectList<DepartmentType>(), new {@onchange="this.form.submit()"})
+            <h4>Selecteer tijd</h4>
+            <div style="display:flex;">
+                <div>
+                    <label>Begintijd</label>
+                    <br />
+                    <input onchange="this.form.submit()" asp-for="SelectedStartTime" step="900" type="time" value="@Model.SelectedStartTime.ToShortTimeString()" />
+                </div>
+                <div>
+                    <label>Eindtijd</label>
+                    <br />
+                    <input onchange="this.form.submit()" asp-for="SelectedEndTime" step="900" type="time" value="@Model.SelectedEndTime.ToShortTimeString()" />
+                </div>
+            </div>
 
-                @for (int i = 0; i < empty; i++)
+            <h4>Selecteer medewerker</h4>
+            <div style="height: 500px; overflow:auto;">
+                @if (Model.AvailableEmployees == null || !Model.AvailableEmployees.Any())
                 {
-                    <td style="background: white;"></td>
+                    <div>
+                        Geen werknemers gevonden die op dit moment in deze afdeling kunnen werken
+                    </div>
                 }
-
-                @for (int j = 0; j < workhours; j++)
+                else
                 {
-                    <td style="background: Green;"></td>
+                    foreach (Employee employee in Model.AvailableEmployees)
+                    {
+                        if (employee.EmployeeID == Model.SelectedEmployeeId)
+                        {
+                            <div>
+                                <button type="button" style="background-color: blue; color: white;">@employee.FullName</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <button asp-action="Index" asp-route-SelectedEmployeeId="@employee.EmployeeID" type="submit">@employee.FullName</button>
+                            </div>
+                        }
+                    }
                 }
+            </div>
+            @if (Model.SelectedEmployeeId != null)
+            {
+                <button asp-action="AddShift" asp-route-SelectedEmployeeId="@Model.SelectedEmployeeId" type="submit">Voeg dienst toe</button>
+            }
+        </div>
 
-                @for (int k = 0; k < emptyend; k++)
+        <div class="col-6">
+            <table class="scheduletable">
+                @if (Model.Shifts != null && Model.Shifts.Any())
                 {
-                    <td style="background: white;"></td>
+                    @foreach (var shift in Model.Shifts)
+                    {
+                        <tr>
+                            <td style="width: 400px;">@shift.Employee.FullName, @shift.ShiftStartDateTime.ToString("HH:mm")-@shift.ShiftEndDateTime.ToString("HH:mm")</td>
+                            @{
+                                int empty = Model.GetEmptyStart(shift.ShiftStartDateTime);
+                                int workhours = Model.GetWorkHours(shift.ShiftStartDateTime, shift.ShiftEndDateTime);
+                                int emptyend = ((Model.ClosingTime.Hour - Model.OpenTime.Hour) * 2) - workhours - empty;
+                            }
+
+                            @for (int i = 0; i < empty; i++)
+                            {
+                                <td style="background: white;"></td>
+                            }
+
+                            @for (int j = 0; j < workhours; j++)
+                            {
+                                <td style="background: Green;"></td>
+                            }
+
+                            @for (int k = 0; k < emptyend; k++)
+                            {
+                                <td style="background: white;"></td>
+                            }
+                            <td>
+                                <button type="submit" asp-action="DeleteShift" asp-route-ShiftId="@shift.ShiftId">Verwijderen</button>
+                            </td>
+                        </tr>
+
+                    }
                 }
-            </tr>
-        }
+                else
+                {
+                    <div>
+                        Geen planning gevonden voor deze dag en afdeling
+                    </div>
+                }
+            </table>
+            @* int NotWorkingBefore = (Model.OpenTime - shift.StartTime) * 2 -> make cells white (employee not working)
+            int WorkingHours = (shift.EndTime - shift.StartTime) * 2 -> Color cells based on department (employee working)
+            int NotWorkingHoursAfter (Model.ClosedTime - shift.EndTime) * 2 -> make cells white (employee not working) *@
 
-
-
-
-</table>
-@* int NotWorkingBefore = (Model.OpenTime - shift.StartTime) * 2 -> make cells white (employee not working)
-    int WorkingHours = (shift.EndTime - shift.StartTime) * 2 -> Color cells based on department (employee working)
-    int NotWorkingHoursAfter (Model.ClosedTime - shift.EndTime) * 2 -> make cells white (employee not working) *@
-
+        </div>
+    </div>
+</form>
