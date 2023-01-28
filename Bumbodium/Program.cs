@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
 using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
 using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
+using Bumbodium.WebApp.Models.Utilities.StandardsValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddScoped<PresenceRepo>();
 builder.Services.AddScoped<EmployeeRepo>();
 
 builder.Services.AddScoped<BLExcelExport>();
+builder.Services.AddScoped<BLStandards>();
 builder.Services.AddScoped<BLForecast>();
 builder.Services.AddScoped<BLClocking>();
 

@@ -7,36 +7,32 @@
     <input hidden asp-for="StartOfWeekDate" />
     <div class="container">
         <div class="row shadow-lg">
-            <div class="col-md-3 p-0 bg-white">
+            <div class="col-auto p-0 bg-white">
                 <ul class="list-group-flush p-0">
-                    <li class="list-group-item mb-1 bg-black text-black"> - </li>
-                    <li class="list-group-item mb-1">Verwachte klanten</li>
-                    <li class="list-group-item mb-4">Verwachte colis</li>
-                    <li class="list-group-item mb-0">
-                        <p class="mb-1">Totaal verwachte medewerkers</p>
-                    </li>
-                    <li class="list-group-item">
-                        <p class="mb-2">Totaal verwachte uren</p>
-                    </li>
+                    <li class="list-group-item mb-1"><h3 class="bg-black text-light p-1"> Year: @Model.StartOfWeekDate.Year </h3></li>
+                    <li class="list-group-item mb-1"><h3 class="m-2">Verwachte klanten</h3></li>
+                    <li class="list-group-item mb-4"><h3 class="m-2">Verwachte colis</h3></li>
+                    <li class="list-group-item mb-0"><h3 class="m-2">Totaal verwachte medewerkers</h3></li>
+                    <li class="list-group-item"><h3 class="m-2">Totaal verwachte uren</h3></li>
                 </ul>
             </div>
             @foreach (var forecastDay in Model.ForecastWeek)
             {
                 <div class="col text-center p-0 bg-light ">
                     <ul class="list-group-flush p-0">
-                        <li class="list-group-item bg-black text-light mb-1">@forecastDay.Key.ToString("dd/MM")</li>
+                        <li class="list-group-item"><h3 class="bg-black text-light p-1">@forecastDay.Key.ToString("dd/MM")</h3></li>
 
-                        <li class="list-group-item mb-1">
+                        <li class="list-group-item mb-3">
                             <input class="text-center" style="width:85%" asp-for="ForecastWeek[forecastDay.Key].AmountExpectedCustomers">
                             <span asp-validation-for="ForecastWeek[forecastDay.Key].AmountExpectedCustomers" class="text-danger"></span>
                         </li>
-                        <li class="list-group-item mb-3">
+                        <li class="list-group-item mb-4">
                             <input class="text-center" style="width:85%" asp-for="ForecastWeek[forecastDay.Key].AmountExpectedColis">
                             <span asp-validation-for="ForecastWeek[forecastDay.Key].AmountExpectedColis" class="text-danger"></span>
                         </li>
 
-                        <li class="list-group-item">@Model.CountTotaalEmplyeesPerDay(forecastDay.Key)</li>
-                        <li class="list-group-item mb-2">@Model.CountTotaalHoursPerDay(forecastDay.Key)</li>
+                        <li class="list-group-item"><h3 class="m-2">@Model.CountTotaalEmplyeesPerDay(forecastDay.Key)</h3></li>
+                        <li class="list-group-item mb-2"><h3 class="m-2">@Model.CountTotaalHoursPerDay(forecastDay.Key)</h3></li>
                     </ul>
                 </div>
             }
@@ -45,10 +41,10 @@
         <br />
         <div class="row pb-0">
             <div class="col text-center p-0 ">
-                <button type="submit" class="btn btn-lg btn-primary btn-outline-warning">Maakt een nieuwe prognose aan!</button>
+                <button type="submit" class="btn btn-lg btn-primary btn-outline-warning">Maakt een nieuwe prognose aan</button>
             </div>
         </div>
     </div>
 </form>
 <br />
-<a asp-action="Index" class="btn btn-lg btn-primary btn-outline-danger">Terug naar prognose overzicht.</a>
+<a asp-action="Index" class="btn btn-lg btn-primary btn-outline-danger">Terug naar prognose overzicht</a>

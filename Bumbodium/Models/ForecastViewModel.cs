@@ -98,9 +98,9 @@ namespace Bumbodium.WebApp.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (AmountExpectedCustomers < 0)
-                yield return new ValidationResult("Negative numbers cannot be added", new[] { "AmountExpectedCustomers" });
+                yield return new ValidationResult("Hier mogen geen negatieve getallen", new[] { "AmountExpectedCustomers" });
             if (AmountExpectedColis < 0)
-                yield return new ValidationResult("Negative numbers cannot be added", new[] { "AmountExpectedColis" });
+                yield return new ValidationResult("Hier mogen geen negatieve getallen", new[] { "AmountExpectedColis" });
         }
     }
 
@@ -116,9 +116,9 @@ namespace Bumbodium.WebApp.Models
         {
 
             if (AmountExpectedEmployees < 0)
-                yield return new ValidationResult("Negative numbers cannot be added", new[] { "AmountExpectedEmployees" });
+                yield return new ValidationResult("Hier mogen geen negatieve getallen", new[] { "AmountExpectedEmployees" });
             if (AmountExpectedHours < 0)
-                yield return new ValidationResult("Negative numbers cannot be added", new[] { "AmountExpectedHours" });
+                yield return new ValidationResult("Hier mogen geen negatieve getallen", new[] { "AmountExpectedHours" });
         }
     }
 

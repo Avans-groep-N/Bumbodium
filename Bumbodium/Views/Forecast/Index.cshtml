@@ -19,24 +19,24 @@
 <br />
 <div class="container justify-content-center">
     <div class="row shadow-lg">
-        <div class="col-sm-3 p-0 bg-white">
+        <div class="col-auto p-0 bg-white">
             <ul class="list-group-flush p-0">
-                <li class="list-group-item bg-black text-black"> - </li>
-                <li class="list-group-item mb-1">Verwachte klanten</li>
-                <li class="list-group-item mb-3">Verwachte colis</li>
-                <li class="list-group-item mb-1">Totaal verwachte medewerkers</li>
-                <li class="list-group-item mb-1">Totaal verwachte uren</li>
+                <li class="list-group-item"><h3 class="bg-black text-light p-1"> Year: @Model.StartOfWeekDate.Year </h3></li>
+                <li class="list-group-item mb-1"><h3 class="m-2">Verwachte klanten</h3></li>
+                <li class="list-group-item mb-3"><h3 class="m-2">Verwachte colis</h3></li>
+                <li class="list-group-item mb-1"><h3 class="m-2">Totaal verwachte medewerkers</h3></li>
+                <li class="list-group-item mb-1"><h3 class="m-2">Totaal verwachte uren</h3></li>
             </ul>
         </div>
         @foreach (var forecastDay in Model.ForecastWeek)
         {
             <div class="col text-center p-0 bg-light ">
                 <ul class="list-group-flush p-0">
-                    <li class="list-group-item bg-black text-light">@forecastDay.Key.ToString("dd/MM")</li>
-                    <li class="list-group-item mb-1">@forecastDay.Value.AmountExpectedCustomers</li>
-                    <li class="list-group-item mb-3">@forecastDay.Value.AmountExpectedColis</li>
-                    <li class="list-group-item mb-1">@Model.CountTotaalEmplyeesPerDay(forecastDay.Key)</li>
-                    <li class="list-group-item mb-1">@Model.CountTotaalHoursPerDay(forecastDay.Key)</li>
+                    <li class="list-group-item"><h3 class="bg-black text-light p-1">@forecastDay.Key.ToString("dd/MM")</h3></li>
+                    <li class="list-group-item mb-1"><h3 class="m-2">@forecastDay.Value.AmountExpectedCustomers</h3></li>
+                    <li class="list-group-item mb-3"><h3 class="m-2">@forecastDay.Value.AmountExpectedColis</h3></li>
+                    <li class="list-group-item mb-1"><h3 class="m-2">@Model.CountTotaalEmplyeesPerDay(forecastDay.Key)</h3></li>
+                    <li class="list-group-item mb-1"><h3 class="m-2">@Model.CountTotaalHoursPerDay(forecastDay.Key)</h3></li>
                 </ul>
             </div>
         }
@@ -66,4 +66,4 @@
         </div>
     </div>
 </div>
-<a asp-controller="Standard" asp-action="Index" class="btn btn-lg btn-primary btn-outline-info">Normering bekijken.</a>
+<a asp-controller="Standard" asp-action="Index" class="btn btn-lg btn-primary btn-outline-info">Normering bekijken</a>
