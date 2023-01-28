@@ -10,14 +10,19 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
         private DepartmentRepo _departmentRepo;
         private List<Standards> _standards;
 
-        private const int Minute = 60;
         private const int BranchId = 1;
+        private const Country StanderdsOfCountry = Country.Netherlands;
+
+        private const int HourSpan = 3600;
+        private const int MinuteSpan = 60;
+        private const int HoursPerShift = 4;
 
         public BLForecast(ForecastRepo forecastRepo, DepartmentRepo departmentRepo, StandardsRepo standardsRepo)
         {
             _forcastRepo = forecastRepo;
             _standardsRepo = standardsRepo;
             _departmentRepo = departmentRepo;
+            _standards = new List<Standards>();
         }
 
         public ForecastViewModel GetForecast(DateTime date)
@@ -100,89 +105,80 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
                     _forcastRepo.RemoveForecast(foreDBs);
                 }
 
-                List<Forecast> newForecastDB = CreateNewForecastDay(forecastDay.Value, forecastDay.Key);
-                _forcastRepo.SaveNewForecast(newForecastDB);
+                List<Forecast> newForecastDB = CreateForecastDayForAllDepartments(forecastDay.Value, forecastDay.Key);
+                _forcastRepo.CreateForecast(newForecastDB);
 
             }
         }
 
-        private List<Forecast> CreateNewForecastDay(ForecastDay forecastDay, DateTime date)
+        private List<Forecast> CreateForecastDayForAllDepartments(ForecastDay forecastDay, DateTime date)
         {
             List<Forecast> forecastsDB = new List<Forecast>();
 
-            int amountWorkingHours = DayCalcuWorkHours(workHours:
-                                DayCalcuColis(amountColis: forecastDay.AmountExpectedColis) +
-                                DayCalcuVakkenVullen(amountColis: forecastDay.AmountExpectedColis),
-                                customers: forecastDay.AmountExpectedCustomers);
+            //vakkenvullen
+            int amountWorkingSecondsShelves = DayClacuShelveSeconds(forecastDay.AmountExpectedColis);
+            forecastsDB.Add(
+                MakeNewForecast(forecastDay, date, DepartmentType.Shelves, amountWorkingSecondsShelves));
 
-            foreach (DepartmentType department in (DepartmentType[])Enum.GetValues(typeof(DepartmentType)))
-            {
-                if (department == DepartmentType.Checkout)
-                    continue;
+            //vers
+            int amountWorkingSecondsFresh = DayClacuFreshSeconds(forecastDay.AmountExpectedCustomers);
+            forecastsDB.Add(
+                MakeNewForecast(forecastDay, date, DepartmentType.Fresh, amountWorkingSecondsFresh));
 
-                int hoursPerDep = amountWorkingHours / Enum.GetValues(typeof(DepartmentType)).Length - 1;
-                hoursPerDep = hoursPerDep < 0 ? 0 : hoursPerDep;
+            //kassa
+            int amountWorkingSecondsCheckout = DayCalcuKasiereSeconds(forecastDay.AmountExpectedCustomers);
+            forecastsDB.Add(
+                MakeNewForecast(forecastDay, date, DepartmentType.Checkout, amountWorkingSecondsCheckout));
 
-                forecastsDB.Add(new Forecast()
-                {
-                    //id
-                    Date = date.Date,
-                    DepartmentId = _departmentRepo.GetDepartment(department, 1),
+            return forecastsDB;
+        }
 
-                    //user input
-                    AmountExpectedColis = forecastDay.AmountExpectedColis,
-                    AmountExpectedCustomers = forecastDay.AmountExpectedCustomers,
-
-                    //calculated output
-                    AmountExpectedHours = hoursPerDep,
-                    AmountExpectedEmployees = DayCalcuEmployees(hoursPerDep)
-                });
-            }
-
-            int amoutOfHours = DayCalcuKasiereHours(forecastDay.AmountExpectedCustomers);
-
-            forecastsDB.Add(new Forecast()
+        private Forecast MakeNewForecast(ForecastDay forecastDay, DateTime date, DepartmentType departmentType, int amoutOfSecondes)
+        {
+            return new Forecast()
             {
                 //id
                 Date = date.Date,
-                DepartmentId = _departmentRepo.GetDepartment(DepartmentType.Checkout, 1),
+                DepartmentId = _departmentRepo.GetDepartment(departmentType, BranchId),
 
                 //user input
                 AmountExpectedColis = forecastDay.AmountExpectedColis,
                 AmountExpectedCustomers = forecastDay.AmountExpectedCustomers,
 
                 //calculated output
-                AmountExpectedHours = amoutOfHours,
-                AmountExpectedEmployees = DayCalcuEmployees(amoutOfHours),
-
-            });
-            return forecastsDB;
+                AmountExpectedHours = RoundUp(amoutOfSecondes / HourSpan),
+                AmountExpectedEmployees = DayCalcuEmployees(RoundUp(amoutOfSecondes / HourSpan))
+            };
         }
 
-        
+        private int DayCalcuEmployees(int workHours) => RoundUp(workHours / HoursPerShift);
 
-        private int DayCalcuColis(int amountColis) => _standards.Find(
-            s => s.Subject == "Coli" && s.Country == Country.Netherlands).Value * amountColis * Minute;
-        private int DayCalcuVakkenVullen(int amountColis) => _standards.Find(
-            s => s.Subject == "StockingShelves" && s.Country == Country.Netherlands).Value * amountColis * Minute;
-        private int DayCalcuKasiereHours(int amountCustomers) => amountCustomers / _standards.Find(
-            s => s.Subject == "Cashier" && s.Country == Country.Netherlands).Value;
-        private int DayCalcuSpiegelen(int amountMeters) => _standards.Find(
-            s => s.Subject == "Mirror" && s.Country == Country.Netherlands).Value * amountMeters;
-        private int DayCalcuEmployees(int workHours)
+        private int DayClacuShelveSeconds(int amountColis)
         {
-            return workHours / 9;
+            int colisUnloading = _standards.FirstOrDefault(
+            s => s.Subject == "Coli" && s.Country == StanderdsOfCountry).Value * amountColis * MinuteSpan;
+
+            int colisStocking = _standards.Find(
+            s => s.Subject == "StockingShelves" && s.Country == StanderdsOfCountry).Value * amountColis * MinuteSpan;
+
+            return colisStocking + colisUnloading;
         }
-        private int DayCalcuWorkHours(int workHours, int customers)
+        private int DayClacuFreshSeconds(int amountColisCustomers)
         {
-            int hoursaDay = 14;
-            int amountOfSecondsToDay = hoursaDay * 3600;
-            int workTimeNotWithCustomers = workHours / amountOfSecondsToDay;
-            int timeNeededToHelpCustomers = (customers / _standards.Find(
-                   s => s.Subject == "Employee" && s.Country == Country.Netherlands).Value) *
-                   3600;
+            int neededToHelpCustomers = amountColisCustomers / _standards.Find(
+                   s => s.Subject == "Employee" && s.Country == StanderdsOfCountry).Value * HourSpan;
 
-            return (int)(workTimeNotWithCustomers + timeNeededToHelpCustomers) / 3600;
+            int neededSecondsToMirror = _standards.Find(
+            s => s.Subject == "Mirror" && s.Country == StanderdsOfCountry).Value * _departmentRepo.GetSurfaceOfDepartment(BranchId, DepartmentType.Fresh);
+
+            return neededToHelpCustomers + neededSecondsToMirror;
+        }
+        private int DayCalcuKasiereSeconds(int amountCustomers) => amountCustomers / _standards.Find(
+            s => s.Subject == "Cashier" && s.Country == StanderdsOfCountry).Value * HourSpan;
+
+        private int RoundUp(double n)
+        {
+            return (int)(n + 0.5);
         }
     }
 }
