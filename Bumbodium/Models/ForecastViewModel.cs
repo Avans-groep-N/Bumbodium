@@ -7,6 +7,7 @@ namespace Bumbodium.WebApp.Models
     public class ForecastViewModel
     {
         public DateTime StartOfWeekDate { get; set; }
+        public bool WeekBeforeNow { get; private set; }
         public int WeekNr { get; private set; }
 
         public Dictionary<DateTime, ForecastDay> ForecastWeek { get; }
@@ -20,17 +21,24 @@ namespace Bumbodium.WebApp.Models
             foreach (DepartmentType department in Enum.GetValues(typeof(DepartmentType)))
                 DepartmentTypes.Add(department);
         }
-        public void MakeDictionary(DateTime startOfWeekDate)
+        public void MakeDictionary(DateTime date)
         {
-            StartOfWeekDate = startOfWeekDate;
+            while (date.DayOfWeek != DayOfWeek.Monday)
+            {
+                date = date.AddDays(-1);
+            }
+            StartOfWeekDate = date;
+
+            WeekBeforeNow = StartOfWeekDate <= DateTime.Now.AddDays(-7);
+
             WeekNr = ISOWeek.GetWeekOfYear(StartOfWeekDate);
 
             for (int i = 0; i < 7; i++)
             {
-                ForecastWeek.Add(startOfWeekDate.AddDays(i).Date, new ForecastDay());
+                ForecastWeek.Add(StartOfWeekDate.AddDays(i).Date, new ForecastDay());
 
                 foreach (DepartmentType department in Enum.GetValues(typeof(DepartmentType)))
-                    ForecastWeek[startOfWeekDate.AddDays(i).Date].forecastDepartments.Add(department, new ForecastDepartment());
+                    ForecastWeek[StartOfWeekDate.AddDays(i).Date].forecastDepartments.Add(department, new ForecastDepartment());
             }
         }
 
