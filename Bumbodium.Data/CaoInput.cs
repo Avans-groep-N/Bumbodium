@@ -58,12 +58,17 @@ namespace Bumbodium.Data
         }
 
         //Calculates the break in minutes
-        public int CalcBreak()
+        public TimeSpan CalcBreak()
         {
-            var workingHours = _plannedShift.ShiftEndDateTime.Hour - _plannedShift.ShiftStartDateTime.Hour;
-            var fullBreaks = workingHours / 8;
-            var halfBreaks = (int)(workingHours / 4.5);
-            return ((fullBreaks + halfBreaks) * 30);
+            TimeSpan breaks = new TimeSpan();
+            int workingHours = _plannedShift.ShiftEndDateTime.Hour - _plannedShift.ShiftStartDateTime.Hour;
+            int fullBreaks = (workingHours / 8) + (int)(workingHours / 4.5);
+            for(int i = 0; i < fullBreaks; i++)
+            {
+                breaks.Add(new TimeSpan(0, 30, 0));
+            }
+
+            return breaks;
         }
 
         #region IndividualRules
@@ -71,7 +76,7 @@ namespace Bumbodium.Data
         //Returns validation result if the planned shift is longer than the max amount given
         private CaoValidationResult? MaxAmountHourShift(int maxHours)
         {
-            var schoolHours = 0;
+            int schoolHours = 0;
             if (_employee.Availability != null)
             {
                 var schoolAvailabilities = _employee.Availability.Where(a => a.Type == AvailabilityType.Schoolhours &&
@@ -103,9 +108,9 @@ namespace Bumbodium.Data
         //Returns validation result if the amount of hours in a week is more than the max amount given
         private CaoValidationResult? MaxHoursAWeek(int maxHours)
         {
-            var week = _plannedShift.ShiftStartDateTime.DayOfYear / 7;
+            int week = _plannedShift.ShiftStartDateTime.DayOfYear / 7;
             var shiftsThisWeek = _workedShifts.Where(s => (s.ShiftStartDateTime.DayOfYear / 7) == week);
-            var hoursThisWeek = 0;
+            int hoursThisWeek = 0;
             foreach(var shift in shiftsThisWeek)
                 hoursThisWeek += shift.ShiftEndDateTime.Hour - shift.ShiftStartDateTime.Hour;
 
@@ -118,8 +123,8 @@ namespace Bumbodium.Data
         //Returns validation result if the amount of shifts this week is more than the max amount given
         private CaoValidationResult? MaxShiftsThisWeek(int maxShifts)
         {
-            var week = _plannedShift.ShiftStartDateTime.DayOfYear / 7;
-            var amountOfShifts = 0;
+            int week = _plannedShift.ShiftStartDateTime.DayOfYear / 7;
+            int amountOfShifts = 0;
             foreach(var shift in _workedShifts)
             {
                 if(shift.ShiftStartDateTime.DayOfYear / 7 == week)
