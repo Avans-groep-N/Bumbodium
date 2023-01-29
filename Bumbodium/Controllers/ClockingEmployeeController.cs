@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data; 
 using System.Globalization;
 using Bumbodium.Data.DBModels;
-using Bumbodium.Data.Migrations;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bumbodium.WebApp.Controllers
