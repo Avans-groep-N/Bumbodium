@@ -29,17 +29,6 @@ namespace Bumbodium.Data.Repositories
 
         public List<Forecast> GetAllInRange(DateTime startDate, DateTime endDate, List<int> departmentIds) => _ctx.Forecast.Where(f => startDate <= f.Date && f.Date >= endDate && departmentIds.Contains(f.DepartmentId)).ToList();
 
-        /*public void CreateForecast(Forecast[] forecasts)
-        {
-            //TODO Make Country relative to the forecast
-            _standards = _ctx.Standards.Where(s => s.Country == Country.Netherlands).ToList();
-            var weekprognose = WeekCalEmployes(forecasts);
-            foreach (var prognosis in weekprognose)
-                _ctx.Forecast.Add(prognosis);
-            _ctx.SaveChanges();
-
-        }*/
-
         private List<Forecast> WeekCalEmployes(Forecast[] forecast)
         {
             List<Forecast> allDepForecasts = new List<Forecast>();
