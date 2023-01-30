@@ -19,7 +19,6 @@
     <p>
         begin tijd:
         <label>
-            @*TODO: change to military time*@
             <InputDate Type="InputDateType.Time" @bind-Value="availabilityViewModel.StartTime" />
         </label>
     </p>
@@ -52,7 +51,6 @@
     <Template Context="data">
         <p>
             @data.Text
-            <RadzenButton Click=@(args => EditItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="edit" />
             <RadzenButton Click=@(args => DeleteItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="delete" />
         </p>
     </Template>
@@ -73,14 +71,6 @@
     DateTime? SelectedEndTime;
     public AvailabilityType SelectedType { get; set; }
 
-    async Task EditItem(Availability item)
-    {
-        await DialogService.OpenAsync<EditAvailabilityPage>("Aanpassen",
-            new Dictionary<string, object>() { { "Availability", item } },
-            new DialogOptions() { });
-        _db.UpdateAvailability(item);
-        await scheduler.Reload();
-    }
     async Task DeleteItem(Availability item)
     {
         _db.DeleteAvailability(item);
