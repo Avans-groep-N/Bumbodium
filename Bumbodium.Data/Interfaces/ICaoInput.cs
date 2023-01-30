@@ -9,6 +9,6 @@ namespace Bumbodium.Data.Interfaces
 {
     public interface ICaoInput
     {
-        public List<CaoValidationResult> ValidateRules();
+        public List<ValidationResult> ValidateRules();
     }
 }

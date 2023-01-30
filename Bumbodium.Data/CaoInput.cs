@@ -24,9 +24,9 @@ namespace Bumbodium.Data
             _vacationWeeks = new[] { 1, 9, 18, 30, 31, 32, 33, 34, 35, 43, 52 };
         }
 
-        public List<CaoValidationResult> ValidateRules()
+        public List<ValidationResult> ValidateRules()
         {
-            var results = new List<CaoValidationResult>();
+            var results = new List<ValidationResult>();
 
             results.Add(MaxAmountHourShift(12));
             results.Add(MaxHoursAWeek(60));
@@ -61,8 +61,8 @@ namespace Bumbodium.Data
         public TimeSpan CalcBreak()
         {
             TimeSpan breaks = new TimeSpan();
-            int workingHours = _plannedShift.ShiftEndDateTime.Hour - _plannedShift.ShiftStartDateTime.Hour;
-            int fullBreaks = (workingHours / 8) + (int)(workingHours / 4.5);
+            TimeSpan workingHours = _plannedShift.ShiftEndDateTime - _plannedShift.ShiftStartDateTime;
+            int fullBreaks = (int)(workingHours.Minutes / 480) + (int)(workingHours.Minutes / 270); //one break for every 270 minutes/4.5 hours and 480 minutes/8 hours
             for(int i = 0; i < fullBreaks; i++)
             {
                 breaks.Add(new TimeSpan(0, 30, 0));
@@ -74,7 +74,7 @@ namespace Bumbodium.Data
         #region IndividualRules
 
         //Returns validation result if the planned shift is longer than the max amount given
-        private CaoValidationResult? MaxAmountHourShift(int maxHours)
+        private ValidationResult? MaxAmountHourShift(int maxHours)
         {
             int schoolHours = 0;
             if (_employee.Availability != null)
@@ -86,12 +86,12 @@ namespace Bumbodium.Data
             }
             
             if (_plannedShift.ShiftStartDateTime.Hour - _plannedShift.ShiftEndDateTime.Hour > (maxHours - schoolHours))
-                return new CaoValidationResult($"Deze werknemer mag maximaal maar {maxHours} uur in één dienst werken", "MaxAmountHourShift");
+                return new ValidationResult($"Deze werknemer mag maximaal maar {maxHours} uur in één dienst werken", new[] { "MaxAmountHourShift" });
             return null;
         }
 
         //Returns validation result if the average over a month is more than the max amount given
-        private CaoValidationResult? MaxAverageHoursAWeek(int maxHours)
+        private ValidationResult? MaxAverageHoursAWeek(int maxHours)
         {
             int hoursThisMonth = 0;
             var month = _plannedShift.ShiftStartDateTime.Month;
@@ -101,12 +101,12 @@ namespace Bumbodium.Data
                     hoursThisMonth += shift.ShiftEndDateTime.Hour - shift.ShiftStartDateTime.Hour;
             }
             if (hoursThisMonth / 7 > maxHours)
-                 return new CaoValidationResult($"Deze werknemer mag gemiddeld maar {maxHours} uur per week per maand werken", "MaxAverageHoursAWeek");
+                 return new ValidationResult($"Deze werknemer mag gemiddeld maar {maxHours} uur per week per maand werken", new[] { "MaxAverageHoursAWeek" });
             return null;
         }
 
         //Returns validation result if the amount of hours in a week is more than the max amount given
-        private CaoValidationResult? MaxHoursAWeek(int maxHours)
+        private ValidationResult? MaxHoursAWeek(int maxHours)
         {
             int week = _plannedShift.ShiftStartDateTime.DayOfYear / 7;
             var shiftsThisWeek = _workedShifts.Where(s => (s.ShiftStartDateTime.DayOfYear / 7) == week);
@@ -115,13 +115,13 @@ namespace Bumbodium.Data
                 hoursThisWeek += shift.ShiftEndDateTime.Hour - shift.ShiftStartDateTime.Hour;
 
             if (hoursThisWeek > maxHours)
-                return new CaoValidationResult($"Deze werknemer mag niet langer dan {maxHours} uur in de week werken", "MaxHoursAWeek");
+                return new ValidationResult($"Deze werknemer mag niet langer dan {maxHours} uur in de week werken", new[] { "MaxHoursAWeek" });
 
             return null;
         }
 
         //Returns validation result if the amount of shifts this week is more than the max amount given
-        private CaoValidationResult? MaxShiftsThisWeek(int maxShifts)
+        private ValidationResult? MaxShiftsThisWeek(int maxShifts)
         {
             int week = _plannedShift.ShiftStartDateTime.DayOfYear / 7;
             int amountOfShifts = 0;
@@ -132,16 +132,16 @@ namespace Bumbodium.Data
             }
 
             if(amountOfShifts > 5)
-                return new CaoValidationResult($"Deze werknemer mag maar {maxShifts} keer worden ingepland per week", "MaxShiftsThisWeek");
+                return new ValidationResult($"Deze werknemer mag maar {maxShifts} keer worden ingepland per week", new[] { "MaxShiftsThisWeek" });
             return null;
         }
 
         //Returns validation result if the planned end time is later than the time given
-        private CaoValidationResult? LatestTime(TimeOnly time)
+        private ValidationResult? LatestTime(TimeOnly time)
         {
             if(_plannedShift.ShiftEndDateTime.TimeOfDay.CompareTo(time) > 0)
             {
-                return new CaoValidationResult($"Deze werknemer mag niet na {time.ToString()} werken", "LatestTime");
+                return new ValidationResult($"Deze werknemer mag niet na {time.ToString()} werken", new[] { "LatestTime" });
             }
             return null;
         }
