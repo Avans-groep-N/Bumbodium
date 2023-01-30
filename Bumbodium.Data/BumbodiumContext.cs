@@ -105,7 +105,7 @@ namespace Bumbodium.Data
                     Id = 3,
                     Subject = "Cashier",
                     Value = 30,
-                    Description = "1 Kasiere per uur per aantal klanten.",
+                    Description = "1 Kassière aantal klanten per uur.",
                     Country = Country.Netherlands
                 },
 
@@ -114,7 +114,7 @@ namespace Bumbodium.Data
                     Id = 4,
                     Subject = "Employee",
                     Value = 100,
-                    Description = "1 medewerker per customer per uur per aantal klanten.",
+                    Description = "1 medewerker per aantal klanten per uur.",
                     Country = Country.Netherlands
                 },
 
@@ -123,7 +123,7 @@ namespace Bumbodium.Data
                     Id = 5,
                     Subject = "Mirror",
                     Value = 30,
-                    Description = "aantal seconde voor medewerker per customer per meter.",
+                    Description = "aantal seconde per meter.",
                     Country = Country.Netherlands
                 });
         }
