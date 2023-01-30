@@ -11,7 +11,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
         private List<Standards> _standards;
 
         private const int BranchId = 1;
-        private const Country StanderdsOfCountry = Country.Netherlands;
+        private const Country StandardsOfCountry = Country.Netherlands;
 
         private const int HourSpan = 3600;
         private const int MinuteSpan = 60;
@@ -32,32 +32,32 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
                 date = date.AddDays(-1);
             }
 
-            var forecastVW = new ForecastViewModel();
-            forecastVW.MakeDictionary(date.Date);
+            var forecastVM = new ForecastViewModel();
+            forecastVM.MakeDictionary(date.Date);
 
             var forecastsDB = _forcastRepo.GetForecastInRange(date.Date, date.Date.AddDays(7));
             if (forecastsDB == null)
-                return forecastVW;
+                return forecastVM;
 
             foreach (var forecast in forecastsDB)
             {
-                if (forecastVW.ForecastWeek.ContainsKey(forecast.Date.Date))
+                if (forecastVM.ForecastWeek.ContainsKey(forecast.Date.Date))
                 {
-                    forecastVW.ForecastWeek[forecast.Date.Date].AmountExpectedCustomers = forecast.AmountExpectedCustomers;
-                    forecastVW.ForecastWeek[forecast.Date.Date].AmountExpectedColis = forecast.AmountExpectedColis;
+                    forecastVM.ForecastWeek[forecast.Date.Date].AmountExpectedCustomers = forecast.AmountExpectedCustomers;
+                    forecastVM.ForecastWeek[forecast.Date.Date].AmountExpectedColis = forecast.AmountExpectedColis;
 
-                    forecastVW.AddToDict(forecast.Date.Date, new ForecastDepartment() { DepartmentType = forecast.Department.Name, AmountExpectedEmployees = forecast.AmountExpectedEmployees, AmountExpectedHours = forecast.AmountExpectedHours });
+                    forecastVM.AddToDict(forecast.Date.Date, new ForecastDepartment() { DepartmentType = forecast.Department.Name, AmountExpectedEmployees = forecast.AmountExpectedEmployees, AmountExpectedHours = forecast.AmountExpectedHours });
                 }
             }
 
-            return forecastVW;
+            return forecastVM;
         }
 
-        public void ChangeOutputDB(ForecastViewModel ForecastVW)
+        public void ChangeOutputDB(ForecastViewModel ForecastVM)
         {
-            List<Forecast> forecastsDB = _forcastRepo.GetForecastInRange(ForecastVW.StartOfWeekDate.Date, ForecastVW.StartOfWeekDate.Date.AddDays(7));
+            List<Forecast> forecastsDB = _forcastRepo.GetForecastInRange(ForecastVM.StartOfWeekDate.Date, ForecastVM.StartOfWeekDate.Date.AddDays(7));
 
-            foreach (var forecastDay in ForecastVW.ForecastWeek)
+            foreach (var forecastDay in ForecastVM.ForecastWeek)
             {
                 foreach (var forecastDepartment in forecastDay.Value.forecastDepartments)
                 {
@@ -88,13 +88,13 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
             }
         }
 
-        public void ChangeInputDB(ForecastViewModel ForecastVW)
+        public void ChangeInputDB(ForecastViewModel ForecastVM)
         {
-            List<Forecast> forecastsDB = _forcastRepo.GetForecastInRange(ForecastVW.StartOfWeekDate.Date, ForecastVW.StartOfWeekDate.Date.AddDays(7));
+            List<Forecast> forecastsDB = _forcastRepo.GetForecastInRange(ForecastVM.StartOfWeekDate.Date, ForecastVM.StartOfWeekDate.Date.AddDays(7));
 
             _standards = _standardsRepo.GetAll(Country.Netherlands);
 
-            foreach (var forecastDay in ForecastVW.ForecastWeek)
+            foreach (var forecastDay in ForecastVM.ForecastWeek)
             {
                 List<Forecast> foreDBs = forecastsDB.Where(f => f.Date.Date == forecastDay.Key.Date).ToList();
                 if (forecastDay.Value.AmountExpectedColis == foreDBs.FirstOrDefault()?.AmountExpectedColis && forecastDay.Value.AmountExpectedCustomers == foreDBs.FirstOrDefault()?.AmountExpectedCustomers)
@@ -156,25 +156,25 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
         private int DayClacuShelveSeconds(int amountColis)
         {
             int colisUnloading = _standards.FirstOrDefault(
-            s => s.Subject == "Coli" && s.Country == StanderdsOfCountry).Value * amountColis * MinuteSpan;
+            s => s.Subject == "Coli" && s.Country == StandardsOfCountry).Value * amountColis * MinuteSpan;
 
             int colisStocking = _standards.Find(
-            s => s.Subject == "StockingShelves" && s.Country == StanderdsOfCountry).Value * amountColis * MinuteSpan;
+            s => s.Subject == "StockingShelves" && s.Country == StandardsOfCountry).Value * amountColis * MinuteSpan;
 
             return colisStocking + colisUnloading;
         }
         private int DayClacuFreshSeconds(int amountColisCustomers)
         {
             int neededToHelpCustomers = amountColisCustomers / _standards.Find(
-                   s => s.Subject == "Employee" && s.Country == StanderdsOfCountry).Value * HourSpan;
+                   s => s.Subject == "Employee" && s.Country == StandardsOfCountry).Value * HourSpan;
 
             int neededSecondsToMirror = _standards.Find(
-            s => s.Subject == "Mirror" && s.Country == StanderdsOfCountry).Value * _departmentRepo.GetSurfaceOfDepartment(BranchId, DepartmentType.Fresh);
+            s => s.Subject == "Mirror" && s.Country == StandardsOfCountry).Value * _departmentRepo.GetSurfaceOfDepartment(BranchId, DepartmentType.Fresh);
 
             return neededToHelpCustomers + neededSecondsToMirror;
         }
         private int DayCalcuKasiereSeconds(int amountCustomers) => amountCustomers / _standards.Find(
-            s => s.Subject == "Cashier" && s.Country == StanderdsOfCountry).Value * HourSpan;
+            s => s.Subject == "Cashier" && s.Country == StandardsOfCountry).Value * HourSpan;
 
         private int RoundUp(double n)
         {

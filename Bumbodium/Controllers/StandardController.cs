@@ -10,7 +10,7 @@ namespace Bumbodium.WebApp.Controllers
     [Authorize(Roles = "Manager")]
     public class StandardController : Controller
     {
-        private const Country CountryOfFillial = Country.Netherlands;
+        private const Country CountryOfFiliation = Country.Netherlands;
         private BLStandards _blStandards;
 
         public StandardController(BLStandards blStandards)
@@ -20,7 +20,7 @@ namespace Bumbodium.WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View(_blStandards.GetStandardsViewModel(CountryOfFillial));
+            return View(_blStandards.GetStandardsViewModel(CountryOfFiliation));
         }
 
         [HttpPost]

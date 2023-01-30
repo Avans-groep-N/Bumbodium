@@ -35,8 +35,8 @@
                     <li class="list-group-item"><h3 class="bg-black text-light p-1">@forecastDay.Key.ToString("dd/MM")</h3></li>
                     <li class="list-group-item mb-1"><h3 class="m-2">@forecastDay.Value.AmountExpectedCustomers</h3></li>
                     <li class="list-group-item mb-3"><h3 class="m-2">@forecastDay.Value.AmountExpectedColis</h3></li>
-                    <li class="list-group-item mb-1"><h3 class="m-2">@Model.CountTotaalEmplyeesPerDay(forecastDay.Key)</h3></li>
-                    <li class="list-group-item mb-1"><h3 class="m-2">@Model.CountTotaalHoursPerDay(forecastDay.Key)</h3></li>
+                    <li class="list-group-item mb-1"><h3 class="m-2">@Model.CountTotalEmployeeaPerDay(forecastDay.Key)</h3></li>
+                    <li class="list-group-item mb-1"><h3 class="m-2">@Model.CountTotalHoursPerDay(forecastDay.Key)</h3></li>
                 </ul>
             </div>
         }
@@ -47,21 +47,21 @@
         <div class="col text-center p-0 ">
             @if (!Model.WeekBeforeNow)
             {
-                <a asp-action="ChangeInput" class="btn btn-lg btn-primary btn-outline-warning" asp-route-id="@calanderVal">Verander de prognose dag</a>
+                <a asp-action="ChangeInput" class="btn btn-lg btn-primary btn-outline-warning" asp-route-id="@calanderVal">Nieuwe prognose aanmaken</a>
             }
             else
             {
-                <p class="btn btn-lg btn-outline-secondary">Verander de prognose dag</p>
+                <p class="btn btn-lg btn-outline-secondary">Nieuwe prognose aanmaken</p>
             }
         </div>
         <div class="col text-center p-0">
             @if (!Model.WeekBeforeNow)
             {
-                <a asp-action="ChangeOutput" class="btn btn-lg btn-primary btn-outline-warning" asp-route-id="@calanderVal">Veranderen de uitkomst velden</a>
+                <a asp-action="ChangeOutput" class="btn btn-lg btn-primary btn-outline-warning" asp-route-id="@calanderVal">Prognose aanpassen</a>
             }
             else
             {
-                <p class="btn btn-lg btn-outline-secondary">Veranderen de uitkomst velden</p>
+                <p class="btn btn-lg btn-outline-secondary">Prognose aanpassen</p>
             }
         </div>
     </div>

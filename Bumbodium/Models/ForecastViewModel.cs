@@ -42,7 +42,7 @@ namespace Bumbodium.WebApp.Models
             }
         }
 
-        public int CountTotaalEmplyeesPerDay(DateTime date)
+        public int CountTotalEmployeeaPerDay(DateTime date)
         {
             if (!ForecastWeek.ContainsKey(date.Date))
                 return 0;
@@ -54,7 +54,7 @@ namespace Bumbodium.WebApp.Models
 
             return totaal;
         }
-        public int CountTotaalHoursPerDay(DateTime date)
+        public int CountTotalHoursPerDay(DateTime date)
         {
             if (!ForecastWeek.ContainsKey(date.Date))
                 return 0;
@@ -98,9 +98,9 @@ namespace Bumbodium.WebApp.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (AmountExpectedCustomers < 0)
-                yield return new ValidationResult("Hier mogen geen negatieve getallen", new[] { nameof(AmountExpectedCustomers) });
+                yield return new ValidationResult("Negative getallen zijn niet toegestaan.", new[] { nameof(AmountExpectedCustomers) });
             if (AmountExpectedColis < 0)
-                yield return new ValidationResult("Hier mogen geen negatieve getallen", new[] { nameof(AmountExpectedColis) });
+                yield return new ValidationResult("Negative getallen zijn niet toegestaan.", new[] { nameof(AmountExpectedColis) });
         }
     }
 
@@ -116,9 +116,9 @@ namespace Bumbodium.WebApp.Models
         {
 
             if (AmountExpectedEmployees < 0)
-                yield return new ValidationResult("Hier mogen geen negatieve getallen", new[] { nameof(AmountExpectedEmployees) });
+                yield return new ValidationResult("Negative getallen zijn niet toegestaan.", new[] { nameof(AmountExpectedEmployees) });
             if (AmountExpectedHours < 0)
-                yield return new ValidationResult("Hier mogen geen negatieve getallen", new[] { nameof(AmountExpectedHours) });
+                yield return new ValidationResult("Negative getallen zijn niet toegestaan.", new[] { nameof(AmountExpectedHours) });
         }
     }
 

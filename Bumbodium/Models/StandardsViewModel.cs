@@ -26,7 +26,7 @@ namespace Bumbodium.WebApp.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Value < 0)
-                yield return new ValidationResult("Hier mogen geen negatieve getallen", new[] { nameof(Value) });
+                yield return new ValidationResult("Negative getallen zijn niet toegestaan.", new[] { nameof(Value) });
         }
     }
 }

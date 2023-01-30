@@ -32,9 +32,9 @@ namespace Bumbodium.WebApp.Controllers
             var datestring = id.Split("-W");
             var date = ISOWeek.ToDateTime(Convert.ToInt32(datestring[0]), Convert.ToInt32(datestring[1]), DayOfWeek.Monday);
 
-            ForecastViewModel forecastVW = _blForecast.GetForecast(date);
+            ForecastViewModel forecastVM = _blForecast.GetForecast(date);
 
-            return View(forecastVW);
+            return View(forecastVM);
         }
 
         public IActionResult ChangeOutput(string id)
@@ -42,9 +42,9 @@ namespace Bumbodium.WebApp.Controllers
             var datestring = id.Split("-W");
             var date = ISOWeek.ToDateTime(Convert.ToInt32(datestring[0]), Convert.ToInt32(datestring[1]), DayOfWeek.Monday);
 
-            ForecastViewModel forecastVW = _blForecast.GetForecast(date);
+            ForecastViewModel forecastVM = _blForecast.GetForecast(date);
             
-            return View(forecastVW);
+            return View(forecastVM);
         }
 
         [HttpPost]
