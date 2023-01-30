@@ -10,6 +10,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
         private const int Addition33Percent = 33;
         private const int Addition50Percent = 50;
         private const int Addition100Percent = 100;
+        private const int AdditionSickPercent = 100;
         private const double HourDif = 60.0;
         private const int Hour0Mark = 0;
         private const int Hour6Mark = 6;
@@ -57,7 +58,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
                 if (item.AlteredClockOutDateTime != null)
                     clockOut = item.AlteredClockOutDateTime.GetValueOrDefault();
 
-                FillHours(employeesHoursSurchargeRate, item.EmployeeId, clockIn, clockOut);
+                FillHours(employeesHoursSurchargeRate, item.EmployeeId, item.IsSick, clockIn, clockOut);
             }
             return employeesHoursSurchargeRate;
         }
@@ -125,12 +126,20 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
                 });
         }
 
-        private void FillHours(Dictionary<string, EmployeeHours> workedHoursDict, string employeeId, DateTime clockIn, DateTime clockOut)
+        private void FillHours(Dictionary<string, EmployeeHours> workedHoursDict, string employeeId, bool isSick, DateTime clockIn, DateTime clockOut)
         {
+            if (isSick)
+            {
+                //these clock hours are the planned shift hours that have been put down in the present.
+                var sundayShift = clockOut.Subtract(clockIn);
+                AddWorkedHoursToDict(workedHoursDict, sundayShift, employeeId, AdditionSickPercent);
+                return;
+            }
+
             if (clockIn.DayOfWeek == DayOfWeek.Sunday)
             {
                 var sundayShift = clockOut.Subtract(clockIn);
-                AddWorkedHoursToDict(workedHoursDict,sundayShift,employeeId,Addition100Percent);
+                AddWorkedHoursToDict(workedHoursDict, sundayShift, employeeId, Addition100Percent);
                 return;
             }
 

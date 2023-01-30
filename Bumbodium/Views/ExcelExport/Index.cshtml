@@ -1,5 +1,6 @@
 ﻿@model Bumbodium.WebApp.Models.ExcelExport.ExcelExportEmployeesHours
 
+<br />
 @{
     string calanderVal = Model.Year + "-W";
     if (Model.WeekNr < 10)
@@ -10,60 +11,78 @@
 
 <h1>Excel export werknemers uren</h1>
 <br />
-
-
-<div class="card-header">
-    <h3 class="card-title">select week</h3>
-</div>
-<br />
-@using (Html.BeginForm("SelectWeek", "ExcelExport", FormMethod.Post))
-{
-    <input class="form-label" type="week" name="week" id="week" value="@calanderVal" onchange="this.form.submit()" required>
-}
-
-
-<div class="col-md-12">
-
-    <div class="card-header">
-        <h3 class="card-title">Download Excel</h3>
-    </div>
-
-    <div class="card-body register-card-body">
-        <div class="form-row">
-            <br />
-            <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-lg btn-primary btn-outline-warning">Export to Excel</button>
+<div class="container justify-content-center">
+    <div class="row m-0">
+        <div class="col-lg-5 m-0 p-0 text-center">
+            @using (Html.BeginForm("SelectWeek", "ExcelExport", FormMethod.Post))
+            {
+                <input class="text-center m-3" type="week" name="week" id="week" value="@calanderVal" onchange="this.form.submit()" required>
+            }
+        </div>
+        <div class="col-lg-5 m-0 p-0 text-center">
+            <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-lg btn-primary btn-outline-warning m-3 ">Export to Excel</button>
         </div>
     </div>
-    <div class="card-footer">
-    </div>
-
 </div>
+
 
 <br />
 
 @if (Model.EmployeeHours.Count > 0)
 {
-    <table class="table table-striped text-center table-responsive">
-        <thead>
-            <tr>
-                <th class="row-cols-md-4">BID</th>
-                <th class="row-cols-md-4">Naam</th>
-                <th class="row-cols-md-4">Uren</th>
-                <th class="row-cols-md-4">Toeslag</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.EmployeeHours)
+    <div class="container justify-content-center">
+        <div class="row shadow-lg m-0">
+            <div class="col-lg-5 m-0 p-0 bg-black ">
+                <h2 class="p-3 text-lg text-light">BID</h2>
+            </div>
+            <div class="col m-0 p-0 bg-black ">
+                <h2 class="p-3 text-lg text-light">Naam</h2>
+            </div>
+            <div class="col m-0 p-0 bg-black ">
+                <h2 class="p-3 text-lg text-light">Uren</h2>
+            </div>
+            <div class="col m-0 p-0 bg-black ">
+                <h2 class="p-3 text-lg text-light">Toeslag</h2>
+            </div>
+        </div>
+        @for (var i = 0; i < Model.EmployeeHours.Count; i += 2)
+        {
+            <div class="row shadow-lg m-0">
+                <div class="col-lg-5 m-0 p-0 bg-white">
+                    <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i].EmployeeId</p>
+                </div>
+                <div class="col m-0 p-0 bg-white">
+                    <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i].EmployeeName</p>
+                </div>
+                <div class="col m-0 p-0 bg-white">
+                    <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i].WorkedHours</p>
+                </div>
+                <div class="col m-0 p-0 bg-white">
+                    <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i].SurchargeRate</p>
+                </div>
+            </div>
+            @if (Model.EmployeeHours.Count > i + 1)
             {
-                <tr>
-                    <td>@item.EmployeeId</td>
-                    <td>@item.EmployeeName</td>
-                    <td>@item.WorkedHours</td>
-                    <td>@item.SurchargeRate %</td>
-                </tr>
+
+                <div class="row shadow-lg m-0">
+                    <div class="col-lg-5 m-0 p-0 bg-light">
+                        <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i+1].EmployeeId</p>
+                    </div>
+                    <div class="col m-0 p-0 bg-light">
+                        <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i+1].EmployeeName</p>
+                    </div>
+                    <div class="col m-0 p-0 bg-light">
+                        <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i+1].WorkedHours</p>
+                    </div>
+                    <div class="col m-0 p-0 bg-light">
+                        <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i+1].SurchargeRate</p>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+        }
+
+        <br />
+    </div>
 }
 else
 {
