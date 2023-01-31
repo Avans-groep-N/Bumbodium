@@ -3,14 +3,13 @@
 <br />
 
 <div class="container justify-content-center">
-    <div class="row m-0">
-        <div class="col-lg-5 m-0 p-0 text-center">
+    <div class="row m-0 bg-light rounded-3">
+        <div class="col-lg-5 m-auto p-auto text-center">
             <form asp-action="Index" method="post">
                 <input type="month" asp-for="FirstDateOfMonth" onchange="this.form.submit()" required />
-                <input type="submit" />
             </form>
         </div>
-        <div class="col-lg-5 m-0 p-0 text-center">
+        <div class="col-lg-5 m-auto p-auto text-center">
             <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-lg btn-primary btn-outline-warning m-3 ">Export to Excel</button>
         </div>
     </div>
@@ -76,6 +75,6 @@
 }
 else
 {
-    <h1>Deze week is niet gewerkt</h1>
+    <h1 class="text-center m-5">Deze week is niet gewerkt!</h1>
 }
 
