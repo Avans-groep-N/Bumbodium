@@ -9,7 +9,6 @@ namespace Bumbodium.WebApp.Models
     public class AvailabilityViewModel : IValidatableObject
     {
         [Required]
-        //[ValidateDate]
         public DateOnly Date { get; set; }
         [Required]
         public TimeOnly StartTime { get; set; }
@@ -29,20 +28,21 @@ namespace Bumbodium.WebApp.Models
 
             //Verify that availability can only be added if startTime is before EndTime
             if (EndTime.CompareTo(StartTime) == -1)
-                yield return new ValidationResult("End time cannot be before start time", new[] { "StartTime" });
+                yield return new ValidationResult("Eind tijd kan niet voor de begin tijd", new[] { "StartTime" });
 
             //Verify that user cannot have multiple availabilities on the same time and day
+            //TODO: make so it does not crash the page
             var availabilities = _availabilityRepo.GetAvailabilitiesInRange(Date.ToDateTime(StartTime), Date.ToDateTime(EndTime));
             if (availabilities.Count > 0)
                 yield return new ValidationResult("Cannot have multiple availabilities at the same time", new[] { "StartTime" });
 
             //Verify that user cannot add availability without a 2 week notice
             if (Date.Day < DateTime.Today.AddDays(14).Day)
-                yield return new ValidationResult("Cannot add availability under 2 weeks in advance", new[] { "StartTime" });
+                yield return new ValidationResult("Kan beschikbaarheid niet toevoegen minder dan 2 weken van tevoren", new[] { "StartTime" });
 
             //Verify that user cannot add availability in the past
-            if (DateTime.Now.CompareTo(StartTime) > 0)
-                yield return new ValidationResult("Cannot add availability in the past", new[] { "StartTime" });
+            if (Date < DateOnly.FromDateTime(DateTime.Now))
+                yield return new ValidationResult("Kan beschikbaarheid niet in het verleden toevoegen", new[] { "StartTime" });
         }
     }
 }
