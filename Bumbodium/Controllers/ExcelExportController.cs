@@ -38,7 +38,10 @@ namespace Bumbodium.WebApp.Controllers
             var employeesHoursPulsList = _bLExcelExport.GetEmployeesHours(employeesHours.FirstDateOfMonth);
 
             var stream = _bLExcelExport.GetEmployeesHoursStream(employeesHoursPulsList);
-            return File(stream, "application/octet-stream", "Verloning.csv");
+
+            string fileName = "Verloning.csv";
+
+            return File(stream, "application/octet-stream", fileName);
         }
     }
 }

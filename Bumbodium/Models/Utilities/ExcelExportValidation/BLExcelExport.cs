@@ -1,4 +1,5 @@
-﻿using Bumbodium.Data.Repositories;
+﻿using Bumbodium.Data;
+using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp.Models.ExcelExport;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.EntityFrameworkCore.Update.Internal;
@@ -22,11 +23,13 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
         private DateTime Hour24Mark = new DateTime(1, 1, 1, 23, 59, 0);
 
         private PresenceRepo _presenceRepo;
+        private EmployeeRepo _employeeRepo;
         private List<DateTime> _holidays;
 
-        public BLExcelExport(PresenceRepo presenceRepo)
+        public BLExcelExport(PresenceRepo presenceRepo, EmployeeRepo employeeRepo)
         {
             _presenceRepo = presenceRepo;
+            _employeeRepo = employeeRepo;
             _holidays = new List<DateTime>();
         }
 
@@ -102,7 +105,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
             {
                 var key = hoursDict[employeeIDkey].EmployeeId;
                 //TODO this has to by the EmployeeRepo
-                string name = _presenceRepo.GetEmployeeName(key);
+                string name = _employeeRepo.GetEmployee(key).FullName;
 
                 AddToWorkedHours(workedHours, hoursDict, name, key + $":{Addition0Percent}");
                 AddToWorkedHours(workedHours, hoursDict, name, key + $":{Addition33Percent}");
@@ -127,9 +130,6 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
             }
         }
 
-
-
-
         private void FillHours(Dictionary<string, EmployeeHours> workedHoursDict, string employeeId, bool isSick, DateTime clockIn, DateTime clockOut)
         {
             if (isSick)
@@ -140,7 +140,6 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
                 return;
             }
 
-            //add feestdag check
             if (clockIn.DayOfWeek == DayOfWeek.Sunday || _holidays.Contains(clockIn.AddYears(clockIn.Year - 1).Date))
             {
                 var sundayShift = clockOut.Subtract(clockIn);
@@ -203,8 +202,6 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
             var workedTime = endTimeOfmark.Subtract(clockIn);
             return workedTime;
         }
-
-
 
         private void AddWorkedHoursToDict(Dictionary<string, EmployeeHours> workedHoursDict, TimeSpan workedHours, string employeeId, double additionPercent)
         {
