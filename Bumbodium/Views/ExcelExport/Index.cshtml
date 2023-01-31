@@ -1,30 +1,20 @@
 ﻿@model Bumbodium.WebApp.Models.ExcelExport.ExcelExportEmployeesHours
 
 <br />
-@{
-    string calanderVal = Model.Year + "-W";
-    if (Model.WeekNr < 10)
-        calanderVal += "0" + Model.WeekNr;
-    else
-        calanderVal += Model.WeekNr;
-}
 
-<h1>Excel export werknemers uren</h1>
-<br />
 <div class="container justify-content-center">
     <div class="row m-0">
         <div class="col-lg-5 m-0 p-0 text-center">
-            @using (Html.BeginForm("SelectWeek", "ExcelExport", FormMethod.Post))
-            {
-                <input class="text-center m-3" type="week" name="week" id="week" value="@calanderVal" onchange="this.form.submit()" required>
-            }
+            <form asp-action="Index" method="post">
+                <input type="month" asp-for="FirstDateOfMonth" onchange="this.form.submit()" required />
+                <input type="submit" />
+            </form>
         </div>
         <div class="col-lg-5 m-0 p-0 text-center">
             <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-lg btn-primary btn-outline-warning m-3 ">Export to Excel</button>
         </div>
     </div>
 </div>
-
 
 <br />
 

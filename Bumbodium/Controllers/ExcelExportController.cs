@@ -17,27 +17,25 @@ namespace Bumbodium.WebApp.Controllers
 
         public IActionResult Index()
         {
-            DateTime date = DateTime.Now;
-            var weekNr = ISOWeek.GetWeekOfYear(date);
-
-            var workedHours = _bLExcelExport.GetEmployeesHours(date.Year, weekNr);
-            return View(workedHours);
+            return View(_bLExcelExport.GetEmployeesHours(DateTime.Now.AddMonths(-1)));
         }
 
         [HttpPost]
-        public IActionResult SelectWeek()
+        public IActionResult Index(ExcelExportEmployeesHours workedHours)
         {
-            var week = Request.Form["Week"].First().Split("-W");
-            int[] yearAndWeek = { Int32.Parse(week[0]), Int32.Parse(week[1]) };
+            return View(_bLExcelExport.GetEmployeesHours(workedHours.FirstDateOfMonth));
+        }
 
-            var workedHours = _bLExcelExport.GetEmployeesHours(yearAndWeek[0], yearAndWeek[1]);
-            //TODO look for another way to get to the view
-            return View("../ExcelExport/Index", workedHours);
+        [HttpPost]
+        public IActionResult SelectMonth(DateTime firstOfMonth)
+        {
+            var workedHours = _bLExcelExport.GetEmployeesHours(firstOfMonth);
+            return RedirectToAction(nameof(Index), workedHours);
         }
 
         public ActionResult DownloadExcel(ExcelExportEmployeesHours employeesHours)
         {
-            var employeesHoursPulsList = _bLExcelExport.GetEmployeesHours(employeesHours.Year, employeesHours.WeekNr);
+            var employeesHoursPulsList = _bLExcelExport.GetEmployeesHours(employeesHours.FirstDateOfMonth);
 
             var stream = _bLExcelExport.GetEmployeesHoursStream(employeesHoursPulsList);
             return File(stream, "application/octet-stream", "Verloning.csv");
