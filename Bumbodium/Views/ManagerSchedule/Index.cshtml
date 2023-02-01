@@ -7,7 +7,6 @@
 <form asp-action="Index" method="post">
     <div class="row">
         <div class="roosterbox col-md-4">
-            <div asp-validation-summary="All"></div>
             <h4 style="margin-top: 10px;">Selecteer datum</h4>
             <input onchange="this.form.submit()" asp-for="SelectedDate" type="date" />
             <h4 style="margin-top: 10px;">Selecteer afdeling</h4>
@@ -53,6 +52,7 @@
                     }
                 }
             </div>
+            <div class="text-danger" asp-validation-summary="All"></div>
             @if (Model.SelectedEmployeeId != null)
             {
                 <button asp-action="AddShift" class="roosteraddbtn" asp-route-SelectedEmployeeId="@Model.SelectedEmployeeId" type="submit">Voeg dienst toe</button>

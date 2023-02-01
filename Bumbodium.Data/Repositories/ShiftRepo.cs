@@ -79,6 +79,14 @@ namespace Bumbodium.Data
                 .Count();
         }
 
-        
+        public bool ShiftExistsInTime(DateTime start, DateTime end, string employeeId)
+        {
+            return _ctx.Shift.Any(a =>
+            (a.EmployeeId == employeeId) &&
+            ((a.ShiftStartDateTime > start && a.ShiftStartDateTime < end) ||
+            (a.ShiftEndDateTime > start && a.ShiftEndDateTime < end) ||
+            (a.ShiftStartDateTime < start && a.ShiftEndDateTime > end))
+            ); ;
+        }
     }
 }

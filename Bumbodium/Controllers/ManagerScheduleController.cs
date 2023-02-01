@@ -8,6 +8,7 @@ using Bumbodium.Data.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Bumbodium.WebApp.Models.ManagerSchedule;
 using System.Security.Cryptography.Xml;
+using Bumbodium.WebApp.Models.Utilities.ShiftValidation;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -15,13 +16,11 @@ namespace Bumbodium.WebApp.Controllers
     public class ManagerScheduleController : Controller
     {
         private readonly EmployeeRepo _employeeRepo;
-        private readonly IAvailabilityRepo _availabilityRepo;
         private readonly IShiftRepo _shiftRepo;
 
-        public ManagerScheduleController(EmployeeRepo employeeRepo, IAvailabilityRepo availabilityRepo, IShiftRepo shiftRepo)
+        public ManagerScheduleController(EmployeeRepo employeeRepo, IShiftRepo shiftRepo)
         {
             _employeeRepo = employeeRepo;
-            _availabilityRepo = availabilityRepo;
             _shiftRepo = shiftRepo;
         }
 
@@ -33,8 +32,7 @@ namespace Bumbodium.WebApp.Controllers
             viewModel.SelectedDate = t;
             viewModel.SelectedStartTime = new DateTime(t.Year, t.Month, t.Day, 8, 0, 0);
             viewModel.SelectedEndTime = new DateTime(t.Year, t.Month, t.Day, 22, 0, 0);
-            viewModel.AvailableEmployees = _availabilityRepo.GetAvailableEmployees(1, viewModel.SelectedStartTime, viewModel.SelectedEndTime).ToList();
-            viewModel.Shifts = _shiftRepo.GetShiftsInRange(t, t.AddDays(1), ((int)viewModel.SelectedDepartment + 1));
+            viewModel = GetDataForViewModel(viewModel);
             return View("Index", viewModel);
         }
 
@@ -58,8 +56,7 @@ namespace Bumbodium.WebApp.Controllers
                     viewModel.SelectedStartTime = new(d.Year, d.Month, d.Day, et.Hour, et.Minute, 0);
                 }
             }
-            viewModel.AvailableEmployees = _availabilityRepo.GetAvailableEmployees(((int)viewModel.SelectedDepartment + 1), viewModel.SelectedStartTime, viewModel.SelectedEndTime).ToList();
-            viewModel.Shifts = _shiftRepo.GetShiftsInRange(viewModel.SelectedDate, viewModel.SelectedDate.AddDays(1), ((int)viewModel.SelectedDepartment + 1));
+            viewModel = GetDataForViewModel(viewModel);
             return View("Index", viewModel);
         }
 
@@ -68,11 +65,9 @@ namespace Bumbodium.WebApp.Controllers
             if(viewModel.SelectedEmployeeId == null)
             {
                 ModelState.AddModelError("NoEmployeeSelected", "Je moet een medewerker selecteren");
-                viewModel.AvailableEmployees = _availabilityRepo.GetAvailableEmployees(((int)viewModel.SelectedDepartment + 1), viewModel.SelectedStartTime, viewModel.SelectedEndTime).ToList();
-                viewModel.Shifts = _shiftRepo.GetShiftsInRange(viewModel.SelectedDate, viewModel.SelectedDate.AddDays(1), ((int)viewModel.SelectedDepartment + 1));
+                viewModel = GetDataForViewModel(viewModel);
                 return View("Index", viewModel);
             }
-
             Shift shift = new()
             {
                 EmployeeId = viewModel.SelectedEmployeeId,
@@ -80,19 +75,35 @@ namespace Bumbodium.WebApp.Controllers
                 ShiftEndDateTime = viewModel.SelectedEndTime,
                 DepartmentId = ((int)viewModel.SelectedDepartment + 1)
             };
-            // validate here
+            IEnumerable<ValidationResult> validationResults = ShiftValidation.ValidateShift(_shiftRepo, shift);
+            if(validationResults.Any())
+            {
+                foreach (ValidationResult result in validationResults)
+                {
+                    ModelState.AddModelError("ShiftValidationError", result.ErrorMessage);
+                }
+                viewModel = GetDataForViewModel(viewModel);
+                return View("Index", viewModel);
+            }
+            // TODO add CAO here
             _shiftRepo.InsertShift(shift);
-            viewModel.AvailableEmployees = _availabilityRepo.GetAvailableEmployees(((int)viewModel.SelectedDepartment + 1), viewModel.SelectedStartTime, viewModel.SelectedEndTime).ToList();
-            viewModel.Shifts = _shiftRepo.GetShiftsInRange(viewModel.SelectedDate, viewModel.SelectedDate.AddDays(1), ((int)viewModel.SelectedDepartment + 1));
+            viewModel = GetDataForViewModel(viewModel);
             return View("Index", viewModel);
         }
 
         public IActionResult DeleteShift(ManagerScheduleViewModel viewModel, int ShiftId)
         {
             _shiftRepo.DeleteShift(ShiftId);
-            viewModel.AvailableEmployees = _availabilityRepo.GetAvailableEmployees(((int)viewModel.SelectedDepartment + 1), viewModel.SelectedStartTime, viewModel.SelectedEndTime).ToList();
-            viewModel.Shifts = _shiftRepo.GetShiftsInRange(viewModel.SelectedDate, viewModel.SelectedDate.AddDays(1), ((int)viewModel.SelectedDepartment + 1));
+            viewModel = GetDataForViewModel(viewModel);
             return View("Index", viewModel);
+        }
+
+        // This needs to be called to fill the shifts and employees list with data
+        private ManagerScheduleViewModel GetDataForViewModel(ManagerScheduleViewModel viewModel)
+        {
+            viewModel.AvailableEmployees = _employeeRepo.GetAvailableEmployees(((int)viewModel.SelectedDepartment + 1), viewModel.SelectedStartTime, viewModel.SelectedEndTime).ToList();
+            viewModel.Shifts = _shiftRepo.GetShiftsInRange(viewModel.SelectedDate, viewModel.SelectedDate.AddDays(1), ((int)viewModel.SelectedDepartment + 1));
+            return viewModel;
         }
     }
 }
