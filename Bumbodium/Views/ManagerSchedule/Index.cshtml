@@ -10,7 +10,39 @@
             <h4 style="margin-top: 10px;">Selecteer datum</h4>
             <input onchange="this.form.submit()" asp-for="SelectedDate" type="date" />
             <h4 style="margin-top: 10px;">Selecteer afdeling</h4>
-            @Html.DropDownListFor(vm => vm.SelectedDepartment, Html.GetEnumSelectList<DepartmentType>(), new {@onchange="this.form.submit()"})
+            <select id="SelectedDepartment" asp-for="SelectedDepartment" onchange="this.form.submit()">
+                @foreach (DepartmentSelectionViewModel department in Model.DepartmentViewModels)
+                {
+                    @if (department.Type == Model.SelectedDepartment)
+                    {
+                        if(department.PlannedHours < department.NeededHours) {
+                            <option class="text-danger" selected value="@department.Type">
+                                @department.Type - @department.PlannedHours / @department.NeededHours uur gepland
+                            </option>
+                        } else {
+                            <option selected value="@department.Type">
+                                @department.Type - @department.PlannedHours / @department.NeededHours uur gepland
+                            </option>
+                        }
+                    }
+                    else
+                    {
+                        if (department.PlannedHours < department.NeededHours)
+                        {
+                            <option class ="text-danger" value="@department.Type">
+                                @department.Type - @department.PlannedHours / @department.NeededHours uur gepland
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@department.Type">
+                                @department.Type - @department.PlannedHours / @department.NeededHours uur gepland
+                            </option>
+                        }
+                    }
+                }
+            </select>
+
             <h4 style="margin-top: 10px;">Selecteer tijd</h4>
             <div style="display:flex;">
                 <div>
@@ -59,7 +91,7 @@
             }
         </div>
 
-<!--Schedule visual-->
+        <!--Schedule visual-->
         <div class="col-md-8">
             <table class="scheduletable">
                 @if (Model.Shifts != null && Model.Shifts.Any())

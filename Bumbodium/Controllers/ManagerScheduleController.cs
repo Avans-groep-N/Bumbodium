@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using Bumbodium.WebApp.Models.ManagerSchedule;
 using System.Security.Cryptography.Xml;
 using Bumbodium.WebApp.Models.Utilities.ShiftValidation;
+using Bumbodium.Data.Repositories;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -17,11 +18,13 @@ namespace Bumbodium.WebApp.Controllers
     {
         private readonly EmployeeRepo _employeeRepo;
         private readonly IShiftRepo _shiftRepo;
+        private readonly ForecastRepo _forecastRepo;
 
-        public ManagerScheduleController(EmployeeRepo employeeRepo, IShiftRepo shiftRepo)
+        public ManagerScheduleController(EmployeeRepo employeeRepo, IShiftRepo shiftRepo, ForecastRepo forecastRepo)
         {
             _employeeRepo = employeeRepo;
             _shiftRepo = shiftRepo;
+            _forecastRepo = forecastRepo;
         }
 
         // GET: WeekRoosterController
@@ -103,6 +106,17 @@ namespace Bumbodium.WebApp.Controllers
         {
             viewModel.AvailableEmployees = _employeeRepo.GetAvailableEmployees(((int)viewModel.SelectedDepartment + 1), viewModel.SelectedStartTime, viewModel.SelectedEndTime).ToList();
             viewModel.Shifts = _shiftRepo.GetShiftsInRange(viewModel.SelectedDate, viewModel.SelectedDate.AddDays(1), ((int)viewModel.SelectedDepartment + 1));
+            viewModel.DepartmentViewModels = new();
+            foreach(DepartmentType department in Enum.GetValues(typeof(DepartmentType)))
+            {
+                viewModel.DepartmentViewModels.Add(new()
+                {
+                    Type = department,
+                    NeededHours = _forecastRepo.GetNeededHoursOfDepartmentOnDate(viewModel.SelectedDate, (int) department+1),
+                    PlannedHours = _shiftRepo.GetPlannedHoursOfDepartmentOnDate(viewModel.SelectedDate, (int)department + 1)
+                }); 
+            }
+            
             return viewModel;
         }
     }

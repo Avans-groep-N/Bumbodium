@@ -119,6 +119,15 @@ namespace Bumbodium.Data.Repositories
 
         public List<Forecast> GetForecastOfDate(DateTime startDate, DateTime endDate) => _ctx.Forecast.Where(f => f.Date >= startDate && f.Date <= endDate).ToList();
 
+        public int GetNeededHoursOfDepartmentOnDate(DateTime date, int departmentId)
+        {
+            int hoursNeeded = 0;
+            hoursNeeded = _ctx.Forecast
+                .Where(f => f.Date == date && f.DepartmentId == departmentId)
+                .FirstOrDefault().AmountExpectedHours; 
+            return hoursNeeded;
+        }
+
         public void SaveNewForecast(Forecast forecast)
         {
             _ctx.Forecast.Add(forecast);

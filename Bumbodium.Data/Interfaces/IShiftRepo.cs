@@ -13,5 +13,6 @@ namespace Bumbodium.Data.Interfaces
         List<Employee> GetEmployeesInRange(int departmentId, string? filter, int offset, int top);
         int GetEmployeeCount(int departmentId, string? filter);
         bool ShiftExistsInTime(DateTime start, DateTime end, string employeeId);
+        double GetPlannedHoursOfDepartmentOnDate(DateTime date, int departmentId);
     }
 }

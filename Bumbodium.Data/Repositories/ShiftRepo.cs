@@ -88,5 +88,28 @@ namespace Bumbodium.Data
             (a.ShiftStartDateTime < start && a.ShiftEndDateTime > end))
             ); ;
         }
+
+        public double GetPlannedHoursOfDepartmentOnDate(DateTime date, int departmentId)
+        {
+            double hoursPlanned = 0;
+            List<Shift> shifts = _ctx.Shift
+                .Where(f => f.ShiftStartDateTime.Date == date && f.DepartmentId == departmentId)
+                .ToList();
+            if(!shifts.Any())
+            {
+                return 0;
+            }
+            foreach(Shift shift in shifts)
+            {
+                hoursPlanned += CalculateShiftDuration(shift);
+            }
+
+            return hoursPlanned;
+        }
+
+        private static double CalculateShiftDuration(Shift shift)
+        {
+            return (shift.ShiftEndDateTime - shift.ShiftStartDateTime).TotalHours;
+        }
     }
 }

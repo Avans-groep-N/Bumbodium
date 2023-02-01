@@ -8,6 +8,7 @@ namespace Bumbodium.WebApp.Models.ManagerSchedule
         public List<Employee>? AvailableEmployees { get; set; }
         public string? SelectedEmployeeId { get; set; }
         public DepartmentType SelectedDepartment { get; set; }
+        public List<DepartmentSelectionViewModel>? DepartmentViewModels { get; set; }
         public DateTime SelectedDate { get; set; }
         public DateTime SelectedStartTime { get; set; }
         public DateTime SelectedEndTime { get; set; }
