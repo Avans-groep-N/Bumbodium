@@ -1,53 +1,52 @@
 ﻿using Bumbodium.Data.DBModels;
-using Bumbodium.Data.Repositories;
-using Bumbodium.WebApp.Models.ClockingView;
+using Bumbodium.WebApp.Models;
+using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
+using Bumbodium.WebApp.Models.Utilities.StandardsValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Data;
-using System.Diagnostics.Metrics;
-using System.Linq.Dynamic.Core;
 
 namespace Bumbodium.WebApp.Controllers
 {
     [Authorize(Roles = "Manager")]
     public class StandardController : Controller
     {
-        private StandardsRepo _standardsRepo;
-        public StandardController(StandardsRepo standardsRepo)
-        {
-            _standardsRepo = standardsRepo;
-        }
+        private const Country CountryOfFiliation = Country.Netherlands;
+        private BLStandards _blStandards;
 
+        public StandardController(BLStandards blStandards)
+        {
+            _blStandards = blStandards;
+        }
 
         public IActionResult Index()
         {
-            //TODO Make Reletive
-            var country = Country.Netherlands;
-            ViewBag.Countrys = (Country[])Enum.GetValues(typeof(Country));
-            
-            return View(_standardsRepo.GetAll(country));
+            return View(_blStandards.GetStandardsViewModel(CountryOfFiliation));
         }
 
         [HttpPost]
-        public IActionResult SelectCountry()
+        public IActionResult Index(StandardsViewModel standardsVM)
         {
-            var stringcountry = Request.Form["country"];
-            var newCountry = Country.Netherlands;
-            var countrys = Enum.GetValues(typeof(Country)).ToDynamicList();
+            return View(_blStandards.GetStandardsViewModel(standardsVM.Country));
+        }
 
-            for (int i = 0; i < countrys.Count; i++)
+        public IActionResult ChangeStandards(Country country)
+        {
+            return View(_blStandards.GetStandardsViewModel(country));
+        }
+
+        [HttpPost]
+        public IActionResult ChangeStandards(StandardsViewModel standardsVM)
+        {
+
+            if (!ModelState.IsValid)
             {
-                if (countrys[i].ToString().Equals(stringcountry[0]))
-                {
-                    newCountry = countrys[i];
-                    break;
-                }
+                return View(_blStandards.GetStandardsViewModel(standardsVM.Country));
             }
-
-
-            ViewBag.Countrys = countrys;
-            return View("../Standard/Index", _standardsRepo.GetAll(newCountry));
+            else
+            {
+                _blStandards.ChangeStandards(standardsVM);
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

@@ -47,20 +47,9 @@ namespace Bumbodium.WebApp.Controllers
             var clockingViewModel = _blclocking.GetClockingViewModel(id, yearAndWeek[1], yearAndWeek[0]);
             AddEmployeeToViewBag(id);
 
-            return View("../Clocking/Index", clockingViewModel);
+            return View($"../{nameof(ClockingController).Replace(nameof(Controller),"")}/{nameof(Index)}", clockingViewModel);
         }
 
-        private void AddEmployeeToViewBag(string id)
-        {
-            var employeeList = _blclocking.GetEmployees();
-            var temp = employeeList.Find(e => e.Id == id);
-            if (temp != null)
-            {
-                employeeList.Remove(temp);
-                employeeList.Insert(0, temp);
-            }
-            ViewBag.EmployeeList = new SelectList(employeeList, "Id", "Name");
-        }
 
         [Authorize(Roles = "Manager")]
         [HttpPost]
@@ -96,7 +85,19 @@ namespace Bumbodium.WebApp.Controllers
             AddEmployeeToViewBag(employeeId);
 
 
-            return View("../Clocking/Index", clockingViewModel);
+            return View($"../{nameof(ClockingController).Replace(nameof(Controller), "")}/{nameof(Index)}", clockingViewModel);
+        }
+
+        private void AddEmployeeToViewBag(string id)
+        {
+            var employeeList = _blclocking.GetEmployees();
+            var temp = employeeList.Find(e => e.Id == id);
+            if (temp != null)
+            {
+                employeeList.Remove(temp);
+                employeeList.Insert(0, temp);
+            }
+            ViewBag.EmployeeList = new SelectList(employeeList, "Id", "Name");
         }
     }
 }

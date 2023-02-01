@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Bumbodium.WebApp.Models;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Repositories;
-using Bumbodium.Data;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
+using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
+using System.Globalization;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -13,112 +12,77 @@ namespace Bumbodium.WebApp.Controllers
     public class ForecastController : Controller
     {
         private readonly ForecastRepo _forecastRepo;
+        private readonly BLForecast _blForecast;
         private readonly DepartmentRepo _departmentRepo;
 
-        public ForecastController(ForecastRepo forecastRepo, DepartmentRepo departmentRepo)
+        public ForecastController(ForecastRepo forecastRepo, DepartmentRepo departmentRepo, BLForecast bLForecast)
         {
+            _blForecast = bLForecast;
             _forecastRepo = forecastRepo;
             _departmentRepo = departmentRepo;
         }
 
-        // GET: ForecastController
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            var forecasts = _forecastRepo.GetAll();
-            foreach(var forecast in forecasts)
-            {
-                forecast.Department = _departmentRepo.GetDepartmentById(forecast.DepartmentId);
-            }
-            return View(forecasts);
+            return View(_blForecast.GetForecast(DateTime.Now));
         }
 
-        // GET: ForecastController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult ChangeInput(string id)
         {
-            return View();
+            var datestring = id.Split("-W");
+            var date = ISOWeek.ToDateTime(Convert.ToInt32(datestring[0]), Convert.ToInt32(datestring[1]), DayOfWeek.Monday);
+
+            ForecastViewModel forecastVM = _blForecast.GetForecast(date);
+
+            return View(forecastVM);
         }
 
-        // GET: ForecastController/Create
-        public ActionResult Create()
+        public IActionResult ChangeOutput(string id)
         {
-            return View(new ForecastWeekViewModel());
+            var datestring = id.Split("-W");
+            var date = ISOWeek.ToDateTime(Convert.ToInt32(datestring[0]), Convert.ToInt32(datestring[1]), DayOfWeek.Monday);
+
+            ForecastViewModel forecastVM = _blForecast.GetForecast(date);
+            
+            return View(forecastVM);
         }
 
-        // POST: ForecastController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(ForecastWeekViewModel forecastVM)
+        public IActionResult ChangeOutput(ForecastViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    Forecast[] forecasts = new Forecast[7];
-
-                    //Transitioning VMs to dbmodels
-                    for (int index = 0; index < forecasts.Length; index++)
-                    {
-                        var model = forecastVM.DaysOfTheWeek[index];
-                        forecasts[index] = new Forecast()
-                        {
-                            Date = model.Date.Value,
-                            AmountExpectedColis = model.AmountExpectedColis.Value,
-                            AmountExpectedCustomers = model.AmountExpectedCustomers.Value
-                        };
-                    }
-
-                    _forecastRepo.CreateForecast(forecasts);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch
-                {
-                    return RedirectToAction(nameof(Index));
-                }
+                return View(viewModel);
             }
-            return View(new ForecastWeekViewModel());
-
-        }
-
-        // GET: ForecastController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: ForecastController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
+            else
             {
+                _blForecast.ChangeOutputDB(viewModel);
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
         }
 
-        // GET: ForecastController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ForecastController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult ChangeInput(ForecastViewModel viewModel)
         {
-            try
+            if (!ModelState.IsValid)
             {
+                return View(viewModel);
+            }
+            else
+            {
+                _blForecast.ChangeInputDB(viewModel);
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+        }
+
+        [HttpPost]
+        public IActionResult SelectWeek()
+        {
+            var datestring = Request.Form["weeknumber"].First().Split("-W");
+            var date = ISOWeek.ToDateTime(Convert.ToInt32(datestring[0]), Convert.ToInt32(datestring[1]), DayOfWeek.Monday);
+
+            var fw = _blForecast.GetForecast(date);
+            return View($"../{nameof(ForecastController).Replace(nameof(Controller), "")}/{nameof(Index)}", fw);
         }
     }
 }
