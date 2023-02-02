@@ -18,10 +18,10 @@ namespace Bumbodium.WebApp.Controllers
     public class ManagerScheduleController : Controller
     {
         private readonly EmployeeRepo _employeeRepo;
-        private readonly IShiftRepo _shiftRepo;
+        private readonly ShiftRepo _shiftRepo;
         private readonly ForecastRepo _forecastRepo;
 
-        public ManagerScheduleController(EmployeeRepo employeeRepo, IShiftRepo shiftRepo, ForecastRepo forecastRepo)
+        public ManagerScheduleController(EmployeeRepo employeeRepo, ShiftRepo shiftRepo, ForecastRepo forecastRepo)
         {
             _employeeRepo = employeeRepo;
             _shiftRepo = shiftRepo;
@@ -88,7 +88,7 @@ namespace Bumbodium.WebApp.Controllers
             List<ValidationResult> validationResults = ShiftValidation.ValidateShift(_shiftRepo, shift).ToList();
             CaoInput cao = new(
                 _employeeRepo.GetEmployee(viewModel.SelectedEmployeeId),
-                _shiftRepo.GetShiftsInRange(shift.ShiftStartDateTime.StartOfWeek(), shift.ShiftStartDateTime.EndOfWeek(), viewModel.SelectedEmployeeId),
+                _shiftRepo,
                 shift);
             validationResults.AddRange(cao.ValidateRules());
 

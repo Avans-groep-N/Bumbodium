@@ -14,16 +14,16 @@ namespace Bumbodium.Data
     public class CaoInput : ICaoInput
     {
         private readonly Employee _employee;
-        private readonly List<Shift> _workedShifts;
+        private readonly ShiftRepo _shiftRepo;
         private readonly Shift _plannedShift;
-        private readonly int[] _vacationWeeks;
+        private readonly int[] _vacationWeekNumbers;
 
-        public CaoInput(Employee employee, List<Shift> workedShifts, Shift plannedShift)
+        public CaoInput(Employee employee, ShiftRepo shiftRepo, Shift plannedShift)
         {
             _employee = employee;
-            _workedShifts = workedShifts;
+            _shiftRepo = shiftRepo;
             _plannedShift = plannedShift;
-            _vacationWeeks = new[] { 1, 9, 18, 30, 31, 32, 33, 34, 35, 43, 52 };
+            _vacationWeekNumbers = new[] { 1, 9, 18, 30, 31, 32, 33, 34, 35, 43, 52 };
         }
 
         public IEnumerable<ValidationResult> ValidateRules()
@@ -55,7 +55,7 @@ namespace Bumbodium.Data
                     yield return new ValidationResult("Deze werknemer mag niet na 19:00 werken", new[] { "LatestTime" });
 
 
-                if (_vacationWeeks.Contains<int>(CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(_plannedShift.ShiftStartDateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday) / 7))
+                if (_vacationWeekNumbers.Contains(CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(_plannedShift.ShiftStartDateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday) / 7))
                 {
                     if (MaxHoursAWeek(40))
                         yield return new ValidationResult("Deze werknemer mag maar 40 uur werken deze week");
@@ -63,13 +63,12 @@ namespace Bumbodium.Data
                 else
                 {
                     if (MaxHoursAWeek(12))
-                    yield return new ValidationResult("Deze werknemer mag maar 12 uur werken deze week");
+                        yield return new ValidationResult("Deze werknemer mag maar 12 uur werken deze week");
                 }
                 yield break;
             }
-
-            if (MaxHoursAWeek(60))
-                yield return new ValidationResult("Werknemers mogen niet meer dan 60 uur per week werken");
+            if (MaxHoursAMonth(60))
+                yield return new ValidationResult("Werknemers mogen niet meer dan 60 uur per maand werken");
             if (MaxAmountHourShift(12))
                 yield return new ValidationResult("Werknemers mogen niet langer dan 12 uur werken in een dienst");
         }
@@ -91,47 +90,66 @@ namespace Bumbodium.Data
         #region IndividualRules
 
         //Returns validation result if the planned shift is longer than the max amount given
-        private bool MaxAmountHourShift(int maxHours)
+        private bool MaxAmountHourShift(double maxHours)
         {
-            int schoolHours = 0;
+            double schoolHours = 0;
             if (_employee.Availability != null)
             {
                 var schoolAvailabilities = _employee.Availability.Where(a => a.Type == AvailabilityType.Schoolhours &&
                                                            a.StartDateTime.Day == _plannedShift.ShiftStartDateTime.Day);
-                foreach (var availability in schoolAvailabilities)
-                    schoolHours += (availability.EndDateTime - availability.StartDateTime).Hours;
+                foreach (Availability availability in schoolAvailabilities)
+                    schoolHours += (availability.EndDateTime - availability.StartDateTime).TotalHours;
             }
 
-            if ((_plannedShift.ShiftEndDateTime - _plannedShift.ShiftStartDateTime).Hours > (maxHours - schoolHours))
+            if ((_plannedShift.ShiftEndDateTime - _plannedShift.ShiftStartDateTime).TotalHours > (maxHours - schoolHours))
                 return true;
             return false;
         }
 
         //Returns validation result if the average over a month is more than the max amount given
-        private bool MaxAverageHoursAWeek(int maxHours)
+        private bool MaxAverageHoursAWeek(double maxHours)
         {
-            int hoursThisMonth = 0;
-            var month = _plannedShift.ShiftStartDateTime.Month;
-            foreach (var shift in _workedShifts)
+            double hoursThisMonth = 0;
+            foreach (Shift shift in _shiftRepo.GetShiftsInRange(_plannedShift.ShiftStartDateTime.StartOfMonth(),
+                _plannedShift.ShiftStartDateTime.StartOfMonth().AddHours(23).AddMinutes(59), _plannedShift.EmployeeId))
             {
-                if (shift.ShiftStartDateTime.Month == month)
-                    hoursThisMonth += (shift.ShiftEndDateTime - shift.ShiftStartDateTime).Hours;
+                hoursThisMonth += (shift.ShiftEndDateTime - shift.ShiftStartDateTime).TotalHours;
             }
-            if (hoursThisMonth / 7 > maxHours)
+            hoursThisMonth += (_plannedShift.ShiftEndDateTime - _plannedShift.ShiftStartDateTime).TotalHours;
+            // hoursThis month divided by the amount of days in the month / 7
+            if (hoursThisMonth / (CultureInfo.InvariantCulture.Calendar.GetDaysInMonth(
+                _plannedShift.ShiftStartDateTime.Year, 
+                _plannedShift.ShiftStartDateTime.Month) / 7) > maxHours)
                 return true;
             return false;
         }
 
         //Returns validation result if the amount of hours in a week is more than the max amount given
-        private bool MaxHoursAWeek(int maxHours)
+        private bool MaxHoursAWeek(double maxHours)
         {
-            int hoursThisWeek = 0;
-            foreach (var shift in _workedShifts)
-                hoursThisWeek += (shift.ShiftEndDateTime - shift.ShiftStartDateTime).Hours;
-
-            hoursThisWeek += (_plannedShift.ShiftEndDateTime - _plannedShift.ShiftStartDateTime).Hours;
-
+            double hoursThisWeek = 0;
+            foreach (Shift shift in _shiftRepo.GetShiftsInRange(_plannedShift.ShiftStartDateTime.StartOfWeek(),
+            _plannedShift.ShiftStartDateTime.EndOfWeek(), _plannedShift.EmployeeId))
+            {
+                hoursThisWeek += (shift.ShiftEndDateTime - shift.ShiftStartDateTime).TotalHours;
+            }
+            hoursThisWeek += (_plannedShift.ShiftEndDateTime - _plannedShift.ShiftStartDateTime).TotalHours;
             if (hoursThisWeek > maxHours)
+                return true;
+
+            return false;
+        }
+        //Returns validation result if the amount of hours in a week is more than the max amount given
+        private bool MaxHoursAMonth(double maxHours)
+        {
+            double hoursThisMonth = 0;
+            foreach (Shift shift in _shiftRepo.GetShiftsInRange(_plannedShift.ShiftStartDateTime.StartOfMonth(),
+            _plannedShift.ShiftStartDateTime.EndOfMonth(), _plannedShift.EmployeeId))
+            {
+                hoursThisMonth += (shift.ShiftEndDateTime - shift.ShiftStartDateTime).TotalHours;
+            }
+            hoursThisMonth += (_plannedShift.ShiftEndDateTime - _plannedShift.ShiftStartDateTime).TotalHours;
+            if (hoursThisMonth > maxHours)
                 return true;
 
             return false;
@@ -140,7 +158,9 @@ namespace Bumbodium.Data
         //Returns validation result if the amount of shifts this week is more than the max amount given
         private bool MaxShiftsThisWeek(int maxShifts)
         {
-            if(_workedShifts.Count() >4)
+            if (_shiftRepo.GetShiftCountInRange(_plannedShift.ShiftStartDateTime.StartOfWeek(),
+                _plannedShift.ShiftStartDateTime.EndOfWeek(),
+                _plannedShift.EmployeeId) >= maxShifts)
             {
                 return true;
             }

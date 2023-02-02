@@ -119,5 +119,13 @@ namespace Bumbodium.Data
         {
             return (shift.ShiftEndDateTime - shift.ShiftStartDateTime).TotalHours;
         }
+
+        public int GetShiftCountInRange(DateTime start, DateTime end, string employeeId)
+        {
+            return _ctx.Shift
+                .Where(s => s.EmployeeId == employeeId)
+                .Where(s => s.ShiftStartDateTime > start && s.ShiftStartDateTime < end)
+                .Count();
+        }
     }
 }
