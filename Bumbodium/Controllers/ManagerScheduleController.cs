@@ -66,7 +66,13 @@ namespace Bumbodium.WebApp.Controllers
 
         public IActionResult AddShift(ManagerScheduleViewModel viewModel)
         {
-            if(viewModel.SelectedEmployeeId == null)
+            DateTime d = viewModel.SelectedDate;
+            DateTime st = viewModel.SelectedStartTime;
+            DateTime et = viewModel.SelectedEndTime;
+            viewModel.SelectedStartTime = new(d.Year, d.Month, d.Day, st.Hour, st.Minute, 0);
+            viewModel.SelectedEndTime = new(d.Year, d.Month, d.Day, et.Hour, et.Minute, 0);
+
+            if (viewModel.SelectedEmployeeId == null)
             {
                 ModelState.AddModelError("NoEmployeeSelected", "Je moet een medewerker selecteren");
                 viewModel = GetDataForViewModel(viewModel);
