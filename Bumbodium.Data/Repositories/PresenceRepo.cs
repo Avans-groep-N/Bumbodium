@@ -25,12 +25,6 @@ namespace Bumbodium.Data.Repositories
                     ).ToList();
         }
 
-        //TODO refactor to EmployeeRepo when that is fixed
-        public string GetEmployeeName(string id)
-        {
-            return _ctx.Employee.First(e => e.EmployeeID.Equals(id)).FullName;
-        }
-
         public List<Shift> GetShift(string id, DateTime dateTime)
         {
             return _ctx.Shift.Where(s => s.EmployeeId == id && s.ShiftStartDateTime.Day == dateTime.Day).ToList();
