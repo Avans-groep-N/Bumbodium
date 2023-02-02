@@ -1,8 +1,10 @@
 ﻿using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Interfaces;
+using Radzen.Blazor.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,15 +55,15 @@ namespace Bumbodium.Data
                     yield return new ValidationResult("Deze werknemer mag niet na 19:00 werken", new[] { "LatestTime" });
 
 
-                if (_vacationWeeks.Contains<int>(_plannedShift.ShiftStartDateTime.DayOfYear / 7))
+                if (_vacationWeeks.Contains<int>(CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(_plannedShift.ShiftStartDateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday) / 7))
                 {
                     if (MaxHoursAWeek(40))
-                        yield return new ValidationResult("Deze werknemer mag maar 40 uur werken.");
+                        yield return new ValidationResult("Deze werknemer mag maar 40 uur werken deze week");
                 }
                 else
                 {
                     if (MaxHoursAWeek(12))
-                    yield return new ValidationResult("Deze werknemer mag maar 12 uur werken in de vakantieweken.");
+                    yield return new ValidationResult("Deze werknemer mag maar 12 uur werken deze week");
                 }
                 yield break;
             }
@@ -123,11 +125,11 @@ namespace Bumbodium.Data
         //Returns validation result if the amount of hours in a week is more than the max amount given
         private bool MaxHoursAWeek(int maxHours)
         {
-            int week = _plannedShift.ShiftStartDateTime.DayOfYear / 7;
-            var shiftsThisWeek = _workedShifts.Where(s => (s.ShiftStartDateTime.DayOfYear / 7) == week);
             int hoursThisWeek = 0;
-            foreach (var shift in shiftsThisWeek)
+            foreach (var shift in _workedShifts)
                 hoursThisWeek += (shift.ShiftEndDateTime - shift.ShiftStartDateTime).Hours;
+
+            hoursThisWeek += (_plannedShift.ShiftEndDateTime - _plannedShift.ShiftStartDateTime).Hours;
 
             if (hoursThisWeek > maxHours)
                 return true;
@@ -138,16 +140,10 @@ namespace Bumbodium.Data
         //Returns validation result if the amount of shifts this week is more than the max amount given
         private bool MaxShiftsThisWeek(int maxShifts)
         {
-            int week = _plannedShift.ShiftStartDateTime.DayOfYear / 7;
-            int amountOfShifts = 0;
-            foreach (var shift in _workedShifts)
+            if(_workedShifts.Count() >4)
             {
-                if (shift.ShiftStartDateTime.DayOfYear / 7 == week)
-                    amountOfShifts++;
-            }
-
-            if (amountOfShifts > 5)
                 return true;
+            }
             return false;
         }
 

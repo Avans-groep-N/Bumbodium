@@ -117,6 +117,11 @@ namespace Bumbodium.WebApp.Controllers
         // This needs to be called to fill the shifts and employees list with data
         private ManagerScheduleViewModel GetDataForViewModel(ManagerScheduleViewModel viewModel)
         {
+            DateTime d = viewModel.SelectedDate;
+            DateTime st = viewModel.SelectedStartTime;
+            DateTime et = viewModel.SelectedEndTime;
+            viewModel.SelectedStartTime = new(d.Year, d.Month, d.Day, st.Hour, st.Minute, 0);
+            viewModel.SelectedEndTime = new(d.Year, d.Month, d.Day, et.Hour, et.Minute, 0);
             viewModel.AvailableEmployees = _employeeRepo.GetAvailableEmployees(((int)viewModel.SelectedDepartment + 1), viewModel.SelectedStartTime, viewModel.SelectedEndTime).ToList();
             viewModel.Shifts = _shiftRepo.GetShiftsInRange(viewModel.SelectedDate, viewModel.SelectedDate.AddDays(1), ((int)viewModel.SelectedDepartment + 1));
             viewModel.DepartmentViewModels = new();

@@ -48,12 +48,12 @@
                 <div>
                     <label>Begintijd</label>
                     <br />
-                    <input onchange="this.form.submit()" asp-for="SelectedStartTime" step="900" type="time" value="@Model.SelectedStartTime.ToShortTimeString()" />
+                    <input onchange="this.form.submit()" min="@TimeOnly.MinValue" max="@TimeOnly.MaxValue" asp-for="SelectedStartTime" step="900" type="time" value="@Model.SelectedStartTime.ToShortTimeString()" />
                 </div>
                 <div>
                     <label>Eindtijd</label>
                     <br />
-                    <input onchange="this.form.submit()" asp-for="SelectedEndTime" step="900" type="time" value="@Model.SelectedEndTime.ToShortTimeString()" />
+                    <input onchange="this.form.submit()" min="@TimeOnly.MinValue" max="@TimeOnly.MaxValue" asp-for="SelectedEndTime" step="900" type="time" value="@Model.SelectedEndTime.ToShortTimeString()" />
                 </div>
             </div>
 
