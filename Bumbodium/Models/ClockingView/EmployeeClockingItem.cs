@@ -1,6 +1,6 @@
 ﻿namespace Bumbodium.WebApp.Models.ClockingView
 {
-    public class MedewerkerClockingItem
+    public class EmployeeClockingItem
     {
 
         public DateTime? ClockStartTime { get; set; }
