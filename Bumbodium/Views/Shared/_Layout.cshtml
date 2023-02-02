@@ -17,7 +17,8 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    @if (User.Identity.IsAuthenticated) {
+    @if (User.Identity.IsAuthenticated)
+    {
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container-fluid">
@@ -27,12 +28,10 @@
                     </button>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
-                            @if(User.IsInRole("Manager")) {
+                            @if (User.IsInRole("Manager"))
+                            {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="WeekSchedule" asp-action="Index">Week rooster</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Standard" asp-action="Index">Normering</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Forecast" asp-action="Index">Prognose</a>
@@ -40,15 +39,23 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="ExcelExport" asp-action="Index">Verloning</a>
                                 </li>
-                                  <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Clocking" asp-action="Index">Kloktijden</a>
-                        </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Clocking" asp-action="Index">Kloktijden</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Werknemers</a>
+                                </li>
+
                             }
                             @if (User.IsInRole("Employee"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Availability" asp-action="Index">Beschikbaarheid</a>
                                 </li>
+                                      <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="ClockingEmployee" asp-action="Index">Kloktijden</a>
+                                </li>
+                                
                             }
                         </ul>
                         <ul class="navbar-nav flex-grow-1 position-absolute end-0 ">

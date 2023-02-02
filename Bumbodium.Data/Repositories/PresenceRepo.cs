@@ -1,4 +1,5 @@
 ﻿using Bumbodium.Data.DBModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bumbodium.Data.Repositories
 {
@@ -24,10 +25,33 @@ namespace Bumbodium.Data.Repositories
                     ).ToList();
         }
 
-        //TODO refactor to EmployeeRepo when that is fixed
-        public string GetEmployeeName(string id)
+        public List<Shift> GetShift(string id, DateTime dateTime)
         {
-            return _ctx.Employee.First(e => e.EmployeeID.Equals(id)).FullName;
+            return _ctx.Shift.Where(s => s.EmployeeId == id && s.ShiftStartDateTime.Day == dateTime.Day).ToList();
+        }
+
+        public Presence? GetStartToEndPresence(string employeeId, DateTime? startTime, DateTime? endTime)
+        {
+            return _ctx.Presence.FirstOrDefault(p => p.EmployeeId == employeeId && (p.ClockInDateTime == startTime && p.AlteredClockInDateTime == null && p.ClockOutDateTime == endTime && p.AlteredClockOutDateTime == null) ||
+
+                    (p.ClockInDateTime == startTime && p.AlteredClockInDateTime == null && p.AlteredClockOutDateTime == endTime) ||
+
+                    (p.AlteredClockInDateTime == startTime && p.ClockOutDateTime == endTime && p.AlteredClockOutDateTime == null) ||
+
+                    (p.AlteredClockInDateTime == startTime && p.AlteredClockOutDateTime == endTime)
+                    );
+
+        }
+
+        public List<Presence> GetWorkedHours(string id, DateTime dateTime)
+        {
+            return _ctx.Presence.Where(p => p.EmployeeId == id && p.ClockInDateTime.Date == dateTime.Date).ToList();
+        }
+
+        public void Save(Presence alterdPresence)
+        {
+            _ctx.Presence.Update(alterdPresence);
+            _ctx.SaveChanges();
         }
     }
 }

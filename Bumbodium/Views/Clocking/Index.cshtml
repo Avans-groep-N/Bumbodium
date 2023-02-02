@@ -1,77 +1,74 @@
-﻿@model ClockingViewModel
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<div class="row">
-    <div class="col" style="padding: 5px;">Gijs van der Velden</div>
-</div>
+@model Bumbodium.WebApp.Models.ClockingView.ClockingViewModel
 
 <br />
 
-<div class="row">
-    <div class="col" style="padding: 5px;">Week: @Model.WeekNumber</div>
-</div>
-
-<br />
+@{
+    string calanderVal = Model.YearNumber + "-W";
+    if (Model.WeekNumber < 10)
+        calanderVal += "0" + Model.WeekNumber;
+    else
+        calanderVal += Model.WeekNumber;
+}
+@using (Html.BeginForm("SelectWeek", "Clocking", FormMethod.Post))
+{
+    @Html.DropDownList("Id", (IEnumerable<SelectListItem>)ViewBag.EmployeeList)
+    <input type="week" name="weekNumber" value="@calanderVal" onchange="this.form.submit()" required />
+    <input type="submit" value="Submit" />
+}
 
 <div class="row">
     <div class="col" style="padding: 5px;"><strong>Kloktijden</strong></div>
     <div class="col" style="padding: 5px;"><strong>Roostertijden</strong></div>
 </div>
 
-@foreach (var day in Model.ClockingDays)
-{
-
-    <div class="row" style="background-color:cornflowerblue; color: white; padding: 15px;">
-        @foreach (var shift in day.ClockingItems)
-        {
-
-            <div class="row">
-                <div class="col">
-                    @if (shift.IsChanged)
-                    {
-                        @shift.ClockStartTime
-
-                        <i class="fa fa-user-o" aria-hidden="true" style="padding-left: 5px"></i>
-                    }
-                    else if (shift.IsOnGoing)
-                    {
-                        @shift.ClockStartTime
-
-                        <i class="fa fa-clock-o" aria-hidden="true" style="padding-left: 5px"></i>
-                    }
-                    else
-                    {
-                        @shift.ClockStartTime
-                    }
-
+<form asp-action="SaveNewTimes" method="post">
+    <input type="hidden" id="employeeId" name="employeeId" value="@Model.EmployeeId" />
+    @for (int i = 0; i < Model.ClockingDays.Count; i++)
+    {
+        <div class="row" style="background-color:cornflowerblue; color: white; padding: 15px; ">
+            <div class="row m-auto">
+                <div class="bg-light text-dark rounded-2 mb-3 p-1">
+                    <p class="mb-0 p-0 bold">@Model.ClockingDays[i].Day.ToString("dd/MM/yyyy")</p>
                 </div>
-                <div class="col">@shift.ScheduleStartTime</div>
+
+                @for (var j = 0; j < Model.ClockingDays[i].ManagerClocking.Count; j++)
+                {
+                    <input type="hidden" id="day" name="day" value="@Model.ClockingDays[i].Day.ToString("dd/MM/yyyy")" />
+                    <div class="bg-light mb-2 text-dark rounded-1">
+                        <div class="row">
+                            <div class="col justify-content-md-start">
+                                <input type="hidden" id="timestart" name="timestart"
+                               value="@Model.ClockingDays[i].ManagerClocking[j].ClockStartTime.GetValueOrDefault().TimeOfDay">
+
+                                <input type="time" id="alterdtimestart" name="alterdtimestart"
+                               class="form-control-plaintext accordion-button" value="@Model.ClockingDays[i].ManagerClocking[j].ClockStartTime.GetValueOrDefault().TimeOfDay">
+                            </div>
+                            <div class="col"></div>
+                            <div class="col">@Model.ClockingDays[i].ManagerClocking[j].ScheduleStartTime.GetValueOrDefault().TimeOfDay</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+
+                                <input type="hidden" id="timeend" name="timeend" value="@Model.ClockingDays[i].ManagerClocking[j].ClockEndTime.GetValueOrDefault().TimeOfDay">
+                                <input type="time" id="alterdtimeend" name="alterdtimeend" class="form-control-plaintext accordion-button" value="@Model.ClockingDays[i].ManagerClocking[j].ClockEndTime.GetValueOrDefault().TimeOfDay">
+                            </div>
+                            <div class="col"></div>
+                            <div class="col">@Model.ClockingDays[i].ManagerClocking[j].ScheduleEndTime.GetValueOrDefault().TimeOfDay</div>
+                        </div>
+                    </div>
+                }
             </div>
-            <div class="row">
-                <div class="col">
-                    @if (shift.IsChanged)
-                    {
-                        @shift.ClockEndTime
-
-                        <i class="fa fa-user-o" aria-hidden="true" style="padding-left: 5px"></i>
-                    }
-                    else
-                    {
-                        @shift.ClockEndTime
-                    }
-
-                </div>
-                <div class="col">@shift.ScheduleEndTime</div>
-            </div>
-
-        }
-    </div>
-    <br />
-
-}
-
-
-
-
-
-
+        </div>
+        <br />
+    }
+    @if (Model.ClockingDays.Count > 0)
+    {
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-lg btn-primary btn-outline-warning" />
+        </div>
+    }
+    else
+    {
+        <h1>Er zijn geen in geklokte uren deze week van @Model.EmployeeName</h1>
+    }
+</form>

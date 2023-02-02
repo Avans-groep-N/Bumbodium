@@ -9,6 +9,9 @@ using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
+using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
+using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
+using Bumbodium.WebApp.Models.Utilities.StandardsValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +29,12 @@ builder.Services.AddScoped<DepartmentRepo>();
 builder.Services.AddScoped<StandardsRepo>();
 builder.Services.AddScoped<PresenceRepo>();
 builder.Services.AddScoped<AvailabilityRepo>();
+builder.Services.AddScoped<EmployeeRepo>();
 
 builder.Services.AddScoped<BLExcelExport>();
+builder.Services.AddScoped<BLStandards>();
+builder.Services.AddScoped<BLForecast>();
+builder.Services.AddScoped<BLClocking>();
 
 builder.Services.AddTransient<IAvailabilityRepo, AvailabilityRepo>();
 builder.Services.AddTransient<IShiftRepo, ShiftRepo>();
@@ -36,8 +43,10 @@ builder.Services.AddDbContext<BumbodiumContext>(options =>
                 options.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;")); //TODO: change back to azure db
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>{
     options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireNonAlphanumeric = false;
     }).AddEntityFrameworkStores<BumbodiumContext>()
-    .AddRoles<IdentityRole>();
+    .AddRoles<IdentityRole>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
 
 var app = builder.Build();
 

@@ -1,0 +1,41 @@
+﻿@model StandardsViewModel
+
+@{
+    ViewData["Title"] = "Normeringen";
+}
+
+<h1>Normeringen</h1>
+<hr>
+<br />
+
+<form asp-action="ChangeStandards" method="post">
+    <input hidden asp-for="Country" />
+    <div class="container justify-content-center">
+        <div class="row shadow-lg m-0">
+            <div class="col m-0 p-0 bg-black ">
+                <h2 class="p-3 text-lg text-light">Normeringen van @Model.Country</h2>
+            </div>
+        </div>
+        @for (int i = 0; i < Model.Standards.Count; i++)
+        {
+            <div class="row shadow-lg m-0">
+                <div class="col m-0 p-0 bg-white">
+                    <h2 class="p-3 pb-0 text-lg">@Model.Standards[i].Description.Replace("aantal", Model.Standards[i].Value.ToString())</h2>
+                </div>
+                <div class="col m-0 p-0 bg-white text-center">
+                    <input hidden asp-for="Standards[i].Description" />
+                    <input hidden asp-for="Standards[i].Subject" />
+                    <input asp-for="Standards[i].Value" class="m-3 text-lg text-center" />
+                    <span asp-validation-for="Standards[i].Value" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        <br />
+        <div class="row pb-0">
+            <div class="col text-center p-0 ">
+                <button type="submit" class="btn btn-lg btn-primary btn-outline-warning">Veranderde normeringen opslaan</button>
+            </div>
+        </div>
+    </div>
+</form>
+<a asp-action="Index" class="btn btn-lg btn-primary btn-outline-danger">Terug naar Normering</a>

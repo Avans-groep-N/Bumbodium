@@ -105,7 +105,7 @@ namespace Bumbodium.Data
                     Id = 3,
                     Subject = "Cashier",
                     Value = 30,
-                    Description = "1 Kasiere per uur per aantal klanten.",
+                    Description = "1 Kassière aantal klanten per uur.",
                     Country = Country.Netherlands
                 },
 
@@ -114,7 +114,7 @@ namespace Bumbodium.Data
                     Id = 4,
                     Subject = "Employee",
                     Value = 100,
-                    Description = "1 medewerker per customer per uur per aantal klanten.",
+                    Description = "1 medewerker per aantal klanten per uur.",
                     Country = Country.Netherlands
                 },
 
@@ -123,7 +123,7 @@ namespace Bumbodium.Data
                     Id = 5,
                     Subject = "Mirror",
                     Value = 30,
-                    Description = "aantal seconde voor medewerker per customer per meter.",
+                    Description = "aantal seconde per meter.",
                     Country = Country.Netherlands
                 });
         }
@@ -385,15 +385,10 @@ namespace Bumbodium.Data
         private static void InsertDepartmentData(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Department>().HasData(
-                            new Department() { Id = 1, BranchId = 1, SurfaceAreaInM2 = 50, Name = DepartmentType.Vegetables_Fruit, Description = "Vegetables_Fruit" },
-                            new Department() { Id = 2, BranchId = 1, SurfaceAreaInM2 = 140, Name = DepartmentType.Meat, Description = "Meat" },
-                            new Department() { Id = 3, BranchId = 1, SurfaceAreaInM2 = 80, Name = DepartmentType.Fish, Description = "Fish" },
-                            new Department() { Id = 4, BranchId = 1, SurfaceAreaInM2 = 200, Name = DepartmentType.Cheese_Milk, Description = "Cheese_Milk" },
-                            new Department() { Id = 5, BranchId = 1, SurfaceAreaInM2 = 150, Name = DepartmentType.Bread, Description = "Bread" },
-                            new Department() { Id = 6, BranchId = 1, SurfaceAreaInM2 = 180, Name = DepartmentType.Cosmetics, Description = "Cosmetics" },
-                            new Department() { Id = 7, BranchId = 1, SurfaceAreaInM2 = 90, Name = DepartmentType.Checkout, Description = "Checkout" },
-                            new Department() { Id = 8, BranchId = 1, SurfaceAreaInM2 = 100, Name = DepartmentType.Stockroom, Description = "Stockroom" },
-                            new Department() { Id = 9, BranchId = 1, SurfaceAreaInM2 = 70, Name = DepartmentType.InformationDesk, Description = "InformationDesk" });
+                            new Department() { Id = 1, BranchId = 1, SurfaceAreaInM2 = 50, Name = DepartmentType.Fresh, Description = "Fresh" },
+                            new Department() { Id = 2, BranchId = 1, SurfaceAreaInM2 = 140, Name = DepartmentType.Shelves, Description = "Shelves" },
+                            new Department() { Id = 3, BranchId = 1, SurfaceAreaInM2 = 90, Name = DepartmentType.Checkout, Description = "Checkout" 
+                            });
         }
         private static void InsertDepartmentEmployeeData(ModelBuilder modelBuilder)
         {
@@ -401,38 +396,20 @@ namespace Bumbodium.Data
                 new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
                 new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
                 new DepartmentEmployee() { DepartmentId = 3, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
-                new DepartmentEmployee() { DepartmentId = 4, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
-                new DepartmentEmployee() { DepartmentId = 5, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
-                new DepartmentEmployee() { DepartmentId = 6, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
-                new DepartmentEmployee() { DepartmentId = 7, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
-                new DepartmentEmployee() { DepartmentId = 8, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
-                new DepartmentEmployee() { DepartmentId = 9, EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65" },
                 new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c" },
                 new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c" },
                 new DepartmentEmployee() { DepartmentId = 3, EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c" },
-                new DepartmentEmployee() { DepartmentId = 7, EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c" },
-                new DepartmentEmployee() { DepartmentId = 8, EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c" },
-                new DepartmentEmployee() { DepartmentId = 9, EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c" },
                 new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
                 new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
                 new DepartmentEmployee() { DepartmentId = 3, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
-                new DepartmentEmployee() { DepartmentId = 4, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
-                new DepartmentEmployee() { DepartmentId = 5, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
-                new DepartmentEmployee() { DepartmentId = 6, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
-                new DepartmentEmployee() { DepartmentId = 7, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
-                new DepartmentEmployee() { DepartmentId = 8, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
-                new DepartmentEmployee() { DepartmentId = 9, EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f" },
                 new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b" },
                 new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b" },
                 new DepartmentEmployee() { DepartmentId = 3, EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b" },
-                new DepartmentEmployee() { DepartmentId = 4, EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b" },
-                new DepartmentEmployee() { DepartmentId = 5, EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b" },
                 new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b" },
                 new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b" },
                 new DepartmentEmployee() { DepartmentId = 3, EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b" },
-                new DepartmentEmployee() { DepartmentId = 4, EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b" },
-                new DepartmentEmployee() { DepartmentId = 5, EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b" },
                 new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "a20cddd4-9704-439f-94bc-95f4659ce543" },
+                new DepartmentEmployee() { DepartmentId = 2, EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c" },
                 new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "a357223e-5d1e-461e-b1ad-3a8592f548dd" },
                 new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "b74ddd14-6340-4840-95c2-db12554843e5" },
                 new DepartmentEmployee() { DepartmentId = 1, EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f" },

@@ -23,9 +23,11 @@ namespace Bumbodium.Data
 
         public List<Availability> GetAvailabilitiesInRange(DateTime start, DateTime end)
         {
-            //TODO: _ctx is null. must return a list
-            //return _ctx.Availability.Where(a => (a.StartDateTime >= start && a.StartDateTime <= end) || (a.StartDateTime >= end && a.EndDateTime <= start)).ToList();
-            return _ctx.Availability.Where(a => a.StartDateTime == start && a.EndDateTime == end).ToList();
+            return _ctx.Availability.Where(a => 
+            (a.StartDateTime > start && a.StartDateTime < end) ||
+            (a.EndDateTime > start && a.EndDateTime < end) ||
+            (a.StartDateTime < start && a.EndDateTime > end)
+            ).ToList();
         }
 
         public void InsertAvailability(Availability availability)

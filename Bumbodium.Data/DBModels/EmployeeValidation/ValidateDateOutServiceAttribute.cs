@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bumbodium.Data.Utilities.EmployeeValidation
+namespace Bumbodium.Data.DBModels.EmployeeValidation
 {
 
     public class ValidateDateOutServiceAttribute : ValidationAttribute

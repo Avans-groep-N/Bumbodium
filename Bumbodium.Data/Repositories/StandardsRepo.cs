@@ -17,5 +17,11 @@ namespace Bumbodium.Data.Repositories
         }
 
         public List<Standards> GetAll(Country country) => _ctx.Standards.Where(s => s.Country == country).ToList();
+
+        public void UpdateStandards(List<Standards> standardsDB)
+        {
+            _ctx.Standards.UpdateRange(standardsDB);
+            _ctx.SaveChanges();
+        }
     }
 }
