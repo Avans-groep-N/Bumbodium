@@ -33,7 +33,7 @@ namespace Bumbodium.Data
             {
                 if (MaxAmountHourShift(9))
                 {
-                    yield return new ValidationResult("Deze werknemer mag maximaal maar 9 uur in één dienst werken", new[] { "MaxAmountHourShift" });
+                    yield return new ValidationResult("Deze werknemer mag maximaal maar 9 uur in één dienst werken (inclusief schooluren)", new[] { "MaxAmountHourShift" });
                 }
                 if (MaxAverageHoursAWeek(40))
                 {
@@ -49,13 +49,13 @@ namespace Bumbodium.Data
                     yield return new ValidationResult("Deze werknemer mag maar 5 keer worden ingepland per week", new[] { "MaxShiftsThisWeek" });
 
                 if (MaxAmountHourShift(8))
-                    yield return new ValidationResult("Deze werknemer mag maximaal maar 8 uur in één dienst werken", new[] { "MaxAmountHourShift" });
+                    yield return new ValidationResult("Deze werknemer mag maximaal maar 8 uur in één dienst werken (inclusief school)", new[] { "MaxAmountHourShift" });
 
                 if (LatestTime(new TimeSpan(19, 0, 0)))
                     yield return new ValidationResult("Deze werknemer mag niet na 19:00 werken", new[] { "LatestTime" });
 
 
-                if (_vacationWeekNumbers.Contains(CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(_plannedShift.ShiftStartDateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday) / 7))
+                if (_vacationWeekNumbers.Contains(CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(_plannedShift.ShiftStartDateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday)))
                 {
                     if (MaxHoursAWeek(40))
                         yield return new ValidationResult("Deze werknemer mag maar 40 uur werken deze week");
@@ -111,7 +111,7 @@ namespace Bumbodium.Data
         {
             double hoursThisMonth = 0;
             foreach (Shift shift in _shiftRepo.GetShiftsInRange(_plannedShift.ShiftStartDateTime.StartOfMonth(),
-                _plannedShift.ShiftStartDateTime.StartOfMonth().AddHours(23).AddMinutes(59), _plannedShift.EmployeeId))
+                _plannedShift.ShiftStartDateTime.EndOfMonth().AddHours(23).AddMinutes(59), _plannedShift.EmployeeId))
             {
                 hoursThisMonth += (shift.ShiftEndDateTime - shift.ShiftStartDateTime).TotalHours;
             }
