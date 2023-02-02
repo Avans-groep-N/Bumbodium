@@ -9,11 +9,7 @@ namespace Bumbodium.WebApp.Models
         [Required]
         [BindProperty]
         public List<AvailabilityViewModel> Availabilities { get; set; }
-        public string[] Opdions = new[] { "Accepted", "Denied" };
-
-        [BindProperty]
-        public string Gender { get; set; }
-        public string[] Genders = new[] { "Male", "Female", "Unspecified" };
+        public string[] Options = new[] { "Accepted", "Denied" };
     }
 
     public class AvailabilityViewModel
