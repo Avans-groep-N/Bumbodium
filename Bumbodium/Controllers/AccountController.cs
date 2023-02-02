@@ -54,7 +54,7 @@ namespace Bumbodium.WebApp.Controllers
                     Employee employee = _employeeRepo.GetEmployee(currentUser.Id);
                     if (employee.Type == Data.DBModels.TypeStaff.Manager)
                     {
-                        return RedirectToAction("Index", "WeekSchedule");
+                        return RedirectToAction("Index", "ManagerSchedule");
                     }
                     else
                     {

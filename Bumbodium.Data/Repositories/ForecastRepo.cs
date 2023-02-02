@@ -122,9 +122,13 @@ namespace Bumbodium.Data.Repositories
         public int GetNeededHoursOfDepartmentOnDate(DateTime date, int departmentId)
         {
             int hoursNeeded = 0;
-            hoursNeeded = _ctx.Forecast
+            var forecast = _ctx.Forecast
                 .Where(f => f.Date == date && f.DepartmentId == departmentId)
-                .FirstOrDefault().AmountExpectedHours; 
+                .FirstOrDefault(); 
+            if(forecast != null)
+            {
+                hoursNeeded = forecast.AmountExpectedHours;
+            }
             return hoursNeeded;
         }
 
