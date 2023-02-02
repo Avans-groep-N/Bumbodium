@@ -6,6 +6,7 @@
 
 <RadzenDialog />
 
+<h4>Selecteer type onbeschikbaarheid</h4>
 <RadzenSelectBar @bind-Value=@SelectedType TValue="AvailabilityType">
     <Items>
         <RadzenSelectBarItem Text="School uren" Value="AvailabilityType.Schoolhours" Style="color: red;" />
@@ -13,10 +14,12 @@
         <RadzenSelectBarItem Text="Vakantie" Value="AvailabilityType.Holidays" Style="color: green;" />
     </Items>
 </RadzenSelectBar>
+<h4>Klik een begin en eindtijd om aan te geven wanneer je <strong>niet</strong> beschikbaar bent</h4>
+<h6>Je kunt je beschikbaarheid niet meer opgeven  of veranderen in de grijze vakken</h6>
 <RadzenScheduler @ref=@scheduler Data="@Data" TItem="Availability"
                  StartProperty="StartDateTime" EndProperty="EndDateTime" TextProperty="Text"
                  LoadData=@OnLoadData
-                 style="height: 770px;" TodayText="Vandaag"
+                 style="height: 770px;" TodayText="Vandaag" Date="DateTime.Today.AddDays(14)"
                  SlotRender=@OnSlotRender SlotSelect=@OnSlotSelect AppointmentRender=@OnAppointmentRender>
     <Template Context="data">
         <p>

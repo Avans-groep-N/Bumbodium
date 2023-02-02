@@ -48,6 +48,11 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>{
     .AddRoles<IdentityRole>()
     .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Index";
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
