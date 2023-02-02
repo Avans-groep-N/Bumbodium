@@ -9,21 +9,24 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Bumbodium.WebApp.Controllers
 {
-    [Authorize(Roles = "Employee")]
     public class AvailabilityController : Controller
     {
         private readonly BumbodiumContext _ctx;
         //auto-suggested by Visual Studio. Make a class inhereting from IdentityUser.
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AvailabilityRepo _availabilityRepo;
+        private readonly EmployeeRepo _employeeRepo;
 
         public AvailabilityController(BumbodiumContext ctx, UserManager<IdentityUser> userManager, AvailabilityRepo availabilityRepo)
         {
             _ctx = ctx;
             _userManager = userManager;
             _availabilityRepo = availabilityRepo;
+            _employeeRepo = new EmployeeRepo(ctx);
         }
-        public IActionResult Index()
+		
+        [Authorize(Roles = "Employee")]
+        public ActionResult Index()
         {
             return View();
         }
@@ -49,6 +52,32 @@ namespace Bumbodium.WebApp.Controllers
 
             _ctx.Availability.Add(availability);
             _ctx.SaveChanges();
+		}
+
+        [Authorize(Roles = "Manager")]
+        public ActionResult Accodation()
+        {
+            var availabilities = _availabilityRepo.GetUnconfirmedAvailabilities();
+            var model = new AvailabilityListViewModel()
+            {
+                Availabilities = new List<AvailabilityViewModel>()
+            };
+
+            //Converting DB models into view models
+            foreach(var availability in availabilities)
+            {
+                var employee = _employeeRepo.GetEmployee(availability.EmployeeId);
+                model.Availabilities.Add(new AvailabilityViewModel()
+                {
+                    Id = availability.AvailabilityId,
+                    Employee = employee,
+                    EmployeeId = employee.EmployeeID,
+                    StartDateTime = availability.StartDateTime,
+                    EndDateTime = availability.EndDateTime,
+                    IsConfirmed = availability.IsConfirmed,
+                    Type = availability.Type
+                });
+            }
 
             return View(model);
         }
@@ -93,6 +122,34 @@ namespace Bumbodium.WebApp.Controllers
 
             //TODO: return a message saying what was updated
             return RedirectToAction("Index");
+		}
+
+        [Authorize(Roles = "Manager")]
+        [HttpPost]
+        public ActionResult Accodation(AvailabilityListViewModel model)
+        {
+            foreach(var availabilityVM in model.Availabilities)
+            {
+                //Converting VM to DBmodel
+                var availability = new Availability()
+                {
+                    AvailabilityId = availabilityVM.Id,
+                    EmployeeId = availabilityVM.EmployeeId,
+                    StartDateTime = availabilityVM.StartDateTime,
+                    EndDateTime = availabilityVM.EndDateTime,
+                    Type = availabilityVM.Type,
+                    IsConfirmed = availabilityVM.IsConfirmed
+                };
+                if (availability.IsConfirmed)
+                {
+                    _availabilityRepo.UpdateAvailability(availability);
+                }
+                else
+                {
+                    _availabilityRepo.DeleteAvailability(availability);
+                }
+            }
+            return RedirectToAction("Accodation");
         }
     }
 }

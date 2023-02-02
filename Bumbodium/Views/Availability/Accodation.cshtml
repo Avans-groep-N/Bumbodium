@@ -1,0 +1,41 @@
+﻿@model Bumbodium.WebApp.Models.AvailabilityListViewModel;
+
+<h2>Beschikbaarheid accoderen</h2>
+
+<p>Hier kunt u werknemers die vrij hebben gevraagd accepteren of weigeren.</p>
+<p class="text-danger">Let op: geweigerde tijden worden verwijdert.</p>
+<p class="text-danger">Let op: schooltijden kunnen niet worden geaccodeerd.</p>
+
+@if(Model.Availabilities.Count == 0)
+{
+    <h2>Er zijn geen medewerkers die op dit moment vrij hebben gevraagd.</h2>
+}
+else{
+    <form asp-action="Accodation" method="post">
+        <div class="row">
+            @for (var i = 0; i < Model.Availabilities.Count; i++)
+            {
+                var availability = Model.Availabilities[i];
+                <div class="col-5">
+                    <p>@availability.Employee.FullName wilt van @availability.StartDateTime tot @availability.EndDateTime vrij voor @availability.Type</p>
+                </div>
+                <div class="col-5">
+                    <div class="col-form-label-lg">
+                        <input asp-for="@Model.Availabilities[i].IsConfirmed" value="@true" type="radio" class="form-check-input" />
+                        <label asp-for="@Model.Availabilities[i].IsConfirmed" class="form-check-label">Accepteren</label>
+                        <input asp-for="@Model.Availabilities[i].IsConfirmed" value="@false" type="radio" class="form-check-input" />
+                        <label asp-for="@Model.Availabilities[i].IsConfirmed" class="form-check-label">Weigeren</label>
+                        <input type="hidden" asp-for="@Model.Availabilities[i].Employee" value="@Model.Availabilities[i].Employee">
+                        <input type="hidden" asp-for="@Model.Availabilities[i].Type" value="@Model.Availabilities[i].Type">
+                        <input type="hidden" asp-for="@Model.Availabilities[i].StartDateTime" value="@Model.Availabilities[i].StartDateTime">
+                        <input type="hidden" asp-for="@Model.Availabilities[i].EndDateTime" value="@Model.Availabilities[i].EndDateTime">
+                        <input type="hidden" asp-for="@Model.Availabilities[i].Id" value="@Model.Availabilities[i].Id">
+                        <input type="hidden" asp-for="@Model.Availabilities[i].EmployeeId" value="@Model.Availabilities[i].EmployeeId">
+                    </div>
+                    <hr />
+                </div>
+            }
+        </div>
+        <input type="submit" class="btn" />
+    </form>
+}
