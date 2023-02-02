@@ -43,9 +43,11 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Clocking" asp-action="Index">Kloktijden</a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Availability" asp-action="Accodation">Beschikbaarheden</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Werknemers</a>
                                 </li>
-
                             }
                             @if (User.IsInRole("Employee"))
                             {
