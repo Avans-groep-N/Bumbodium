@@ -1,28 +1,31 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
+using Bumbodium.Data.Interfaces;
 using Bumbodium.WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbodium.WebApp.Controllers
 {
     public class AvailabilityController : Controller
     {
-        private readonly BumbodiumContext _ctx;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly AvailabilityRepo _availabilityRepo;
         private readonly EmployeeRepo _employeeRepo;
 
-        public AvailabilityController(BumbodiumContext ctx)
+        public AvailabilityController(AvailabilityRepo availabilityRepo, EmployeeRepo employeeRepo, UserManager<IdentityUser> userManager)
         {
-            _ctx = ctx;
-            _availabilityRepo = new AvailabilityRepo(ctx);
-            _employeeRepo = new EmployeeRepo(ctx);
+            _availabilityRepo = availabilityRepo;
+            _employeeRepo = employeeRepo;
+            _userManager = userManager;
         }
 
         [Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
-            return View();
+            string userId = _userManager.GetUserId(User);
+            return View("Index", userId);
         }
 
         [Authorize(Roles = "Manager")]

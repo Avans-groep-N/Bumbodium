@@ -29,6 +29,7 @@ builder.Services.AddScoped<DepartmentRepo>();
 builder.Services.AddScoped<StandardsRepo>();
 builder.Services.AddScoped<PresenceRepo>();
 builder.Services.AddScoped<EmployeeRepo>();
+builder.Services.AddScoped<AvailabilityRepo>();
 
 builder.Services.AddScoped<BLExcelExport>();
 builder.Services.AddScoped<BLStandards>();
