@@ -1,4 +1,4 @@
-﻿@model Bumbodium.Data.DBModels.Availability[]
+﻿@model Bumbodium.WebApp.Models.AvailabilityViewModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,4 +6,35 @@
 <div class="text-center">
     <h1>Beschikbaarheid</h1>
     @(await Html.RenderComponentAsync<Bumbodium.WebApp.Views.Shared.Components.AvailabilityComponent>(RenderMode.ServerPrerendered))
+    <!-- TODO: get rid of this, or blazor
+        <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Index" method="post">
+                <h4>Geef je beschikbaarheid op</h4>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="col-form-label-lg">
+                    <label asp-for="Date"></label>
+                    <input asp-for="Date" class="form-control" type="date" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="col-form-label-lg">
+                    <label asp-for="StartTime"></label>
+                    <input asp-for="StartTime" class="form-control" type="time" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="col-form-label-lg">
+                    <label asp-for="EndTime"></label>
+                    <input asp-for="EndTime" class="form-control" type="time" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="col-form-label-lg">
+                    <label asp-for="AvailabilityType"></label>
+                    
+                </div>
+            </form>
+        </div>
+    </div>-->
 </div>

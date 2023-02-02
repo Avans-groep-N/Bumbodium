@@ -1,6 +1,5 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
-using Bumbodium.Data.Utilities.EmployeeValidation;
 using Bumbodium.WebApp.Models.Utilities.AvailabilityValidation;
 using System.ComponentModel.DataAnnotations;
 
@@ -30,11 +29,7 @@ namespace Bumbodium.WebApp.Models
             if (EndTime.CompareTo(StartTime) == -1)
                 yield return new ValidationResult("Eind tijd kan niet voor de begin tijd", new[] { "StartTime" });
 
-            //Verify that user cannot have multiple availabilities on the same time and day
-            //TODO: make so it does not crash the page
-            var availabilities = _availabilityRepo.GetAvailabilitiesInRange(Date.ToDateTime(StartTime), Date.ToDateTime(EndTime));
-            if (availabilities.Count > 0)
-                yield return new ValidationResult("Cannot have multiple availabilities at the same time", new[] { "StartTime" });
+            
 
             //Verify that user cannot add availability without a 2 week notice
             if (Date.Day < DateTime.Today.AddDays(14).Day)

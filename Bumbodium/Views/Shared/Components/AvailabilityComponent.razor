@@ -2,9 +2,11 @@
 @using Bumbodium.WebApp.Models
 @using Bumbodium.Data.DBModels
 @using Bumbodium.Data.Interfaces
+@using Bumbodium.Data
 @using Bumbodium.WebApp.Controllers;
 @inject DialogService DialogService
-@inject IAvailabilityRepo _db
+@inject AvailabilityRepo _db
+@inject BumbodiumContext _ctx
 
 <EditForm Model="@availabilityViewModel" OnValidSubmit="@SubmitAsync">
     <DataAnnotationsValidator />
