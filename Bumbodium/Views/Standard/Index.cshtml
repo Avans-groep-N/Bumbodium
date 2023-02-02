@@ -1,47 +1,53 @@
-﻿@model IEnumerable<Bumbodium.Data.DBModels.Standards>
+﻿@using Bumbodium.Data.DBModels
+@model StandardsViewModel
 
 @{
     ViewData["Title"] = "Normeringen";
 }
 
 <h1>Normeringen</h1>
+<hr>
 
-@using (Html.BeginForm("SelectCountry", "Standard", FormMethod.Post))
-{
-    <select id="country" name="country" onchange="this.form.submit()">
-        <option value="default"> --Select land--</option>
-        @foreach (var coutnry in ViewBag.Countrys)
-        {
-            <option value="@coutnry.ToString()">@coutnry.ToString()</option>
-        }
+<form asp-controller="Standard" asp-action="Index">
+
+    <label class="text-lg">Kies een land: </label>
+    <select asp-for="Country" asp-items="Html.GetEnumSelectList<Country>()" onchange="this.form.submit()">
+        <option selected="selected" value="" disabled>Selecteer</option>
     </select>
-}
+</form>
+<br/>
 
+<div class="container justify-content-center p-0">
+    <div class="row shadow-lg m-0">
+        <div class="col m-0 p-0 bg-black ">
+            <h2 class="p-3 text-lg text-light">Normeringen van @Model.Country</h2>
+        </div>
+    </div>
+    @if (Model.Standards.Count() > 0)
+    {
+        @foreach (var standard in Model.Standards)
+        {
+            <div class="row shadow-lg m-0">
+                <div class="col m-0 p-0 bg-white">
+                    <h2 class="p-3 pb-0 text-lg">@standard.Description.Replace("aantal", standard.Value.ToString())</h2>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="row shadow-lg m-0">
+            <div class="col m-0 p-0 bg-white">
+                <h2 class="p-3 pb-0 text-lg">@Model.Country heeft nog geen normeringen</h2>
+            </div>
+        </div>
+    }
+    <br />
+    <div class="row pb-5">
+        <div class="col text-center p-0 ">
+            <a asp-action="ChangeStandards" class="btn btn-lg btn-primary btn-outline-warning" asp-route-country="@Model.Country">Verander de Normering van dit land</a>
+        </div>
+    </div>
+</div>
 
-@if (Model.Count() > 0)
-{
-
-    <table class="table table-striped text-center table-responsive">
-        <thead>
-            <tr>
-                <th class="row-cols-md-4">Onderwerp</th>
-                <th class="row-cols-md-4">Norming</th>
-                <th class="row-cols-md-4">Waarders voor de aantallen</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Subject</td>
-                    <td>@item.Description</td>
-                    <td>@item.Value</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <h1>Dit land heeft nog geen normeringen</h1>
-}
+<a asp-controller="Forecast" asp-action="Index" class="btn btn-lg btn-primary btn-outline-danger">Terug naar prognose overzicht</a>
