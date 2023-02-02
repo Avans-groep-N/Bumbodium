@@ -1,0 +1,59 @@
+﻿@using Bumbodium.WebApp.Views;
+@using Bumbodium.WebApp.Models.ManagerSchedule;
+@using Bumbodium.Data.DBModels;
+@model ManagerScheduleViewModel;
+
+<!-- Employee selection-->
+<form asp-action="Index" method="post">
+    <div class="row">
+        <!--Schedule visual-->
+        <div class="col-md-8">
+            <table class="scheduletable">
+                <h4 style="margin-top: 10px;">Selecteer datum</h4>
+                <input onchange="this.form.submit()" asp-for="SelectedDate" type="date" />
+                <br/>
+                @if (Model.Shifts != null && Model.Shifts.Any())
+                {
+                    <h4 style="margin-bottom: 10px;">Rooster voor geselecteerde dag + 7 dagen</h4>
+                    @foreach (var shift in Model.Shifts)
+                    {
+                        <tr>
+                            <td style="width: 800px;">@shift.ShiftStartDateTime.ToString("dd-MM-yyyy"), @shift.ShiftStartDateTime.ToString("HH:mm")-@shift.ShiftEndDateTime.ToString("HH:mm")</td>
+                            @{
+                                int empty = Model.GetEmptyStart(shift.ShiftStartDateTime);
+                                int workhours = Model.GetWorkHours(shift.ShiftStartDateTime, shift.ShiftEndDateTime);
+                                int emptyend = ((Model.ClosingTime.Hour - Model.OpenTime.Hour) * 2) - workhours - empty;
+                            }
+
+                            @for (int i = 0; i < empty; i++)
+                            {
+                                <td style="background: lightgray;"></td>
+                            }
+
+                            @for (int j = 0; j < workhours; j++)
+                            {
+                                <td style="background: Green;"></td>
+                            }
+
+                            @for (int k = 0; k < emptyend; k++)
+                            {
+                                <td style="background: lightgray;"></td>
+                            }
+                        </tr>
+
+                    }
+                }
+                else
+                {
+                    <div>
+                        Geen planning gevonden voor komende dagen
+                    </div>
+                }
+            </table>
+            @* int NotWorkingBefore = (Model.OpenTime - shift.StartTime) * 2 -> make cells white (employee not working)
+            int WorkingHours = (shift.EndTime - shift.StartTime) * 2 -> Color cells based on department (employee working)
+            int NotWorkingHoursAfter (Model.ClosedTime - shift.EndTime) * 2 -> make cells white (employee not working) *@
+
+        </div>
+    </div>
+</form>
