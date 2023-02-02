@@ -10,6 +10,7 @@ using Bumbodium.WebApp.Models.ManagerSchedule;
 using System.Security.Cryptography.Xml;
 using Bumbodium.WebApp.Models.Utilities.ShiftValidation;
 using Bumbodium.Data.Repositories;
+using Radzen.Blazor.Rendering;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -78,8 +79,14 @@ namespace Bumbodium.WebApp.Controllers
                 ShiftEndDateTime = viewModel.SelectedEndTime,
                 DepartmentId = ((int)viewModel.SelectedDepartment + 1)
             };
-            IEnumerable<ValidationResult> validationResults = ShiftValidation.ValidateShift(_shiftRepo, shift);
-            if(validationResults.Any())
+            List<ValidationResult> validationResults = ShiftValidation.ValidateShift(_shiftRepo, shift).ToList();
+            CaoInput cao = new(
+                _employeeRepo.GetEmployee(viewModel.SelectedEmployeeId),
+                _shiftRepo.GetShiftsInRange(shift.ShiftStartDateTime.StartOfWeek(), shift.ShiftStartDateTime.EndOfWeek(), viewModel.SelectedEmployeeId),
+                shift);
+            validationResults.AddRange(cao.ValidateRules());
+
+            if (validationResults.Any())
             {
                 foreach (ValidationResult result in validationResults)
                 {
@@ -88,7 +95,7 @@ namespace Bumbodium.WebApp.Controllers
                 viewModel = GetDataForViewModel(viewModel);
                 return View("Index", viewModel);
             }
-            // TODO add CAO here
+            
             _shiftRepo.InsertShift(shift);
             viewModel = GetDataForViewModel(viewModel);
             return View("Index", viewModel);

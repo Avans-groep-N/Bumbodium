@@ -28,6 +28,14 @@ namespace Bumbodium.Data
                 .Include(s => s.Employee)
                 .ToList();
         }
+        public List<Shift> GetShiftsInRange(DateTime start, DateTime end, string employeeId)
+        {
+            return _ctx.Shift
+                .Where(s => s.EmployeeId == employeeId)
+                .Where(s => s.ShiftStartDateTime > start && s.ShiftStartDateTime < end)
+                .Include(s => s.Employee)
+                .ToList();
+        }
 
         public void InsertShift(Shift shift)
         {
@@ -86,7 +94,7 @@ namespace Bumbodium.Data
             ((a.ShiftStartDateTime > start && a.ShiftStartDateTime < end) ||
             (a.ShiftEndDateTime > start && a.ShiftEndDateTime < end) ||
             (a.ShiftStartDateTime < start && a.ShiftEndDateTime > end))
-            ); ;
+            ); 
         }
 
         public double GetPlannedHoursOfDepartmentOnDate(DateTime date, int departmentId)

@@ -6,6 +6,7 @@ namespace Bumbodium.Data.Interfaces
     {
         List<Shift> GetShiftsInRange(DateTime start, DateTime end);
         List<Shift> GetShiftsInRange(DateTime start, DateTime end, int departmentId);
+        List<Shift> GetShiftsInRange(DateTime start, DateTime end, string employeeId);
         void InsertShift(Shift Shift);
         void DeleteShift(Shift Shift);
         void DeleteShift(int shiftId);

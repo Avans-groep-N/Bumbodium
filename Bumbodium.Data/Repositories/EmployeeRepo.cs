@@ -24,6 +24,7 @@ namespace Bumbodium.Data
             return _ctx.Employee
                 .Include(e => e.PartOFDepartment)
                 .ThenInclude(pod => pod.Department)
+                .Include(e => e.Availability)
                 .FirstOrDefault(e => e.EmployeeID == id);
         }
 
@@ -112,6 +113,10 @@ namespace Bumbodium.Data
         {
             IQueryable<Employee> employees = _ctx.Employee.AsQueryable();
             employees = employees.Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == (int)(departmentId)));
+            employees = employees.Include(e => e.Shifts);
+            employees = employees.Where(e => !e.Shifts.Any(s =>
+                (s.ShiftStartDateTime > startTime.Date && s.ShiftStartDateTime < startTime.Date.AddHours(23).AddMinutes(59))
+            ));
 
             employees = employees.Include(e => e.Availability);
             employees = employees.Where(e => !e.Availability.Any(a =>
