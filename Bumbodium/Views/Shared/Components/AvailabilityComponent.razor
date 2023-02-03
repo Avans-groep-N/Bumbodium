@@ -5,6 +5,8 @@
 @inject IAvailabilityRepo _db
 
 <RadzenDialog />
+
+<h4>Selecteer type onbeschikbaarheid</h4>
 <RadzenSelectBar @bind-Value=@SelectedType TValue="AvailabilityType">
     <Items>
         <RadzenSelectBarItem Text="School uren" Value="AvailabilityType.Schoolhours" Style="color: red;" />
@@ -12,22 +14,29 @@
         <RadzenSelectBarItem Text="Vakantie" Value="AvailabilityType.Holidays" Style="color: green;" />
     </Items>
 </RadzenSelectBar>
+<h4>Klik een begin en eindtijd om aan te geven wanneer je <strong>niet</strong> beschikbaar bent</h4>
+<h6>Je kunt je beschikbaarheid niet meer opgeven  of veranderen in de grijze vakken</h6>
 <RadzenScheduler @ref=@scheduler Data="@Data" TItem="Availability"
                  StartProperty="StartDateTime" EndProperty="EndDateTime" TextProperty="Text"
                  LoadData=@OnLoadData
-                 style="height: 1010px;" TodayText="Vandaag"
+                 style="height: 770px;" TodayText="Vandaag" Date="DateTime.Today.AddDays(14)"
                  SlotRender=@OnSlotRender SlotSelect=@OnSlotSelect AppointmentRender=@OnAppointmentRender>
     <Template Context="data">
         <p>
-            @data.Text
-            <RadzenButton Click=@(args => EditItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="edit" />
-            <RadzenButton Click=@(args => DeleteItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="delete" />
+            @if(data.StartDateTime.Date != data.EndDateTime.Date) {
+                @(data.StartDateTime.Day + "-" + data.StartDateTime.Month + " tot " + data.EndDateTime.Day + "-"  + data.EndDateTime.Month)
+            } else {
+                @data.Text
+            }
+            @if (data.StartDateTime.Date >= DateTime.Today.AddDays(14))
+            {
+                <RadzenButton Click=@(args => DeleteItem(data)) ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Icon="delete" />
+            }
+
         </p>
     </Template>
     <ChildContent>
-        <RadzenWeekView TimeFormat="HH:mm" StartTime="@TimeSpan.FromHours(5)" />
-        <!--TODO: create a timespan of the exact month-->
-        <RadzenMonthView Text="Maand" />
+        <RadzenWeekView TimeFormat="HH:mm" StartTime="@TimeSpan.FromHours(8)" EndTime="@TimeSpan.FromHours(22)"/>
     </ChildContent>
 </RadzenScheduler>
 
@@ -42,10 +51,8 @@
     DateTime? SelectedEndTime;
     public AvailabilityType SelectedType { get; set; }
 
-
     async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
     {
-        //TODO single abscence per time constraint, somehow
         if (SelectedStartTime == null && SelectedEndTime == null)
         {
             SelectedStartTime = args.Start;
@@ -53,40 +60,35 @@
         }
         else
         {
+            DateTime start;
+            DateTime end;
             if (SelectedStartTime < args.End)
             {
-                _db.InsertAvailability(new Availability()
-                    {
-                        StartDateTime = SelectedStartTime.GetValueOrDefault(),
-                        EndDateTime = args.End,
-                        Type = SelectedType,
-                        EmployeeId = UserID
-                    });
+                start = SelectedStartTime.GetValueOrDefault();
+                end = args.End;
             }
             else
             {
-                _db.InsertAvailability(new Availability()
+                start = args.Start;
+                end = SelectedEndTime.GetValueOrDefault();
+            }
+            Availability availability = new Availability()
                     {
-                        StartDateTime = args.Start,
-                        EndDateTime = SelectedEndTime.GetValueOrDefault(),
+                        StartDateTime = start,
+                        EndDateTime = end,
                         Type = SelectedType,
                         EmployeeId = UserID
-                    });
+                    };
+            if (AvailabilityIsValid(availability))
+            {
+                _db.InsertAvailability(availability);
             }
             SelectedStartTime = null;
             SelectedEndTime = null;
             await scheduler.Reload();
         }
     }
-
-    async Task EditItem(Availability item)
-    {
-        await DialogService.OpenAsync<EditAvailabilityPage>("Aanpassen",
-            new Dictionary<string, object>() { { "Availability", item } },
-            new DialogOptions() { });
-        _db.UpdateAvailability(item);
-        await scheduler.Reload();
-    }
+    
     async Task DeleteItem(Availability item)
     {
         _db.DeleteAvailability(item);
@@ -122,5 +124,38 @@
         {
             args.Attributes["class"] = "rz-background-color-info-light";
         }
+        if (args.Start.Date < DateTime.Today.AddDays(14))
+        {
+            args.Attributes["class"] = "rz-background-color-base-400";
+            args.Attributes["onclick"] = "";
+        }
+    }
+
+    private bool AvailabilityIsValid(Availability availability)
+    {
+        if (availability.EndDateTime < availability.StartDateTime)
+        {
+            ShowValidationError("Eindtijd moet voor starttijd zijn.");
+            return false;
+        }
+        DateTime minimumDate = DateTime.Today.AddDays(14);
+        if(availability.StartDateTime < minimumDate || availability.EndDateTime < minimumDate) {
+            ShowValidationError("Je kunt voor deze tijd je beschikbaarheid niet meer opgeven");
+            return false;
+        }
+        if (_db.AvailabilityExistsInTime(availability.StartDateTime, availability.EndDateTime, UserID))
+        {
+            ShowValidationError("Je hebt hier al een andere onbeschikbaarheid staan.");
+            return false;
+        }
+        return true;
+    }
+
+    private void ShowValidationError(string error)
+    {
+        DialogService.OpenAsync("Beschikbaarheid toevoegen error", ds =>
+    @<div>
+        @error
+    </div>, new DialogOptions() { CloseDialogOnOverlayClick = true });
     }
 }

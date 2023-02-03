@@ -1,5 +1,6 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
+using Bumbodium.Data.Interfaces;
 using Bumbodium.WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
