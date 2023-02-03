@@ -1,0 +1,16 @@
+﻿@model Bumbodium.WebApp.Models.WeekShiftsViewModel
+@using System.Globalization
+<br />
+
+@if(Model.WeeklyShifts.Count == 0) {
+
+    <p>Je hebt de aankomende week geen shifts!</p>
+
+}
+
+<ul>
+    @foreach (var s in Model.WeeklyShifts)
+    {
+        <li>@s.StartTime - @s.EndTime</li>
+    }
+</ul>
