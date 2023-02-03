@@ -46,3 +46,53 @@ body {
     align-content: center;
     flex-direction: column;
 }
+
+.scheduletable {
+    border: 1px solid;
+}
+
+    .scheduletable td, .scheduletable th {
+        width: 100px;
+        height: 20px;
+    }
+
+    .scheduletable tr {
+        border-bottom: 1px solid black;
+    }
+
+.roosterbox {
+    background-color: #c1cad9;
+    margin-bottom: 20px;
+}
+
+.roostertablebtn {
+    background-color: transparent;
+    border: 0px;
+    color: red;
+}
+
+.roosterselbtn {
+    border: 0px;
+    margin-bottom: 2px;
+    width: 80%;
+    text-align: left;
+    background-color: white;
+    color: black;
+}
+
+.roosterselbtn-active {
+    margin-bottom: 2px;
+    width: 80%;
+    text-align: left;
+    background-color: #ffe700;
+    color: black;
+}
+
+.roosteraddbtn {
+    margin-bottom: 10px;
+    border: 0px;
+    padding: 5px 10px;
+    background-color: #ffe700;
+    color: black;
+    border-radius: 10px;
+}

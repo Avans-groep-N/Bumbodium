@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bumbodium.Data
 {
@@ -38,7 +39,6 @@ namespace Bumbodium.Data
             (a.StartDateTime < start && a.EndDateTime > end)
             ).ToList();
         }
-
         public bool AvailabilityExistsInTime(DateTime start, DateTime end, string employeeId)
         {
             return _ctx.Availability.Any(a =>

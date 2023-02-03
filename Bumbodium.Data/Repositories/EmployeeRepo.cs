@@ -3,6 +3,7 @@ using Bumbodium.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,11 @@ namespace Bumbodium.Data
         }
         public Employee GetEmployee(string id)
         {
-            return _ctx.Employee.Include(e => e.PartOFDepartment).ThenInclude(pod => pod.Department).FirstOrDefault(e => e.EmployeeID == id);
+            return _ctx.Employee
+                .Include(e => e.PartOFDepartment)
+                .ThenInclude(pod => pod.Department)
+                .Include(e => e.Availability)
+                .FirstOrDefault(e => e.EmployeeID == id);
         }
 
         public IQueryable<Employee> GetEmployees()
@@ -104,5 +109,23 @@ namespace Bumbodium.Data
             return _ctx.Employee.Where(e => e.DateOutService == null || e.DateOutService > DateTime.Now).OrderBy(e => e.FirstName).ToList();
         }
 
+        public IQueryable<Employee> GetAvailableEmployees(int departmentId, DateTime startTime, DateTime endTime)
+        {
+            IQueryable<Employee> employees = _ctx.Employee.AsQueryable();
+            employees = employees.Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == (int)(departmentId)));
+            employees = employees.Include(e => e.Shifts);
+            employees = employees.Where(e => !e.Shifts.Any(s =>
+                (s.ShiftStartDateTime > startTime.Date && s.ShiftStartDateTime < startTime.Date.AddHours(23).AddMinutes(59))
+            ));
+
+            employees = employees.Include(e => e.Availability);
+            employees = employees.Where(e => !e.Availability.Any(a =>
+            (a.StartDateTime >= startTime && a.StartDateTime <= endTime) ||
+            (a.EndDateTime >= startTime && a.EndDateTime <= endTime) ||
+            (a.StartDateTime <= startTime && a.EndDateTime >= endTime)
+            ));
+            employees = employees.OrderBy(e => e.FirstName);
+            return employees;
+        }
     }
 }

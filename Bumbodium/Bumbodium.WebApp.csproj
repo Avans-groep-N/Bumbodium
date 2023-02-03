@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Bumbodium.Data\Bumbodium.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\WeekSchedule\" />
+  </ItemGroup>
+
 </Project>
