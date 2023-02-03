@@ -1,12 +1,22 @@
-﻿namespace Bumbodium.WebApp.Models.ClockingView
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Bumbodium.WebApp.Models.ClockingView
 {
-    public class ManagerClockingItem
+    public class ManagerClockingItem : IValidatableObject
     {
-        public DateTime? ClockStartTime { get; set; }
+        public int PresenceId { get; set; }
+        public DateTime ClockStartTime { get; set; }
         public DateTime? ClockEndTime { get; set; }
-        public DateTime? AlterdClockStartTime { get; set; }
-        public DateTime? AlterdClockEndTime { get; set; }
         public DateTime? ScheduleStartTime { get; set; }
         public DateTime? ScheduleEndTime { get; set; }
+        public bool IsSick { get; set; }
+
+        public string Name { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (ClockStartTime >= ClockEndTime)
+                yield return new ValidationResult("Start tijd kan niet groter zijn dan eind tijd of gelijk aan elkaar.", new[] { nameof(ClockStartTime) });
+        }
     }
 }

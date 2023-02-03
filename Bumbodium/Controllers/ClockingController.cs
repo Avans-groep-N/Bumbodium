@@ -4,11 +4,9 @@ using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Globalization;
 
 namespace Bumbodium.WebApp.Controllers
 {
-    [Authorize(Roles = "Manager")]
     public class ClockingController : Controller
     {
 
@@ -21,83 +19,62 @@ namespace Bumbodium.WebApp.Controllers
             _employeeRepo = employeeRepo;
         }
 
-        public IActionResult Index()
+        [Authorize(Roles = "Manager")]
+        public IActionResult IndexManager()
         {
-            var employeeList = _blclocking.GetEmployees();
-            ViewBag.EmployeeList = new SelectList(employeeList, "Id", "Name");
-            string id = "";
-            if (employeeList.Count > 0)
-                id = employeeList[0].Id;
-            var clockingViewModel = _blclocking.GetClockingViewModel(id, ISOWeek.GetWeekOfYear(DateTime.Now), DateTime.Now.Year);
+            var clockingViewModel = _blclocking.GetManagerClockingViewModel(DateTime.Now.AddDays(-1));
             return View(clockingViewModel);
         }
 
         [HttpPost]
-        public IActionResult SelectWeek()
+        [Authorize(Roles = "Manager")]
+        public IActionResult IndexManager(ClockingManagerViewModel clockingManagerVM)
         {
-            var id = Request.Form["Id"];
-
-            if (id.Equals(""))
-                return RedirectToAction(nameof(Index));
-
-            var week = Request.Form["weeknumber"].First().Split("-W");
-            int[] yearAndWeek = { Int32.Parse(week[0]), Int32.Parse(week[1]) };
-
-
-            var clockingViewModel = _blclocking.GetClockingViewModel(id, yearAndWeek[1], yearAndWeek[0]);
-            AddEmployeeToViewBag(id);
-
-            return View($"../{nameof(ClockingController).Replace(nameof(Controller),"")}/{nameof(Index)}", clockingViewModel);
+            var clockingViewModel = _blclocking.GetManagerClockingViewModel(clockingManagerVM.ClockingDateTime);
+            return View(clockingViewModel);
         }
-
 
         [Authorize(Roles = "Manager")]
-        [HttpPost]
-        public ActionResult SaveNewTimes()
+        public IActionResult AddClockingHour(DateTime date)
         {
-            var employeeId = Request.Form["employeeId"].Single();
-            var day = Request.Form["day"];
-            var startTime = Request.Form["timestart"];
-            var alterdStartTime = Request.Form["alterdtimestart"];
-            var endTime = Request.Form["timeend"];
-            var alterdEndTime = Request.Form["alterdtimeend"];
-
-            for (int i = 0; i < day.Count; i++)
-            {
-                var mCItem = new ManagerClockingItem();
-
-                mCItem.ClockStartTime = DateTime.Parse(day[i] + " " + startTime[i]);
-                mCItem.AlterdClockStartTime = DateTime.Parse(day[i] + " " + alterdStartTime[i]);
-                mCItem.ClockEndTime = DateTime.Parse(day[i] + " " + endTime[i]);
-                mCItem.AlterdClockEndTime = DateTime.Parse(day[i] + " " + alterdEndTime[i]);
-
-                if (mCItem.ClockStartTime != mCItem.AlterdClockStartTime || mCItem.ClockEndTime != mCItem.AlterdClockEndTime)
-                    _blclocking.Save(employeeId, mCItem);
-
-            }
-            DateTime date = DateTime.Parse(day[0]);
-            while(date.DayOfWeek != DayOfWeek.Monday)
-                date = date.AddDays(-1);
-
-            int[] yearAndWeek = new int[] { date.Year, ISOWeek.GetWeekOfYear(date) };
-
-            var clockingViewModel = _blclocking.GetClockingViewModel(employeeId, yearAndWeek[1], yearAndWeek[0]);
-            AddEmployeeToViewBag(employeeId);
-
-
-            return View($"../{nameof(ClockingController).Replace(nameof(Controller), "")}/{nameof(Index)}", clockingViewModel);
+            var options = new List<SelectListItem>();
+            _employeeRepo.GetAllEmployees().ForEach(e => options.Add(new SelectListItem() { Value = e.FullName, Text = e.FullName}));
+            
+            ViewBag.Options = options;
+            return View(new ManagerClockingItem() { ClockStartTime = new DateTime(date.Year, date.Month, date.Day, 12, 0, 0), ClockEndTime = new DateTime(date.Year, date.Month, date.Day, 14, 0, 0) });
         }
 
-        private void AddEmployeeToViewBag(string id)
+        [HttpPost]
+        public IActionResult AddClockingHour(ManagerClockingItem model)
         {
-            var employeeList = _blclocking.GetEmployees();
-            var temp = employeeList.Find(e => e.Id == id);
-            if (temp != null)
+            if (!ModelState.IsValid)
             {
-                employeeList.Remove(temp);
-                employeeList.Insert(0, temp);
+                var options = new List<SelectListItem>();
+                _employeeRepo.GetAllEmployees().ForEach(e => options.Add(new SelectListItem() { Value = "1", Text = e.FullName }));
+
+                ViewBag.Options = options;
+                return View(model);
             }
-            ViewBag.EmployeeList = new SelectList(employeeList, "Id", "Name");
+            else
+            {
+                _blclocking.AddClocking(model);
+                var clockingViewModel = _blclocking.GetManagerClockingViewModel(model.ClockStartTime.Date);
+                return View($"../{nameof(ClockingController).Replace(nameof(Controller), "")}/{nameof(IndexManager)}", clockingViewModel);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Manager")]
+        public IActionResult SaveNewTimes(ClockingManagerViewModel clockingManagerVM)
+        {
+            if (ModelState.IsValid)
+            {
+                _blclocking.Save(clockingManagerVM);
+            }
+
+            var clockingViewModel = _blclocking.GetManagerClockingViewModel(clockingManagerVM.ClockingDateTime);
+
+            return View($"../{nameof(ClockingController).Replace(nameof(Controller), "")}/{nameof(IndexManager)}", clockingViewModel);
         }
     }
 }

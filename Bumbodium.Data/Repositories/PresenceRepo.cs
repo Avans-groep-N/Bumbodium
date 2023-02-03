@@ -30,17 +30,9 @@ namespace Bumbodium.Data.Repositories
             return _ctx.Shift.Where(s => s.EmployeeId == id && s.ShiftStartDateTime.Day == dateTime.Day).ToList();
         }
 
-        public Presence? GetStartToEndPresence(string employeeId, DateTime? startTime, DateTime? endTime)
+        public Presence? GetStartToEndPresence(int Id)
         {
-            return _ctx.Presence.FirstOrDefault(p => p.EmployeeId == employeeId && (p.ClockInDateTime == startTime && p.AlteredClockInDateTime == null && p.ClockOutDateTime == endTime && p.AlteredClockOutDateTime == null) ||
-
-                    (p.ClockInDateTime == startTime && p.AlteredClockInDateTime == null && p.AlteredClockOutDateTime == endTime) ||
-
-                    (p.AlteredClockInDateTime == startTime && p.ClockOutDateTime == endTime && p.AlteredClockOutDateTime == null) ||
-
-                    (p.AlteredClockInDateTime == startTime && p.AlteredClockOutDateTime == endTime)
-                    );
-
+            return _ctx.Presence.FirstOrDefault(p => p.PresenceId == Id);
         }
 
         public List<Presence> GetWorkedHours(string id, DateTime dateTime)

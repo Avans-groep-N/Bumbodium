@@ -89,10 +89,10 @@ namespace Bumbodium.Data
             _ctx.SaveChanges();
             AddEmployeeToDepartments(employeeID, departmentIds);
         }
-        
+
         public void AddEmployeeToDepartments(string employeeID, List<int> departmentIds)
         {
-            foreach(int id in departmentIds)
+            foreach (int id in departmentIds)
             {
                 _ctx.DepartmentEmployee.Add(new DepartmentEmployee() { EmployeeId = employeeID, DepartmentId = id });
             }
@@ -103,6 +103,5 @@ namespace Bumbodium.Data
         {
             return _ctx.Employee.Where(e => e.DateOutService == null || e.DateOutService > DateTime.Now).OrderBy(e => e.FirstName).ToList();
         }
-
     }
 }

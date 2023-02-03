@@ -1,27 +1,39 @@
-﻿@model Bumbodium.WebApp.Models.ClockingView.ClockingViewModel
+﻿@model Bumbodium.WebApp.Models.ClockingView.ClockingEmployeeViewModel
 @using System.Globalization;
+
+<h1>Klock uren van @Model.EmployeeName</h1>
 <br />
 
-@{
-    string calanderVal = Model.YearNumber + "-W";
-    if (Model.WeekNumber < 10)
-        calanderVal += "0" + Model.WeekNumber;
-    else
-        calanderVal += Model.WeekNumber;
-}
-@using (Html.BeginForm("SelectWeek", "ClockingEmployee", FormMethod.Post))
-{
-    <input type="hidden" name="id" value="@Model.EmployeeId" />
-    <input type="week" name="weekNumber" value="@calanderVal" onchange="this.form.submit()"  required />
-}
-<br />
-
-<div class="row">
-    <div class="col" style="padding: 5px;"><strong>Kloktijden</strong></div>
-    <div class="col" style="padding: 5px;"><strong>Roostertijden</strong></div>
+<div class="container justify-content-center">
+    <div class="row m-0 bg-light rounded-3">
+        <div class="col-lg-5 m-auto p-auto text-center">
+            <form asp-action="Index" method="post">
+                <input type="month" asp-for="FirstOfTheMonth" onchange="this.form.submit()" required />
+            </form>
+        </div>
+    </div>
 </div>
 
-@for (int i = 0; i < Model.ClockingDays.Count; i++)
+@if (Model.ClockingDays.Count == 0)
+{
+    <h1>Je hebt deze week geen uren gemaakt</h1>
+}
+else
+{
+    @foreach (var day in Model.ClockingDays)
+    {
+        <div class="row" style="background-color:cornflowerblue; color: white; padding: 15px; ">
+            <div class="row m-auto">
+                <div class="bg-light text-dark rounded-2 mb-3 p-1">
+                    <p class="mb-1 pb-0 bold">@day.Key</p>
+                </div>
+            </div>
+        </div>
+    }
+
+}
+
+@*@for (int i = 0; i < Model.ClockingDays.Count; i++)
 {
     <div class="row" style="background-color:cornflowerblue; color: white; padding: 15px; ">
         <div class="row m-auto">
@@ -31,7 +43,6 @@
 
             @for (var j = 0; j < Model.ClockingDays[i].EmployeeClocking.Count; j++)
             {
-                <input type="hidden" id="day" name="day" value="@Model.ClockingDays[i].Day.ToString("dd/MM/yyyy")" />
                 <div class="bg-light mb-2 text-dark rounded-1">
                     <div class="row">
                         <div class="col justify-content-md-start">
@@ -39,7 +50,7 @@
                             @if (Model.ClockingDays[i].EmployeeClocking[j].IsChanged)
                             {
                                 <p>tijd is aangepast</p>
-                                
+
                             }
                             else if (Model.ClockingDays[i].EmployeeClocking[j].IsOnGoing)
                             {
@@ -55,7 +66,7 @@
                             @if (@Model.ClockingDays[i].EmployeeClocking[j].IsChanged)
                             {
                                 <p>tijd is aangepast</p>
-                                
+
                             }
                         </div>
                         <div class="col"></div>
@@ -67,7 +78,4 @@
     </div>
     <br />
 }
-@if (Model.ClockingDays.Count == 0)
-{
-    <h1>Je hebt deze week geen uren gemaakt</h1>
-}
+*@
