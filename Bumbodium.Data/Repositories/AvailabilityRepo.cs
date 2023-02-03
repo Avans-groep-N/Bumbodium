@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bumbodium.Data
 {
@@ -24,6 +25,15 @@ namespace Bumbodium.Data
         public List<Availability> GetAvailabilitiesInRange(DateTime start, DateTime end)
         {
             return _ctx.Availability.Where(a => 
+            (a.StartDateTime > start && a.StartDateTime < end) ||
+            (a.EndDateTime > start && a.EndDateTime < end) ||
+            (a.StartDateTime < start && a.EndDateTime > end)
+            ).ToList();
+        }
+        public List<Availability> GetAvailabilitiesInRange(DateTime start, DateTime end, string userId)
+        {
+            return _ctx.Availability.Where(a => a.EmployeeId == userId)
+                .Where(a =>
             (a.StartDateTime > start && a.StartDateTime < end) ||
             (a.EndDateTime > start && a.EndDateTime < end) ||
             (a.StartDateTime < start && a.EndDateTime > end)
