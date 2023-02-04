@@ -12,5 +12,12 @@
         {
             ClockingDays = new Dictionary<DateTime, List<EmployeeClockingItem>>();
         }
+
+        public void AddToClockingDays(DateTime date, EmployeeClockingItem managerClocking)
+        {
+            if (!ClockingDays.ContainsKey(date))
+                ClockingDays[date] = new List<EmployeeClockingItem>();
+            ClockingDays[date].Add(managerClocking);
+        }
     }
 }

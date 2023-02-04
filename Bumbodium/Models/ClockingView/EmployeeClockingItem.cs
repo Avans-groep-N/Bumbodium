@@ -2,9 +2,10 @@
 {
     public class EmployeeClockingItem
     {
-        public DateTime? ClockStartTime { get; set; }
-        public DateTime? ClockEndTime { get; set; }
-        public bool IsOnGoing { get; set; }
-        public bool IsChanged { get; set; }
+        public DateTime ClockStartTime { get; set; }
+        public DateTime ClockEndTime { get; set; }
+        public bool IsSick { get; set; }
+        public bool IsStartChanged { get; set; }
+        public bool IsEndChanged { get; set; }
     }
 }

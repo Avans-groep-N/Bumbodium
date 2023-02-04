@@ -1,6 +1,6 @@
 ﻿@model Bumbodium.WebApp.Models.ClockingView.ManagerClockingItem
 
-<h1>voeg klock uren toe</h1>
+<h1>Kloktijd toevoegen - @Model.Date.ToString("dd/MM/yyyy")</h1>
 <br />
 
 
@@ -8,7 +8,8 @@
     <div class="container justify-content-center m-3">
         <div class="row mb-3 p-2 bg-white">
             <div class="col d-flex justify-content-start">
-                <select asp-for="Name" asp-items="ViewBag.Options">
+                <input type="hidden" asp-for="Date" />
+                <select asp-for="Name" asp-items="ViewBag.Options" required>
                     <option selected="selected" value="" disabled>Selecteer</option>
                 </select>
             </div>
@@ -16,6 +17,7 @@
             <div class="col d-flex justify-content-start"><h5 class="m-2">Eind tijd :</h5><input type="time" asp-for="ClockEndTime" /></div>
             <div class="col d-flex justify-content-start"><h5 class="m-2">werknemer is ziek :</h5><input type="checkbox" asp-for="IsSick" /></div>
         </div>
+        <br />
         <div class="row pb-0">
             <div class="col text-center p-0 ">
                 <button type="submit" class="btn btn-lg btn-primary btn-outline-warning">Input aanpassen</button>

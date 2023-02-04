@@ -5,6 +5,7 @@ namespace Bumbodium.WebApp.Models.ClockingView
     public class ManagerClockingItem : IValidatableObject
     {
         public int PresenceId { get; set; }
+        public DateTime Date { get; set; }
         public DateTime ClockStartTime { get; set; }
         public DateTime? ClockEndTime { get; set; }
         public DateTime? ScheduleStartTime { get; set; }

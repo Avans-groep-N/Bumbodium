@@ -49,7 +49,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
         {
             var clockdays = new Dictionary<DateTime, List<EmployeeClockingItem>>();
 
-            List<Presence> listPresence = _presenceRepo.GetWorkedHours(id, dateTime);
+            List<Presence> listPresence = _presenceRepo.GetWorkedHours(id, dateTime, dateTime.AddMonths(1));
 
             foreach (var presence in listPresence)
             {
@@ -63,15 +63,16 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
 
         private EmployeeClockingItem EmployeeGetItem(Presence presence)
         {
-            var item = new EmployeeClockingItem();
+            var EmployeeClocking = new EmployeeClockingItem();
 
-            item.ClockStartTime = presence.AlteredClockInDateTime == null ? presence.ClockInDateTime : presence.AlteredClockInDateTime;
-            item.ClockEndTime = presence.AlteredClockOutDateTime == null ? presence.ClockOutDateTime : presence.AlteredClockOutDateTime;
+            EmployeeClocking.ClockStartTime = presence.AlteredClockInDateTime.HasValue ? presence.AlteredClockInDateTime.Value : presence.ClockInDateTime;
+            EmployeeClocking.ClockEndTime = presence.AlteredClockOutDateTime.HasValue ? presence.AlteredClockOutDateTime.Value : presence.ClockOutDateTime.Value;
 
-            item.IsChanged = presence.AlteredClockInDateTime != null || presence.AlteredClockOutDateTime != null;
-            item.IsOnGoing = presence.ClockOutDateTime == null;
+            EmployeeClocking.IsStartChanged = presence.AlteredClockInDateTime.HasValue;
+            EmployeeClocking.IsEndChanged = presence.AlteredClockOutDateTime.HasValue;
+            EmployeeClocking.IsSick = presence.IsSick;
 
-            return item;
+            return EmployeeClocking;
         }
         #endregion
 
@@ -110,15 +111,18 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
 
         public ClockingManagerViewModel GetManagerClockingViewModel(DateTime date)
         {
-            var clock = new ClockingManagerViewModel() { ClockingDateTime = date};
+            var clock = new ClockingManagerViewModel() { ClockingDateTime = date };
 
             var allWorkedHoursPerDay = _presenceRepo.GetAllWorkedHoursInRange(date.Date, date.AddDays(1).Date);
 
             foreach (var presence in allWorkedHoursPerDay)
             {
-                clock.AddToClockingDays(_employeeRepo.GetEmployee(presence.EmployeeId).FullName, new ManagerClockingItem()
+                var name = _employeeRepo.GetEmployee(presence.EmployeeId).FullName;
+                clock.AddToClockingDays(name, new ManagerClockingItem()
                 {
                     PresenceId = presence.PresenceId,
+                    Date = date,
+                    Name = name,
                     ClockStartTime = presence.AlteredClockInDateTime.HasValue ? presence.AlteredClockInDateTime.Value : presence.ClockInDateTime,
                     ClockEndTime = presence.AlteredClockOutDateTime.HasValue ? presence.AlteredClockOutDateTime.Value : presence.ClockOutDateTime,
                     IsSick = presence.IsSick,
@@ -126,16 +130,36 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
                     //TODO koppel dit aan de shifts
                     ScheduleStartTime = DateTime.Now,
                     ScheduleEndTime = DateTime.Now
-                }) ;
+                });
             }
 
             return clock;
         }
 
-        internal void AddClocking(ManagerClockingItem model)
+        public void AddClocking(ManagerClockingItem employeeClocking)
         {
-            throw new NotImplementedException();
+            var date = employeeClocking.Date;
+            employeeClocking.ClockStartTime = new DateTime(date.Year, date.Month, date.Day, employeeClocking.ClockStartTime.Hour, employeeClocking.ClockStartTime.Minute, 0);
+            if (employeeClocking.ClockEndTime.HasValue)
+                employeeClocking.ClockEndTime = new DateTime(date.Year, date.Month, date.Day, employeeClocking.ClockEndTime.Value.Hour, employeeClocking.ClockEndTime.Value.Minute, 0);
+
+            _presenceRepo.Add(new Presence()
+            {
+                ClockInDateTime = employeeClocking.ClockStartTime,
+                AlteredClockInDateTime = employeeClocking.ClockStartTime,
+                ClockOutDateTime = employeeClocking.ClockEndTime,
+                AlteredClockOutDateTime = employeeClocking.ClockEndTime,
+                IsSick = employeeClocking.IsSick,
+                Employee = _employeeRepo.GetEmployees().FirstOrDefault(e=> e.FirstName + " " + e.MiddleName + " " + e.LastName == employeeClocking.Name)
+            });
         }
+
+        public void DeleteClocking(DateTime date, int presenceId)
+        {
+            _presenceRepo.Delete(presenceId);
+        }
+
+
         #endregion
     }
 }

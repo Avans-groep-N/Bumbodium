@@ -1,81 +1,81 @@
 ﻿@model Bumbodium.WebApp.Models.ClockingView.ClockingEmployeeViewModel
 @using System.Globalization;
 
-<h1>Klock uren van @Model.EmployeeName</h1>
+
+<h1>Kloktijden</h1>
 <br />
 
-<div class="container justify-content-center">
+<div class="container p-0 justify-content-center">
     <div class="row m-0 bg-light rounded-3">
-        <div class="col-lg-5 m-auto p-auto text-center">
-            <form asp-action="Index" method="post">
+        <div class="col-lg-5 m-auto p-5 text-center">
+            <form asp-action="IndexEmployee" method="post">
                 <input type="month" asp-for="FirstOfTheMonth" onchange="this.form.submit()" required />
             </form>
         </div>
     </div>
 </div>
 
+<br />
+
 @if (Model.ClockingDays.Count == 0)
 {
-    <h1>Je hebt deze week geen uren gemaakt</h1>
+    <h1>Je hebt deze maand geen uren gemaakt</h1>
 }
 else
 {
-    @foreach (var day in Model.ClockingDays)
-    {
-        <div class="row" style="background-color:cornflowerblue; color: white; padding: 15px; ">
-            <div class="row m-auto">
-                <div class="bg-light text-dark rounded-2 mb-3 p-1">
-                    <p class="mb-1 pb-0 bold">@day.Key</p>
-                </div>
+    <div class="container justify-content-center">
+        @foreach (var day in Model.ClockingDays)
+        {
+            <div class="row bg-black">
+                <h4 class="col-auto p-3 mb-auto text-white">@day.Key.ToString("dd/MM/yyyy")</h4>
             </div>
-        </div>
-    }
-
-}
-
-@*@for (int i = 0; i < Model.ClockingDays.Count; i++)
-{
-    <div class="row" style="background-color:cornflowerblue; color: white; padding: 15px; ">
-        <div class="row m-auto">
-            <div class="bg-light text-dark rounded-2 mb-3 p-1">
-                <p class="mb-1 pb-0 bold">@Model.ClockingDays[i].Day.ToString("dd/MM/yyyy")</p>
-            </div>
-
-            @for (var j = 0; j < Model.ClockingDays[i].EmployeeClocking.Count; j++)
+            @for (var i = 0; i < day.Value.Count; i += 2)
             {
-                <div class="bg-light mb-2 text-dark rounded-1">
-                    <div class="row">
-                        <div class="col justify-content-md-start">
-                            <div class="col">@Model.ClockingDays[i].EmployeeClocking[j].ClockStartTime.GetValueOrDefault().TimeOfDay</div>
-                            @if (Model.ClockingDays[i].EmployeeClocking[j].IsChanged)
-                            {
-                                <p>tijd is aangepast</p>
-
-                            }
-                            else if (Model.ClockingDays[i].EmployeeClocking[j].IsOnGoing)
-                            {
-                                <p>je Bent nog bezig</p>
-                            }
-                        </div>
-                        <div class="col"></div>
-                        <div class="col">@Model.ClockingDays[i].EmployeeClocking[j].ScheduleStartTime.GetValueOrDefault().TimeOfDay</div>
+                <div class="row p-1 bg-white">
+                    <div class="col d-flex justify-content-start">
+                        <h5 class="m-2">Begin tijd : @day.Value[i].ClockStartTime.ToString("HH:mm")</h5>
+                        @if (day.Value[i].IsStartChanged)
+                        {
+                            <h5 class="m-2 text-danger">Veranderd</h5>
+                        }
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="col">@Model.ClockingDays[i].EmployeeClocking[j].ClockEndTime.GetValueOrDefault().TimeOfDay</div>
-                            @if (@Model.ClockingDays[i].EmployeeClocking[j].IsChanged)
-                            {
-                                <p>tijd is aangepast</p>
-
-                            }
-                        </div>
-                        <div class="col"></div>
-                        <div class="col">@Model.ClockingDays[i].EmployeeClocking[j].ScheduleEndTime.GetValueOrDefault().TimeOfDay</div>
+                    <div class="col d-flex justify-content-start">
+                        <h5 class="m-2">Eind tijd : @day.Value[i].ClockEndTime.ToString("HH:mm")</h5>
+                        @if (day.Value[i].IsEndChanged)
+                        {
+                            <h5 class="m-2 text-danger">Veranderd</h5>
+                        }
+                    </div>
+                    <div class="col d-flex justify-content-start">
+                        <h5 class="m-2">werknemer is ziek : </h5>
+                        <input type="checkbox" class="p-3 m-3" asp-for="ClockingDays[day.Key][i].IsSick" disabled />
                     </div>
                 </div>
+                @if (day.Value.Count > i + 1)
+                {
+                    <div class="row p-1 bg-light">
+                        <div class="col d-flex justify-content-start">
+                            <h5 class="m-2">Begin tijd : @day.Value[i + 1].ClockStartTime.ToString("HH:mm")</h5>@if (day.Value[i].IsStartChanged)
+                            {
+                                <h5 class="m-2 text-danger">Veranderd</h5>
+                            }
+                        </div>
+                        <div class="col d-flex justify-content-start">
+                            <h5 class="m-2">Eind tijd : @day.Value[i + 1].ClockEndTime.ToString("HH:mm")</h5>
+                            @if (day.Value[i].IsEndChanged)
+                            {
+                                <h5 class="m-2 text-danger">Veranderd</h5>
+                            }
+                        </div>
+                        <div class="col d-flex justify-content-start">
+                            <h5 class="m-2">werknemer is ziek : </h5>
+                            <input type="checkbox" class="p-3 m-3" asp-for="ClockingDays[day.Key][i + 1].IsSick" disabled />
+                        </div>
+                    </div>
+                }
             }
-        </div>
+            <br />
+        }
     </div>
-    <br />
+
 }
-*@

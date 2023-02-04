@@ -19,6 +19,7 @@ namespace Bumbodium.WebApp.Controllers
             _employeeRepo = employeeRepo;
         }
 
+        #region Manager Clocking
         [Authorize(Roles = "Manager")]
         public IActionResult IndexManager()
         {
@@ -35,16 +36,28 @@ namespace Bumbodium.WebApp.Controllers
         }
 
         [Authorize(Roles = "Manager")]
+        [Route("product/{date}/{presenceID}")]
+        public IActionResult DeleteClocking(long date, int presenceId)
+        {
+            DateTime dateTime = new DateTime(date);
+            _blclocking.DeleteClocking(dateTime, presenceId);
+            var clockingViewModel = _blclocking.GetManagerClockingViewModel(dateTime.Date);
+
+            return View($"../{nameof(ClockingController).Replace(nameof(Controller), "")}/{nameof(IndexManager)}", clockingViewModel);
+        }
+
+        [Authorize(Roles = "Manager")]
         public IActionResult AddClockingHour(DateTime date)
         {
             var options = new List<SelectListItem>();
-            _employeeRepo.GetAllEmployees().ForEach(e => options.Add(new SelectListItem() { Value = e.FullName, Text = e.FullName}));
-            
+            _employeeRepo.GetAllEmployees().ForEach(e => options.Add(new SelectListItem() { Value = e.FullName, Text = e.FullName }));
+
             ViewBag.Options = options;
-            return View(new ManagerClockingItem() { ClockStartTime = new DateTime(date.Year, date.Month, date.Day, 12, 0, 0), ClockEndTime = new DateTime(date.Year, date.Month, date.Day, 14, 0, 0) });
+            return View(new ManagerClockingItem() { Date = date, ClockStartTime = new DateTime(date.Year, date.Month, date.Day, 12, 0, 0), ClockEndTime = new DateTime(date.Year, date.Month, date.Day, 14, 0, 0) });
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public IActionResult AddClockingHour(ManagerClockingItem model)
         {
             if (!ModelState.IsValid)
@@ -58,7 +71,7 @@ namespace Bumbodium.WebApp.Controllers
             else
             {
                 _blclocking.AddClocking(model);
-                var clockingViewModel = _blclocking.GetManagerClockingViewModel(model.ClockStartTime.Date);
+                var clockingViewModel = _blclocking.GetManagerClockingViewModel(model.Date.Date);
                 return View($"../{nameof(ClockingController).Replace(nameof(Controller), "")}/{nameof(IndexManager)}", clockingViewModel);
             }
         }
@@ -72,9 +85,29 @@ namespace Bumbodium.WebApp.Controllers
                 _blclocking.Save(clockingManagerVM);
             }
 
-            var clockingViewModel = _blclocking.GetManagerClockingViewModel(clockingManagerVM.ClockingDateTime);
+            var clockingViewModel = _blclocking.GetManagerClockingViewModel(clockingManagerVM.ClockingDateTime.Date);
 
             return View($"../{nameof(ClockingController).Replace(nameof(Controller), "")}/{nameof(IndexManager)}", clockingViewModel);
         }
+        #endregion
+
+
+        #region Employee Clocking
+
+        [Authorize(Roles = "Employee")]
+        public IActionResult IndexEmployee()
+        {
+            var clockingEmployeeVM = _blclocking.GetEmployeeClockingViewModel(User.Identity?.Name, DateTime.Now);
+            return View(clockingEmployeeVM);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Employee")]
+        public IActionResult IndexEmployee(ClockingEmployeeViewModel clockingEmployeeVM)
+        {
+            return View(_blclocking.GetEmployeeClockingViewModel(User.Identity?.Name, clockingEmployeeVM.FirstOfTheMonth));
+        }
+
+        #endregion
     }
 }
