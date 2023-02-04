@@ -25,24 +25,33 @@ namespace Bumbodium.WebApp.Controllers
             DateTime weekStart = DateTime.Now;
             while (weekStart.DayOfWeek != DayOfWeek.Monday)
             {
-                weekStart.AddDays(-1);
+                weekStart = weekStart.AddDays(-1);
             }
             DateTime weekEnd = weekStart.AddDays(7);
             List<Shift> shifts = _shiftRepo.GetShiftsInRange(weekStart, weekEnd, _employeeRepo.GetUserByName(User.Identity.Name).Id);
             WeekShiftsViewModel weekShifts = new WeekShiftsViewModel();
            
-            foreach (var s in shifts)
-            {
-                ShiftVM tempShiftVM = new ShiftVM()
+           /* foreach (var s in shifts)
+            {*/
+
+                Shift testShift = new Shift()
                 {
-                    StartTime = s.ShiftStartDateTime,
-                    EndTime = s.ShiftEndDateTime,
-                    EmployeeId = s.EmployeeId
+                    EmployeeId = _employeeRepo.GetUserByName(User.Identity.Name).Id,
+                    DepartmentId = 1,
+                    ShiftStartDateTime = new DateTime(2023, 2, 4, 8, 0, 0),
+                    ShiftEndDateTime = new DateTime(2023, 2, 4, 12, 0, 0)
                 };
 
-                weekShifts.AddShiftVM(tempShiftVM);
+                ShiftVM newShiftVM = new ShiftVM()
+                {
+                    StartTime = testShift.ShiftStartDateTime,
+                    EndTime = testShift.ShiftEndDateTime,
+                    EmployeeId = testShift.EmployeeId
+                };
 
-            }
+                weekShifts.AddShiftVM(newShiftVM);
+
+          /*  }*/
             return View(weekShifts);
         }
     }

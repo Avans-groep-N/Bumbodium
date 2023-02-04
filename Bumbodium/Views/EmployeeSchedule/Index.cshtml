@@ -6,11 +6,9 @@
 
     <p>Je hebt de aankomende week geen shifts!</p>
 
+} else {
+    <p>Je werkt de aankomende week de volgende shifts:</p>
 }
 
-<ul>
-    @foreach (var s in Model.WeeklyShifts)
-    {
-        <li>@s.StartTime - @s.EndTime</li>
-    }
-</ul>
+
+<table>
