@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bumbodium.Data
 {
@@ -28,6 +29,24 @@ namespace Bumbodium.Data
             (a.EndDateTime > start && a.EndDateTime < end) ||
             (a.StartDateTime < start && a.EndDateTime > end)
             ).ToList();
+        }
+        public List<Availability> GetAvailabilitiesInRange(DateTime start, DateTime end, string userId)
+        {
+            return _ctx.Availability.Where(a => 
+            (a.EmployeeId == userId) &&
+            (a.StartDateTime > start && a.StartDateTime < end) ||
+            (a.EndDateTime > start && a.EndDateTime < end) ||
+            (a.StartDateTime < start && a.EndDateTime > end)
+            ).ToList();
+        }
+        public bool AvailabilityExistsInTime(DateTime start, DateTime end, string employeeId)
+        {
+            return _ctx.Availability.Any(a =>
+            (a.EmployeeId == employeeId) &&
+            ((a.StartDateTime >= start && a.StartDateTime <= end) ||
+            (a.EndDateTime >= start && a.EndDateTime <= end) ||
+            (a.StartDateTime <= start && a.EndDateTime >= end))
+            );
         }
 
         public List<Availability> GetUnconfirmedAvailabilities()

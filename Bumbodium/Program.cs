@@ -29,6 +29,8 @@ builder.Services.AddScoped<DepartmentRepo>();
 builder.Services.AddScoped<StandardsRepo>();
 builder.Services.AddScoped<PresenceRepo>();
 builder.Services.AddScoped<EmployeeRepo>();
+builder.Services.AddScoped<AvailabilityRepo>();
+builder.Services.AddScoped<ShiftRepo>();
 
 builder.Services.AddScoped<BLExcelExport>();
 builder.Services.AddScoped<BLStandards>();
@@ -46,6 +48,11 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>{
     }).AddEntityFrameworkStores<BumbodiumContext>()
     .AddRoles<IdentityRole>()
     .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Index";
+});
 
 var app = builder.Build();
 

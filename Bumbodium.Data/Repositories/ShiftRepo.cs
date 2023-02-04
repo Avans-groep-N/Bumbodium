@@ -20,6 +20,22 @@ namespace Bumbodium.Data
                 .Include(s => s.Employee)
                 .ToList();
         }
+        public List<Shift> GetShiftsInRange(DateTime start, DateTime end, int departmentId)
+        {
+            return _ctx.Shift
+                .Where(s => s.DepartmentId == departmentId)
+                .Where(s => s.ShiftStartDateTime > start && s.ShiftStartDateTime < end)
+                .Include(s => s.Employee)
+                .ToList();
+        }
+        public List<Shift> GetShiftsInRange(DateTime start, DateTime end, string employeeId)
+        {
+            return _ctx.Shift
+                .Where(s => s.EmployeeId == employeeId)
+                .Where(s => s.ShiftStartDateTime > start && s.ShiftStartDateTime < end)
+                .Include(s => s.Employee)
+                .ToList();
+        }
 
         public void InsertShift(Shift shift)
         {
@@ -29,6 +45,13 @@ namespace Bumbodium.Data
 
         public void DeleteShift(Shift shift)
         {
+            _ctx.Shift.Remove(shift);
+            _ctx.SaveChanges();
+        }
+        
+        public void DeleteShift(int shiftId)
+        {
+            Shift shift = _ctx.Shift.Where(e => e.ShiftId == shiftId).FirstOrDefault();
             _ctx.Shift.Remove(shift);
             _ctx.SaveChanges();
         }
@@ -64,6 +87,45 @@ namespace Bumbodium.Data
                 .Count();
         }
 
-        
+        public bool ShiftExistsInTime(DateTime start, DateTime end, string employeeId)
+        {
+            return _ctx.Shift.Any(a =>
+            (a.EmployeeId == employeeId) &&
+            ((a.ShiftStartDateTime > start && a.ShiftStartDateTime < end) ||
+            (a.ShiftEndDateTime > start && a.ShiftEndDateTime < end) ||
+            (a.ShiftStartDateTime < start && a.ShiftEndDateTime > end))
+            ); 
+        }
+
+        public double GetPlannedHoursOfDepartmentOnDate(DateTime date, int departmentId)
+        {
+            double hoursPlanned = 0;
+            List<Shift> shifts = _ctx.Shift
+                .Where(f => f.ShiftStartDateTime.Date == date && f.DepartmentId == departmentId)
+                .ToList();
+            if(!shifts.Any())
+            {
+                return 0;
+            }
+            foreach(Shift shift in shifts)
+            {
+                hoursPlanned += CalculateShiftDuration(shift);
+            }
+
+            return hoursPlanned;
+        }
+
+        private static double CalculateShiftDuration(Shift shift)
+        {
+            return (shift.ShiftEndDateTime - shift.ShiftStartDateTime).TotalHours;
+        }
+
+        public int GetShiftCountInRange(DateTime start, DateTime end, string employeeId)
+        {
+            return _ctx.Shift
+                .Where(s => s.EmployeeId == employeeId)
+                .Where(s => s.ShiftStartDateTime > start && s.ShiftStartDateTime < end)
+                .Count();
+        }
     }
 }
