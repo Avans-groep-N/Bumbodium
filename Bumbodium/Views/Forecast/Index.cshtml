@@ -11,7 +11,7 @@
     else
         calanderVal += Model.WeekNr;
 }
-@using (Html.BeginForm("SelectWeek", "Forecast", FormMethod.Post))
+@using (Html.BeginForm("SelectWeek", "EmployeeSchedule", FormMethod.Post))
 {
     <input type="week" name="weekNumber" value="@calanderVal" onchange="this.form.submit()" required />
 }

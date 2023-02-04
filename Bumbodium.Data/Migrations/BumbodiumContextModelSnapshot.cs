@@ -579,6 +579,40 @@ namespace Bumbodium.Data.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Shift");
+
+                    b.HasData(
+                        new
+                        {
+                            ShiftId = 1,
+                            DepartmentId = 1,
+                            EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            ShiftEndDateTime = new DateTime(2023, 2, 4, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            ShiftStartDateTime = new DateTime(2023, 2, 4, 8, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ShiftId = 2,
+                            DepartmentId = 1,
+                            EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            ShiftEndDateTime = new DateTime(2023, 2, 5, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                            ShiftStartDateTime = new DateTime(2023, 2, 5, 13, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ShiftId = 3,
+                            DepartmentId = 1,
+                            EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            ShiftEndDateTime = new DateTime(2023, 2, 7, 21, 0, 0, 0, DateTimeKind.Unspecified),
+                            ShiftStartDateTime = new DateTime(2023, 2, 7, 17, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ShiftId = 4,
+                            DepartmentId = 1,
+                            EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            ShiftEndDateTime = new DateTime(2023, 2, 9, 22, 0, 0, 0, DateTimeKind.Unspecified),
+                            ShiftStartDateTime = new DateTime(2023, 2, 9, 18, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Standards", b =>
@@ -772,16 +806,16 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a5bd43dc-8d4c-48fa-9f72-0be0120f775d",
+                            ConcurrencyStamp = "f256e471-1f40-474f-ae10-e36652f4c586",
                             Email = "j.vangeest@bumbodium.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "J.VANGEEST@BUMBODIUM.NL",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAENSkzY5qFUtMPNwDNZGXuIIu8IKQhek9RTiXhPjUhOZW9IcIbNC6Or6dzTcS60Gzpg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELfRSugLZ1ViSj9PsGECsS17m4/NRi0EUJPyHNKqXgbxw4C6gxrzSKdYBeaDih2bhw==",
                             PhoneNumber = "+31 6 56927484",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9b8dd572-7de0-4fe0-bfc3-79d3eaeff9b1",
+                            SecurityStamp = "4ba7d109-45a1-4b91-910d-ba7773e23e48",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
@@ -789,15 +823,15 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "19f7d479-542a-408b-9016-0561e3e70f65",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2bf78360-10c2-4325-a2e8-75ca13809572",
+                            ConcurrencyStamp = "72509bea-28b7-4555-a328-2e182d179d20",
                             Email = "Martijs@Martijs.Martijs",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "MARTIJS@MARTIJS.MARTIJS",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBJzp/AXUThPOA/7lVi/6NLHw+wcUahxjDVGEtVnHvplvlwM19za0neXj/rsSYQCzA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEI66/Q0rzfTUSmEE7Jw8VxYblRlDI2MeFiFjZmib/InPxmqjb85jTAI7YDk4SmFIJw==",
                             PhoneNumber = "Martijs",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a6e59a2a-f15d-4dd8-8248-1b21c15473a1",
+                            SecurityStamp = "aac124e8-2121-4246-9d15-e7bbc660ea6c",
                             TwoFactorEnabled = false,
                             UserName = "Martijs@Martijs.Martijs"
                         },
@@ -805,15 +839,15 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "2e835447-b339-4a55-9a74-c0d8449bca5c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4227e80c-a8a8-4723-a7c9-08cb46424b27",
+                            ConcurrencyStamp = "8541c7bd-161c-48a2-a362-73cddcc955e5",
                             Email = "Johnny@vos.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "JOHNNY@VOS.NL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOsHznbwZGnRorMj0JdUBQv1E30PIcB29bVX/oPioD1EMzF4kcVl5GmkRsJkWIsxlQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFt1DW8lFjmGuCfwx8PBDj30P2MivJbVfaZ23B/oJS7wdGCMnnmEaPuhy2B/yHAvMA==",
                             PhoneNumber = "+31 5",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a6de483c-0838-4d21-9aef-ae20be6b66b0",
+                            SecurityStamp = "23e7656e-258b-4ac8-b8c7-acff40d2d5ce",
                             TwoFactorEnabled = false,
                             UserName = "Johnny@vos.nl"
                         },
@@ -821,15 +855,15 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "44128c29-b648-431e-89f4-7a105f79b00c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "89cad56e-6869-4016-825c-2f0cdcef9b7e",
+                            ConcurrencyStamp = "2167bfc1-f564-43fa-8b49-62d25ccc53e4",
                             Email = "Heinz@vonschmichtelstein.de",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "HEINZ@VONSCHMICHTELSTEIN.DE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM59v/JdDaWhNnddl8oxzdP3nTdcycxtQFdyiyHorcmGDYwIxHq1Kfr2B3S03EbopQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBWgPhdKjpmmFSuYTx9bv/iM2lUwz1ChwTXR+t76w5OBNFyd8+43wnUAe/eKJeFymQ==",
                             PhoneNumber = "+49 420 69 7777",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5e7d1c75-1f25-486d-afe0-42b84f17c37d",
+                            SecurityStamp = "c3bba766-1800-481c-9512-1ecf8eedb87d",
                             TwoFactorEnabled = false,
                             UserName = "Heinz@vonschmichtelstein.de"
                         },
@@ -837,15 +871,15 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "5782d108-8865-40f8-b3b7-ced82309983f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "812b5119-a2de-498d-aa0f-3e93f7b572ca",
+                            ConcurrencyStamp = "53d8f3bb-56b7-496e-aacd-9ecfc94454e2",
                             Email = "Bliksem@martijnshamster.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "BLIKSEM@MARTIJNSHAMSTER.NL",
-                            PasswordHash = "AQAAAAEAACcQAAAAECMbZUs/khC4IC7Xh0VplOPsY9iatUn3DS9NBdpHw7MZ4r6DzjC1bsC6m22qPT4sxA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMFRS+V9UaLu+qX6CBTaS9RsWGV6IPx6nydktMJbvA4ycGVQIDhb18iVZydBHOTHeA==",
                             PhoneNumber = "+31 snel",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5b543755-4437-47b5-bee7-d08208988fa5",
+                            SecurityStamp = "cee205c6-4032-4165-9a50-7c26908c2e5a",
                             TwoFactorEnabled = false,
                             UserName = "Bliksem@martijnshamster.nl"
                         },
@@ -853,15 +887,15 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "5989a56b-4d00-4213-9b73-34f80701836b",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "529d8d73-5397-467a-890e-0ba1cf7767fd",
+                            ConcurrencyStamp = "23815a5a-93d0-4286-853a-00da6d55e7b5",
                             Email = "Lobbus@kjell.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "LOBBUS@KJELL.NL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDZFGZWpwlDzY7dq4OXF2OJs7kULQk2ZeTInH6xvlUFyIULH2FYjyXt6xXp2XCDveQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBqUxBJW8fz6ZG8XsEVvtHhpkyhCSH0JiaFy+2zEZaw+ymFO2iN1O6xm95r3moUAhA==",
                             PhoneNumber = "+31 6 67215943",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "14f2efc4-7b44-43a2-972b-a260932bca0e",
+                            SecurityStamp = "4a45e388-818e-41af-8892-153c6d91e468",
                             TwoFactorEnabled = false,
                             UserName = "Lobbus@kjell.nl"
                         },
@@ -869,15 +903,15 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a7f944f4-8e0e-4a69-9890-30aa75d87608",
+                            ConcurrencyStamp = "d4e0d1e7-a044-4fa8-9d60-747578368e3e",
                             Email = "Paula@campina.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "PAULA@CAMPINA.NL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAxa/ECnPFwMaxpbM01sJFeEZO6pIalYHeJVa+bnKXTBXNvX6i4prEMZ4yDvdeTwdw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPgMtomAc2F0gjIo04WpirHlewLzbkiQ1cAuJ7AwFuqYwysvxQR3hGRTKKNs9mngGA==",
                             PhoneNumber = "+31 612345678",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c5249fe8-6176-4b4a-9416-9adb5c4c0828",
+                            SecurityStamp = "5bb3dc2e-5e59-43c6-8444-3b9ef9ba52ee",
                             TwoFactorEnabled = false,
                             UserName = "Paula@campina.nl"
                         },
@@ -885,15 +919,15 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "a20cddd4-9704-439f-94bc-95f4659ce543",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cf77c204-d61c-42ab-91dc-87a2f204aa3d",
+                            ConcurrencyStamp = "72b76aba-8a42-4875-ad06-9fd599d8c55a",
                             Email = "Henkie@Wauwzerz.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "HENKIE@WAUWZERZ.NL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKDrXrSZTLRnuX6GzwE+7gJACrsqA5Mk2e+vOisOZxkUUOyIO/dtnQ2ZJ5qF4aAcrQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKzPw4pDl3rU3xaROU+tfrttXQTHzan8qLbGkz9tIaId0q748vpRxhuPmmR36moHiw==",
                             PhoneNumber = "ten minste vijf",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "285e941c-c946-4ff1-9e0e-7b0e084d3d2b",
+                            SecurityStamp = "6e390d90-ce45-4588-bb4c-7ca0dd2221a7",
                             TwoFactorEnabled = false,
                             UserName = "Henkie@Wauwzerz.nl"
                         },
@@ -901,15 +935,15 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "a357223e-5d1e-461e-b1ad-3a8592f548dd",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d2065827-f14a-46a6-91e2-36494b52766e",
+                            ConcurrencyStamp = "ebccd760-a7fd-42e9-97bd-fcc2e937b70a",
                             Email = "Katriene@smedensberg.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "KATRIENE@SMEDENSBERG.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC2MozTwS+pLd97FZvxFaitmxUYT/wBVfdxMrvMuzOZIn1cDHSW/r923Qf26m/v0FA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIwqI4rFyAGAK/FGPH/qu57KqPCthpLFlLdAeQ7c50RczKDGdJ+Gb/xKLYKEmHLxuw==",
                             PhoneNumber = "+31 99999999",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "bd919bd4-af57-46cb-b2d7-661864985dc7",
+                            SecurityStamp = "9b79b993-71c9-4fea-b54e-9d0b18515634",
                             TwoFactorEnabled = false,
                             UserName = "Katriene@smedensberg.com"
                         },
@@ -917,15 +951,15 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e761957c-3cb0-475b-abd6-a711286766c2",
+                            ConcurrencyStamp = "89998a1f-15ca-4c0d-bc41-0d24cede9da8",
                             Email = "Henk@henk.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "HENK@HENK.NL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEICi8xIq9ffLeO3X1IgCaRQhFDsfHZt/iN+3QNXMBo6oZlJGArM3z8CRdoiMAdIcLQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEjnWTaA4K7oh9ezcjYvx/+mQR0zEy/qFAOPDaQ6Lrw+cj9Ro8oPQsQsRFTTCxEbpw==",
                             PhoneNumber = "+31 6666666666",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3f5e5db9-6d20-481b-a307-ec6d85e84e18",
+                            SecurityStamp = "87f97ea9-ba56-4a92-954f-432c6ad604f0",
                             TwoFactorEnabled = false,
                             UserName = "Henk@henk.nl"
                         },
@@ -933,15 +967,15 @@ namespace Bumbodium.Data.Migrations
                         {
                             Id = "bdece4e2-3ed9-4008-8878-65884c142394",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ee988581-5689-4d33-9534-3c940d61b6a9",
+                            ConcurrencyStamp = "e693b1a6-e235-46e7-8ca6-8a9c82ce1d22",
                             Email = "Henk@maardanstoer.nl",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "HENK@MAARDANSTOER.NL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEA0lFA3IogyxCcm+ldWaUMVqdRUYz2MwDLUlJcszYo0NEDnx/H223+Es3Unann9qKQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEICyy2hBvLl6cClmJQcXz4WuM75I6ZdFVFjPwbl9MxPCmCT2cS8IOtggECxmzz5Ocw==",
                             PhoneNumber = "+31 123123123",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6fe1bc87-4ab4-4ddb-bf81-4fa6f4e18dde",
+                            SecurityStamp = "060e5327-7302-4505-b476-15d7181ef5c5",
                             TwoFactorEnabled = false,
                             UserName = "Henk@maardanstoer.nl"
                         });

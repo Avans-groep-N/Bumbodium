@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Bumbodium.WebApp.Models;
+using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
+using System.Globalization;
+using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -29,30 +32,47 @@ namespace Bumbodium.WebApp.Controllers
             }
             DateTime weekEnd = weekStart.AddDays(7);
             List<Shift> shifts = _shiftRepo.GetShiftsInRange(weekStart, weekEnd, _employeeRepo.GetUserByName(User.Identity.Name).Id);
-            WeekShiftsViewModel weekShifts = new WeekShiftsViewModel();
-           
-           /* foreach (var s in shifts)
-            {*/
+            WeekShiftsViewModel weekShifts = new WeekShiftsViewModel()
+            {
+                FirstDayOfWeek = weekStart
+            };
 
-                Shift testShift = new Shift()
-                {
-                    EmployeeId = _employeeRepo.GetUserByName(User.Identity.Name).Id,
-                    DepartmentId = 1,
-                    ShiftStartDateTime = new DateTime(2023, 2, 4, 8, 0, 0),
-                    ShiftEndDateTime = new DateTime(2023, 2, 4, 12, 0, 0)
-                };
+            foreach (var s in shifts)
+            {
 
                 ShiftVM newShiftVM = new ShiftVM()
                 {
-                    StartTime = testShift.ShiftStartDateTime,
-                    EndTime = testShift.ShiftEndDateTime,
-                    EmployeeId = testShift.EmployeeId
+                    StartTime = s.ShiftStartDateTime,
+                    EndTime = s.ShiftEndDateTime,
+                    EmployeeId = s.EmployeeId
                 };
 
                 weekShifts.AddShiftVM(newShiftVM);
 
-          /*  }*/
+            }
             return View(weekShifts);
         }
+
+      /*  [HttpPost]
+        public IActionResult SelectWeek(WeekShiftsViewModel model)
+        {
+            var shifts = _shiftRepo.GetShiftsInRange(model.FirstDayOfWeek, model.FirstDayOfWeek.AddDays(7), _employeeRepo.GetUserByName(User.Identity.Name).Id);
+
+            foreach (var s in shifts)
+            {
+
+                ShiftVM newShiftVM = new ShiftVM()
+                {
+                    StartTime = s.ShiftStartDateTime,
+                    EndTime = s.ShiftEndDateTime,
+                    EmployeeId = s.EmployeeId
+                };
+
+                model.AddShiftVM(newShiftVM);
+
+            }
+            return View($"../{nameof(EmployeeScheduleController).Replace(nameof(Controller), "")}/{nameof(Index)}", model);
+        }*/
+
     }
 }

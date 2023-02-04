@@ -77,6 +77,7 @@ namespace Bumbodium.Data
             InsertAccountsData(modelBuilder);
             InsertEmployeeData(modelBuilder);
             InsertDepartmentEmployeeData(modelBuilder);
+            InsertShiftData(modelBuilder);
         }
 
         private static void InsertStandardsData(ModelBuilder modelBuilder)
@@ -380,6 +381,16 @@ namespace Bumbodium.Data
                             }
             };
             modelBuilder.Entity<Employee>().HasData(employees);
+        }
+
+        private static void InsertShiftData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Shift>().HasData(
+                new Shift() { ShiftId = 1, EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f", DepartmentId = 1, ShiftStartDateTime = new DateTime(2023, 2, 4, 8, 0, 0), ShiftEndDateTime = new DateTime(2023, 2, 4, 12, 0, 0) },
+            new Shift() { ShiftId = 2, EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f", DepartmentId = 1, ShiftStartDateTime = new DateTime(2023, 2, 5, 13, 0, 0), ShiftEndDateTime = new DateTime(2023, 2, 5, 18, 0, 0) },
+            new Shift() { ShiftId = 3, EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f", DepartmentId = 1, ShiftStartDateTime = new DateTime(2023, 2, 7, 17, 0, 0), ShiftEndDateTime = new DateTime(2023, 2, 7, 21, 0, 0) },
+            new Shift() { ShiftId = 4, EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f", DepartmentId = 1, ShiftStartDateTime = new DateTime(2023, 2, 9, 18, 0, 0), ShiftEndDateTime = new DateTime(2023, 2, 9, 22, 0, 0) });
+
         }
 
         private static void InsertDepartmentData(ModelBuilder modelBuilder)

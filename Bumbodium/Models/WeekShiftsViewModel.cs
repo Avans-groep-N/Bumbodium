@@ -4,7 +4,8 @@
     {
 
         public List<ShiftVM> WeeklyShifts { get; set; }
-
+/*        public int WeekNr { get; set; }*/
+        public DateTime FirstDayOfWeek { get; set; }
         public WeekShiftsViewModel()
         {
             WeeklyShifts = new List<ShiftVM>();

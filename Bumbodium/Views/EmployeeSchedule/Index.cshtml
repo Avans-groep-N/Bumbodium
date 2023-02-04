@@ -2,6 +2,19 @@
 @using System.Globalization
 <br />
 
+@*@{
+
+    string calanderVal = Model.StartOfWeekDate.Year + "-W";
+    if (Model.WeekNr < 10)
+        calanderVal += "0" + Model.WeekNr;
+    else
+        calanderVal += Model.WeekNr;
+}
+@using (Html.BeginForm("SelectWeek", "Forecast", FormMethod.Post))
+{
+    <input type="week" name="weekNumber" value="@calanderVal" onchange="this.form.submit()" required />
+}*@
+
 @if(Model.WeeklyShifts.Count == 0) {
 
     <p>Je hebt de aankomende week geen shifts!</p>
@@ -10,5 +23,12 @@
     <p>Je werkt de aankomende week de volgende shifts:</p>
 }
 
-
 <table>
+    @foreach(var s in Model.WeeklyShifts) {
+        <tr>
+            <td><strong>@s.StartTime.ToString("dd-MM-yyyy"):</strong></td>
+            <td>@s.StartTime.ToString("HH:mm") - </td>
+            <td>@s.EndTime.ToString("HH:mm")</td>
+        </tr>
+    }
+</table>
