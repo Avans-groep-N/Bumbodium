@@ -17,7 +17,7 @@ namespace Bumbodium.WebApp.Models.ClockingView
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (ClockStartTime >= ClockEndTime)
-                yield return new ValidationResult("Start tijd kan niet groter zijn dan eind tijd of gelijk aan elkaar.", new[] { nameof(ClockStartTime) });
+                yield return new ValidationResult("Start tijd kan niet na of gelijk aan eind tijd zijn.", new[] { nameof(ClockStartTime) });
         }
     }
 }

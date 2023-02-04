@@ -26,7 +26,7 @@
         <div class="container justify-content-center">
             @foreach (var day in Model.ClockingDay)
             {
-                <div class="row bg-black shadow">
+                <div class="row bg-black">
                     <h4 class="col-auto p-3 mb-auto text-white">@day.Key</h4>
                 </div>
                 @for (var i = 0; i < day.Value.Count; i += 2)
@@ -35,17 +35,17 @@
                     <input hidden asp-for="ClockingDay[day.Key][i].Name" />
 
                     <input type="hidden" asp-for="ClockingDay[day.Key][i].Date" />
-                    <div class="row p-1 bg-white shadow">
+                    <div class="row p-1 bg-white">
                         <div class="col d-flex justify-content-start"><h5 class="m-2">Begin tijd :</h5><input type="time" asp-for="ClockingDay[day.Key][i].ClockStartTime" /></div>
                         <div class="col d-flex justify-content-start"><h5 class="m-2">Eind tijd :</h5><input type="time" asp-for="ClockingDay[day.Key][i].ClockEndTime" /></div>
-                        <div class="col d-flex justify-content-start"><h5 class="m-2">werknemer is ziek :</h5><input type="checkbox" asp-for="ClockingDay[day.Key][i].IsSick" /></div>
+                        <div class="col d-flex justify-content-start"><h5 class="m-2">Ziek :</h5><input type="checkbox" asp-for="ClockingDay[day.Key][i].IsSick" /></div>
                         <div class="col d-flex justify-content-start">
-                            <h5 class="m-2">Delete de uren :</h5>
+                            <h5 class="m-2">Delete :</h5>
                             <a asp-action="DeleteClocking" asp-route-date="@Model.ClockingDay[day.Key][i].Date.Date.Ticks"
                    asp-route-presenceId="@Model.ClockingDay[day.Key][i].PresenceId" class="m-auto"><span class="material-icons">delete</span></a>
                         </div>
                     </div>
-                    <div class="row p-0 bg-white shadow">
+                    <div class="row p-0 bg-white">
                         <div class="col d-flex justify-content-start">
                             <span asp-validation-for="ClockingDay[day.Key][i].ClockStartTime" class="text-danger"></span>
                         </div>
@@ -56,17 +56,17 @@
                     @if (day.Value.Count > i + 1)
                     {
                         <input type="hidden" asp-for="ClockingDay[day.Key][i+1].Date" />
-                        <div class="row p-1 bg-light shadow">
+                        <div class="row p-1 bg-light">
                             <div class="col d-flex justify-content-start"><h5 class="m-2">Begin tijd :</h5><input type="time" asp-for="ClockingDay[day.Key][i+1].ClockStartTime" /></div>
                             <div class="col d-flex justify-content-start"><h5 class="m-2">Eind tijd :</h5><input type="time" asp-for="ClockingDay[day.Key][i+1].ClockEndTime" /></div>
-                            <div class="col d-flex justify-content-start"><h5 class="m-2">werknemer is ziek :</h5><input type="checkbox" asp-for="ClockingDay[day.Key][i+1].IsSick" /></div>
+                            <div class="col d-flex justify-content-start"><h5 class="m-2">Ziek :</h5><input type="checkbox" asp-for="ClockingDay[day.Key][i+1].IsSick" /></div>
                             <div class="col d-flex justify-content-start">
                                 <h5 class="m-2">Delete de uren :</h5>
                                 <a asp-action="DeleteClocking" asp-route-date="@Model.ClockingDay[day.Key][i+1].Date.Date.Ticks"
                    asp-route-presenceId="@Model.ClockingDay[day.Key][i+1].PresenceId" class="m-auto"><span class="material-icons">delete</span></a>
                             </div>
                         </div>
-                        <div class="row p-0 bg-light shadow">
+                        <div class="row p-0 bg-light">
                             <div class="col d-flex justify-content-start">
                                 <span asp-validation-for="ClockingDay[day.Key][i+1].ClockStartTime" class="text-danger"></span>
                             </div>
@@ -81,7 +81,7 @@
         </div>
         <br />
         <div>
-            <input type="submit" class="btn btn-lg btn-primary btn-outline-warning m-3" value="Veranderen klok uren opslaan">
+            <input type="submit" class="btn btn-lg btn-primary btn-outline-warning m-3" value="Aanpassingen opslaan">
         </div>
     </form>
 }
