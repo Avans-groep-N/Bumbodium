@@ -33,10 +33,10 @@
                 @Html.CheckBoxFor(vm => vm.ShowInactive)
             </div>
             <div class="col">
-                <button type="submit" class="btn">Filters toepassen</button>
+                <button type="submit" class="btn btn-primary btn-outline-warning">Filters toepassen</button>
             </div>
             <div class="col">
-                <a asp-action="Create" class="btn">Medewerker aanmaken</a>
+                <a asp-action="Create" class="btn btn-primary btn-outline-warning">Medewerker aanmaken</a>
             </div>
         </div>
     </div>
@@ -54,7 +54,7 @@
                     <input hidden asp-for="NameFilter" value=@Model.NameFilter />
                     <input hidden asp-for="DepartmentFilter" value="@Model.DepartmentFilter" />
                     <input hidden asp-for="ShowInactive" value="@Model.ShowInactive" />
-                    <button type="submit" class="btn col-2"> &lt; </button>
+                    <button type="submit" class="btn col-2 btn-primary btn-outline-warning"> &lt; </button>
                 </form>
             }
             <h3 class="col-auto">Pagina @Model.CurrentPage / @Model.PageCount</h3>
@@ -66,15 +66,16 @@
                     <input hidden asp-for="NameFilter" value=@Model.NameFilter />
                     <input hidden asp-for="DepartmentFilter" value="@Model.DepartmentFilter" />
                     <input hidden asp-for="ShowInactive" value="@Model.ShowInactive" />
-                    <button type="submit" class="btn col-2"> &gt; </button>
+                    <button type="submit" class="btn col-2 btn-primary btn-outline-warning"> &gt; </button>
                 </form>
             }
         </div>
     </div>
 }
 
-<table class="table">
-    <thead>
+<br/>
+<table class="table table-striped shadow">
+    <thead class="bg-black text-white">
         <tr>
             <th>
                 Naam
@@ -97,6 +98,9 @@
             <th>
                 Type
             </th>
+            <th>
+                -
+            </th>
         </tr>
     </thead>
 
@@ -118,10 +122,10 @@
                     <td>
                         @Html.DisplayFor(e => employee.Email)
                     </td>
-                    <td class="row">
+                    <td class="row m-0 ">
                         @foreach (DepartmentEmployee departmentEmployee in employee.PartOFDepartment)
                         {
-                            <p class="col-auto">@departmentEmployee.Department.Name</p>
+                            <p class="col-auto ">@departmentEmployee.Department.Name</p>
                         }
                     </td>
                     <td>
@@ -131,8 +135,8 @@
                         @Html.DisplayFor(e => employee.Type)
                     </td>
                     <td>
-                        <a asp-action="Details" class="btn btn-sm" asp-route-id="@employee.EmployeeID">Details</a>
-                        <a asp-action="Edit" class="btn btn-sm" asp-route-id="@employee.EmployeeID">Aanpassen</a>
+                        <a asp-action="Details" class="btn btn-sm btn-primary btn-outline-warning" asp-route-id="@employee.EmployeeID">Details</a>
+                        <a asp-action="Edit" class="btn btn-sm btn-primary btn-outline-warning" asp-route-id="@employee.EmployeeID">Aanpassen</a>
                     </td>
                 </tr>
             }

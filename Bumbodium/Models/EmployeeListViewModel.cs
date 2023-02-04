@@ -4,7 +4,7 @@ namespace Bumbodium.WebApp.Models
 {
     public class EmployeeListViewModel
     {
-        public IEnumerable<Employee> Employees { get; set; }
+        public List<Employee> Employees { get; set; }
         public int EmployeeCount { get; set; }
         public int CurrentPage { get; set; }
         public int EmployeesPerPage { get; set; }
@@ -22,5 +22,10 @@ namespace Bumbodium.WebApp.Models
         public string? NameFilter { get; set; }
         public int DepartmentFilter { get; set; }
         public bool ShowInactive { get; set; }
+
+        public EmployeeListViewModel()
+        {
+            Employees = new List<Employee>();
+        }
     }
 }
