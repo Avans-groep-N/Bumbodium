@@ -63,7 +63,7 @@ namespace Bumbodium.WebApp.Controllers
             if (!ModelState.IsValid)
             {
                 var options = new List<SelectListItem>();
-                _employeeRepo.GetAllEmployees().ForEach(e => options.Add(new SelectListItem() { Value = "1", Text = e.FullName }));
+                _employeeRepo.GetAllEmployees().ForEach(e => options.Add(new SelectListItem() { Value = e.FullName, Text = e.FullName }));
 
                 ViewBag.Options = options;
                 return View(model);

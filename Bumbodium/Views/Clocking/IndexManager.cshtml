@@ -4,7 +4,7 @@
 <h1>Kloktijden @Model.ClockingDateTime.ToString("dd/MM/yyyy")</h1>
 <br />
 
-<div class="container justify-content-center">
+<div class="container justify-content-center p-0">
     <div class="row m-0 bg-light rounded-3">
         <div class="col-lg-5 m-auto p-auto text-center">
             <form asp-action="IndexManager" method="post">
@@ -23,10 +23,10 @@
 {
     <form asp-action="SaveNewTimes" method="post">
         <input type="hidden" asp-for="ClockingDateTime" />
-        <div class="container justify-content-center m-3">
+        <div class="container justify-content-center">
             @foreach (var day in Model.ClockingDay)
             {
-                <div class="row bg-black">
+                <div class="row bg-black shadow">
                     <h4 class="col-auto p-3 mb-auto text-white">@day.Key</h4>
                 </div>
                 @for (var i = 0; i < day.Value.Count; i += 2)
@@ -35,7 +35,7 @@
                     <input hidden asp-for="ClockingDay[day.Key][i].Name" />
 
                     <input type="hidden" asp-for="ClockingDay[day.Key][i].Date" />
-                    <div class="row p-1 bg-white">
+                    <div class="row p-1 bg-white shadow">
                         <div class="col d-flex justify-content-start"><h5 class="m-2">Begin tijd :</h5><input type="time" asp-for="ClockingDay[day.Key][i].ClockStartTime" /></div>
                         <div class="col d-flex justify-content-start"><h5 class="m-2">Eind tijd :</h5><input type="time" asp-for="ClockingDay[day.Key][i].ClockEndTime" /></div>
                         <div class="col d-flex justify-content-start"><h5 class="m-2">werknemer is ziek :</h5><input type="checkbox" asp-for="ClockingDay[day.Key][i].IsSick" /></div>
@@ -45,10 +45,18 @@
                    asp-route-presenceId="@Model.ClockingDay[day.Key][i].PresenceId" class="m-auto"><span class="material-icons">delete</span></a>
                         </div>
                     </div>
+                    <div class="row p-0 bg-white shadow">
+                        <div class="col d-flex justify-content-start">
+                            <span asp-validation-for="ClockingDay[day.Key][i].ClockStartTime" class="text-danger"></span>
+                        </div>
+                        <div class="col d-flex justify-content-start">
+                            <span asp-validation-for="ClockingDay[day.Key][i].ClockEndTime" class="text-danger"></span>
+                        </div>
+                    </div>
                     @if (day.Value.Count > i + 1)
                     {
-                        <input hidden asp-for="ClockingDay[day.Key][i+1].PresenceId" />
-                        <div class="row p-1 bg-light">
+                        <input type="hidden" asp-for="ClockingDay[day.Key][i+1].Date" />
+                        <div class="row p-1 bg-light shadow">
                             <div class="col d-flex justify-content-start"><h5 class="m-2">Begin tijd :</h5><input type="time" asp-for="ClockingDay[day.Key][i+1].ClockStartTime" /></div>
                             <div class="col d-flex justify-content-start"><h5 class="m-2">Eind tijd :</h5><input type="time" asp-for="ClockingDay[day.Key][i+1].ClockEndTime" /></div>
                             <div class="col d-flex justify-content-start"><h5 class="m-2">werknemer is ziek :</h5><input type="checkbox" asp-for="ClockingDay[day.Key][i+1].IsSick" /></div>
@@ -56,6 +64,14 @@
                                 <h5 class="m-2">Delete de uren :</h5>
                                 <a asp-action="DeleteClocking" asp-route-date="@Model.ClockingDay[day.Key][i+1].Date.Date.Ticks"
                    asp-route-presenceId="@Model.ClockingDay[day.Key][i+1].PresenceId" class="m-auto"><span class="material-icons">delete</span></a>
+                            </div>
+                        </div>
+                        <div class="row p-0 bg-light shadow">
+                            <div class="col d-flex justify-content-start">
+                                <span asp-validation-for="ClockingDay[day.Key][i+1].ClockStartTime" class="text-danger"></span>
+                            </div>
+                            <div class="col d-flex justify-content-start">
+                                <span asp-validation-for="ClockingDay[day.Key][i+1].ClockEndTime" class="text-danger"></span>
                             </div>
                         </div>
                     }
