@@ -1,9 +1,9 @@
 ﻿@model Bumbodium.WebApp.Models.ExcelExport.ExcelExportEmployeesHours
-
+<h1>Verloning</h1>
 <br />
 
-<div class="container justify-content-center">
-    <div class="row m-0 bg-light rounded-3">
+<div class="container justify-content-center p-0">
+    <div class="row m-0  bg-light rounded-3">
         <div class="col-lg-5 m-auto p-auto text-center">
             <form asp-action="Index" method="post">
                 <input type="month" asp-for="FirstDateOfMonth" onchange="this.form.submit()" required />
@@ -19,7 +19,7 @@
 
 @if (Model.EmployeeHours.Count > 0)
 {
-    <div class="container justify-content-center">
+    <div class="container justify-content-center p-0">
         <div class="row shadow-lg m-0">
             <div class="col-lg-5 m-0 p-0 bg-black ">
                 <h2 class="p-3 text-lg text-light">BID</h2>

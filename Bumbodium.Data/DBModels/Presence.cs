@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bumbodium.Data.DBModels
 {
     public class Presence
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PresenceId { get; set; }
         
         public string EmployeeId { get; set; }
