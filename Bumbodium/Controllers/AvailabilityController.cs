@@ -1,6 +1,5 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
-using Bumbodium.Data.Interfaces;
 using Bumbodium.WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -37,8 +36,7 @@ namespace Bumbodium.WebApp.Controllers
                 Availabilities = new List<AvailabilityViewModel>()
             };
 
-            //Converting DB models into view models
-            foreach(var availability in availabilities)
+            foreach (var availability in availabilities)
             {
                 var employee = _employeeRepo.GetEmployee(availability.EmployeeId);
                 model.Availabilities.Add(new AvailabilityViewModel()
@@ -60,9 +58,8 @@ namespace Bumbodium.WebApp.Controllers
         [HttpPost]
         public ActionResult Accodation(AvailabilityListViewModel model)
         {
-            foreach(var availabilityVM in model.Availabilities)
+            foreach (var availabilityVM in model.Availabilities)
             {
-                //Converting VM to DBmodel
                 var availability = new Availability()
                 {
                     AvailabilityId = availabilityVM.Id,

@@ -1,13 +1,9 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
 using Bumbodium.WebApp.Models;
-using Bumbodium.WebApp.Models.ExcelExport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Common;
-using System.Data;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -26,8 +22,8 @@ namespace Bumbodium.WebApp.Controllers
         public IActionResult Index()
         {
             int employeesPerPage = 10;
-            int employeeCount = _employeeRepo.GetEmployeesFiltered(null, null).Count();
-            IEnumerable<Employee> employees = _employeeRepo.GetEmployeesList(null, null, 0, employeesPerPage);
+            int employeeCount = _employeeRepo.GetEmployeesFiltered(null, null, false).Count();
+            List<Employee> employees = _employeeRepo.GetEmployeesList(null, null, 0, employeesPerPage, false);
             return View(new EmployeeListViewModel()
             {
                 CurrentPage = 1,
@@ -40,23 +36,17 @@ namespace Bumbodium.WebApp.Controllers
         [HttpPost]
         public IActionResult Index(EmployeeListViewModel viewModel)
         {
-            viewModel.EmployeeCount = _employeeRepo.GetEmployeesFiltered(viewModel.NameFilter,
-                viewModel.DepartmentFilter).Count();
-            viewModel.Employees = _employeeRepo.GetEmployeesList(viewModel.NameFilter, 
-                viewModel.DepartmentFilter,
-                viewModel.EmployeesPerPage * (viewModel.CurrentPage - 1), 
-                viewModel.EmployeesPerPage); 
+            viewModel.EmployeeCount = _employeeRepo.GetEmployeesFiltered(viewModel.NameFilter, viewModel.DepartmentFilter, viewModel.ShowInactive).Count();
+            viewModel.Employees = _employeeRepo.GetEmployeesList(viewModel.NameFilter, viewModel.DepartmentFilter, viewModel.EmployeesPerPage * (viewModel.CurrentPage - 1), viewModel.EmployeesPerPage, viewModel.ShowInactive);
             return View(viewModel);
         }
 
-        // get create
         public IActionResult Create()
         {
             Employee employee = new();
             return View(new EmployeeCreateViewModel() { Employee = employee });
         }
 
-        // post create
         [HttpPost]
         public async Task<IActionResult> Create(EmployeeCreateViewModel viewModel)
         {
@@ -67,8 +57,8 @@ namespace Bumbodium.WebApp.Controllers
             else
             {
                 IdentityUser user = new IdentityUser() { Email = viewModel.Employee.Email, UserName = viewModel.Employee.Email, PhoneNumber = viewModel.Employee.PhoneNumber };
-                var result =  await _userManager.CreateAsync(user, viewModel.Password);
-                if(!result.Succeeded)
+                var result = await _userManager.CreateAsync(user, viewModel.Password);
+                if (!result.Succeeded)
                 {
                     ModelState.AddModelError("UserCreateError", "Het aanmaken van de gebruiker ging fout, probeer het opnieuw");
                     return View(viewModel);
@@ -81,7 +71,6 @@ namespace Bumbodium.WebApp.Controllers
             }
         }
 
-        // get edit
         public IActionResult Edit(string id)
         {
             if (id == null)
@@ -92,7 +81,6 @@ namespace Bumbodium.WebApp.Controllers
             return View(new EmployeeViewModel() { Employee = employee });
         }
 
-        // post edit
         [HttpPost]
         public async Task<IActionResult> Edit(EmployeeViewModel viewModel)
         {
@@ -108,7 +96,7 @@ namespace Bumbodium.WebApp.Controllers
                 {
                     string token = await _userManager.GenerateChangeEmailTokenAsync(user, viewModel.Employee.Email);
                     var result = await _userManager.ChangeEmailAsync(user, viewModel.Employee.Email, token);
-                    if(!result.Succeeded)
+                    if (!result.Succeeded)
                     {
                         ModelState.AddModelError("EmailInvalid", "De opgegeven Email was misvormd");
                         viewModel.Employee.PartOFDepartment = _employeeRepo.GetEmployee(viewModel.Employee.EmployeeID).PartOFDepartment;
@@ -118,8 +106,8 @@ namespace Bumbodium.WebApp.Controllers
                 if (!string.IsNullOrEmpty(viewModel.Password))
                 {
                     string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var result =  await _userManager.ResetPasswordAsync(user, token, viewModel.Password);
-                    if(!result.Succeeded)
+                    var result = await _userManager.ResetPasswordAsync(user, token, viewModel.Password);
+                    if (!result.Succeeded)
                     {
                         ModelState.AddModelError("PasswordInvalid", "Wachtwoord moet minimaal een hoofdletter en een nummer hebben en uit meer dan 5 characters bestaan");
                         viewModel.Employee.PartOFDepartment = _employeeRepo.GetEmployee(viewModel.Employee.EmployeeID).PartOFDepartment;

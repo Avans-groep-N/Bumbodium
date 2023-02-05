@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Bumbodium.Data.DBModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace Bumbodium.WebApp
 {

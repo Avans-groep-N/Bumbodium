@@ -1,8 +1,6 @@
 ﻿using Bumbodium.WebApp.Models.ExcelExport;
 using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
 using Microsoft.AspNetCore.Mvc;
-using Radzen.Blazor.Rendering;
-using System.Globalization;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -39,7 +37,7 @@ namespace Bumbodium.WebApp.Controllers
 
             var stream = _bLExcelExport.GetEmployeesHoursStream(employeesHoursPulsList);
 
-            string fileName = "Verloning.csv";
+            string fileName = $"Verloning-{employeesHours.FirstDateOfMonth.Year}-{employeesHours.FirstDateOfMonth.Month}.csv";
 
             return File(stream, "application/octet-stream", fileName);
         }

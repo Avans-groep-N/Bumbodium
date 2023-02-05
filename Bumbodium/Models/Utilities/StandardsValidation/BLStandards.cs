@@ -1,6 +1,5 @@
 ﻿using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Repositories;
-using System.Diagnostics.Metrics;
 
 namespace Bumbodium.WebApp.Models.Utilities.StandardsValidation
 {
@@ -26,7 +25,7 @@ namespace Bumbodium.WebApp.Models.Utilities.StandardsValidation
                 {
                     Description = standardDB.Description,
                     Subject = standardDB.Subject,
-                    Value= standardDB.Value
+                    Value = standardDB.Value
                 });
             }
 

@@ -523,7 +523,10 @@ namespace Bumbodium.Data.Migrations
             modelBuilder.Entity("Bumbodium.Data.DBModels.Presence", b =>
                 {
                     b.Property<int>("PresenceId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PresenceId"), 1L, 1);
 
                     b.Property<string>("EmployeeId")
                         .HasColumnType("nvarchar(450)");

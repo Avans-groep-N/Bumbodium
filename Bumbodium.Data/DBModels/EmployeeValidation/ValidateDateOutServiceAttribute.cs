@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.Data.DBModels.EmployeeValidation
 {
@@ -16,11 +11,5 @@ namespace Bumbodium.Data.DBModels.EmployeeValidation
         {
             _dateInService = dateInService;
         }
-
-/*        public override bool IsValid(object? value)
-        {
-            DateTime dateOutSerivce = Convert.ToDateTime(value);
-        }*/
-
     }
 }

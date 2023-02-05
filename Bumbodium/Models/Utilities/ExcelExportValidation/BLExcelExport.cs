@@ -1,9 +1,6 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp.Models.ExcelExport;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
-using Microsoft.EntityFrameworkCore.Update.Internal;
-using System.Globalization;
 
 namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
 {
@@ -48,7 +45,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
             var stream = new MemoryStream();
             using (var writeFile = new StreamWriter(stream, leaveOpen: true))
             {
-                writeFile.WriteLine($"Jaar: {employeesHours.FirstDateOfMonth.Year}; WeekNr: {employeesHours.FirstDateOfMonth.Month}");
+                writeFile.WriteLine($"Jaar: {employeesHours.FirstDateOfMonth.Year}; Maand: {employeesHours.FirstDateOfMonth.Month}");
                 writeFile.WriteLine($"BID;Naam;Uren;Toeslag");
                 foreach (var item in employeesHours.EmployeeHours)
                 {
@@ -104,7 +101,6 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
             foreach (var employeeIDkey in hoursDict.Keys)
             {
                 var key = hoursDict[employeeIDkey].EmployeeId;
-                //TODO this has to by the EmployeeRepo
                 string name = _employeeRepo.GetEmployee(key).FullName;
 
                 AddToWorkedHours(workedHours, hoursDict, name, key + $":{Addition0Percent}");

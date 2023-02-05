@@ -14,7 +14,7 @@ namespace Bumbodium.Data.DBModels
 
         [Required]
         public int Value { get; set; }
-        
+
         [StringLength(1048)]
         public string Description { get; set; }
 

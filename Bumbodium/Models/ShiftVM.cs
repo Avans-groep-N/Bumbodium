@@ -20,7 +20,7 @@ namespace Bumbodium.WebApp.Models
             EmployeeRepo _employeeRepo = new EmployeeRepo(_ctx);
             Employee employee = _employeeRepo.GetEmployee(EmployeeId);
 
-            List<Shift> shiftsThisWeek = _shiftRepo.GetShiftsInRange(StartTime.StartOfWeek(), StartTime.EndOfWeek()).ToList(); 
+            List<Shift> shiftsThisWeek = _shiftRepo.GetShiftsInRange(StartTime.StartOfWeek(), StartTime.EndOfWeek()).ToList();
             var hoursThisWeek = 0;
             foreach (Shift shift in shiftsThisWeek)
                 hoursThisWeek += (shift.ShiftStartDateTime.Hour - shift.ShiftEndDateTime.Hour);
@@ -35,10 +35,10 @@ namespace Bumbodium.WebApp.Models
             List<Shift> possibleShifts = _shiftRepo.GetShiftsInRange(startOfDay, endOfDay)
                 .Where(s => s.EmployeeId == employee.EmployeeID)
                 .ToList();
-            if(possibleShifts.Count > 0)
+            if (possibleShifts.Count > 0)
                 yield return new ValidationResult("Cannot add a shift on a day where one already exists", new[] { "ShiftExists" });
 
-            if(employee.Age >= 18)
+            if (employee.Age >= 18)
             {
                 //Verify that the user cannot add a shift over 12 hours on 1 day for an employee >=age of 18
                 if (StartTime.Hour - EndTime.Hour > 12)
@@ -56,7 +56,7 @@ namespace Bumbodium.WebApp.Models
                     .Where(a => a.StartDateTime.Date == StartTime.Date && a.Type == AvailabilityType.Schoolhours)
                     .Single();
                 var schoolHours = schoolTime.StartDateTime.Hour - schoolTime.EndDateTime.Hour;
-                if(StartTime.Hour - EndTime.Hour > (9 - schoolHours))
+                if (StartTime.Hour - EndTime.Hour > (9 - schoolHours))
                     yield return new ValidationResult("Cannot add a shift longer than 9 hours for underage employee", new[] { "ShiftTooLong" });
 
                 //Verify that the user cannot add shifts exceeding 40 hours avergae in 1 month for an employee = 16||17 years old
@@ -67,7 +67,7 @@ namespace Bumbodium.WebApp.Models
 
                 if (hoursThisMonth / 7 > 40)
                     yield return new ValidationResult("Cannot add more than an average of 40 hours a week in 1 month for an underage employee", new[] { "TooManyShifts" });
-                
+
                 if (employee.Age < 16)
                 {
                     //Verify that the user cannot add over 5 shifts in 1 week for an employee < 16 years old
