@@ -16,9 +16,20 @@
                     @foreach (var departments in Model.DepartmentTypes)
                     {
                         <li class="list-group-item bg-secondary">
-                            <h3 class="m-2 ">
-                                @departments :
-                            </h3>
+                            @if(departments == Bumbodium.Data.DBModels.DepartmentType.Fresh) {
+                                <h3 class="m-2 ">
+                                    Vers:
+                                </h3>
+                            } else if (departments == Bumbodium.Data.DBModels.DepartmentType.Shelves) {
+                                   <h3 class="m-2 ">
+                                    Vakkenvullen: 
+                                </h3>
+                            } else if (departments == Bumbodium.Data.DBModels.DepartmentType.Checkout) {
+                                   <h3 class="m-2 ">
+                                    Kassa:
+                                </h3>
+                            }
+                          
                         </li>
                         <li class="list-group-item ">
                             <h3 class="m-2">Verwachte medewerkers</h3>

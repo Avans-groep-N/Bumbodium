@@ -24,7 +24,19 @@
                 @foreach (DepartmentType department in Enum.GetValues(typeof(DepartmentType)))
                 {
                     @Html.RadioButtonFor(vm => vm.DepartmentFilter, (int)department+1)
-                    <label>@department.ToString()</label>
+                   
+                        @if (@department.ToString() == "Fresh")
+                        {
+                        <label>Vers</label>
+                        }
+                        else if (@department.ToString() == "Shelves") {
+                        <label>Vakkenvullen</label>
+                        }
+                        else if (@department.ToString() == "Checkout") {
+                        <label>Kassa</label>
+                        }
+                       
+
                     <br />
                 }
             </div>
@@ -90,13 +102,13 @@
                 Email
             </th>
             <th>
-                Afdelingen
+                Afdeling(en)
             </th>
             <th>
                 Werkt sinds
             </th>
             <th>
-                Type
+                Functie
             </th>
             <th>
                 -
@@ -125,15 +137,30 @@
                     <td class="row m-0 ">
                         @foreach (DepartmentEmployee departmentEmployee in employee.PartOFDepartment)
                         {
-                            <p class="col-auto ">@departmentEmployee.Department.Name</p>
+                            @if (@departmentEmployee.Department.Name.ToString() == "Fresh")
+                            {
+                                <p class="col-auto ">Vers</p>
+                            }
+                            else if (@departmentEmployee.Department.Name.ToString() == "Shelves")
+                            {
+                                <p class="col-auto ">Vakkenvullen</p>
+                            }
+                            else if (@departmentEmployee.Department.Name.ToString() == "Checkout")
+                            {
+                                <p class="col-auto ">Kassa</p>
+                            }
                         }
                     </td>
                     <td>
                         <p>@employee.DateInService.ToShortDateString()</p>
                     </td>
-                    <td>
-                        @Html.DisplayFor(e => employee.Type)
-                    </td>
+           
+                        @if(employee.Type == TypeStaff.Employee) {
+                            <td>Werknemer</td>
+                        } else {
+                            <td>Manager</td>
+                        }
+      
                     <td>
                         <a asp-action="Details" class="btn btn-sm btn-primary btn-outline-warning" asp-route-id="@employee.EmployeeID">Details</a>
                         <a asp-action="Edit" class="btn btn-sm btn-primary btn-outline-warning" asp-route-id="@employee.EmployeeID">Aanpassen</a>
