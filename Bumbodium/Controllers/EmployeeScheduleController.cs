@@ -34,22 +34,10 @@ namespace Bumbodium.WebApp.Controllers
             List<Shift> shifts = _shiftRepo.GetShiftsInRange(weekStart, weekEnd, _employeeRepo.GetUserByName(User.Identity.Name).Id);
             WeekShiftsViewModel weekShifts = new WeekShiftsViewModel()
             {
-                FirstDayOfWeek = weekStart
+                FirstDayOfWeek = weekStart,
+                Shifts = shifts
             };
 
-            foreach (var s in shifts)
-            {
-
-                ShiftVM newShiftVM = new ShiftVM()
-                {
-                    StartTime = s.ShiftStartDateTime,
-                    EndTime = s.ShiftEndDateTime,
-                    EmployeeId = s.EmployeeId
-                };
-
-                weekShifts.AddShiftVM(newShiftVM);
-
-            }
             return View(weekShifts);
         }
 
