@@ -2,18 +2,9 @@
 @using System.Globalization
 <br />
 
-@*@{
-
-    string calanderVal = Model.StartOfWeekDate.Year + "-W";
-    if (Model.WeekNr < 10)
-        calanderVal += "0" + Model.WeekNr;
-    else
-        calanderVal += Model.WeekNr;
-}
-@using (Html.BeginForm("SelectWeek", "Forecast", FormMethod.Post))
-{
-    <input type="week" name="weekNumber" value="@calanderVal" onchange="this.form.submit()" required />
-}*@
+<form asp-action="Index" method="post">
+    <input type="week" asp-for="SelectedWeekString" onchange="this.form.submit()" value="@Model.SelectedWeekString" />
+</form>
 
 <table class="scheduletable">
     @if (Model.Shifts != null && Model.Shifts.Any())

@@ -6,7 +6,8 @@ namespace Bumbodium.WebApp.Models
 
         public List<Shift> Shifts { get; set; }
 /*        public int WeekNr { get; set; }*/
-        public DateTime FirstDayOfWeek { get; set; }
+        public DateTime SelectedWeek { get; set; }
+        public string SelectedWeekString { get; set; }
         public TimeOnly OpenTime = new(08, 00, 00);
         public TimeOnly ClosingTime = new(22, 00, 00);
 

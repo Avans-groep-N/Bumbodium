@@ -8,6 +8,7 @@ using Bumbodium.WebApp.Models;
 using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
 using System.Globalization;
 using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
+using Radzen.Blazor.Rendering;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -25,42 +26,33 @@ namespace Bumbodium.WebApp.Controllers
 
         public IActionResult Index()
         {
-            DateTime weekStart = DateTime.Now;
-            while (weekStart.DayOfWeek != DayOfWeek.Monday)
+            int weekNr = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            string selectedWeekString;
+            if(weekNr <10)
             {
-                weekStart = weekStart.AddDays(-1);
+                selectedWeekString = DateTime.Now.Year.ToString() + "-W0" + CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             }
-            DateTime weekEnd = weekStart.AddDays(7);
-            List<Shift> shifts = _shiftRepo.GetShiftsInRange(weekStart, weekEnd, _employeeRepo.GetUserByName(User.Identity.Name).Id);
-            WeekShiftsViewModel weekShifts = new WeekShiftsViewModel()
+            else
             {
-                FirstDayOfWeek = weekStart,
-                Shifts = shifts
-            };
+                selectedWeekString = DateTime.Now.Year.ToString() + "-W" + CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            }
 
-            return View(weekShifts);
+            WeekShiftsViewModel model = new WeekShiftsViewModel()
+            {
+                SelectedWeek = DateTime.Now,
+                SelectedWeekString = selectedWeekString
+            };
+            model.Shifts = _shiftRepo.GetShiftsInRange(model.SelectedWeek.StartOfWeek(), model.SelectedWeek.EndOfWeek().AddHours(23).AddMinutes(59), _employeeRepo.GetUserByName(User.Identity.Name).Id);
+            return View(model);
         }
 
-      /*  [HttpPost]
-        public IActionResult SelectWeek(WeekShiftsViewModel model)
+        [HttpPost]
+        public IActionResult Index(WeekShiftsViewModel model)
         {
-            var shifts = _shiftRepo.GetShiftsInRange(model.FirstDayOfWeek, model.FirstDayOfWeek.AddDays(7), _employeeRepo.GetUserByName(User.Identity.Name).Id);
-
-            foreach (var s in shifts)
-            {
-
-                ShiftVM newShiftVM = new ShiftVM()
-                {
-                    StartTime = s.ShiftStartDateTime,
-                    EndTime = s.ShiftEndDateTime,
-                    EmployeeId = s.EmployeeId
-                };
-
-                model.AddShiftVM(newShiftVM);
-
-            }
+            model.SelectedWeek = CultureInfo.InvariantCulture.Calendar.AddWeeks(new DateTime(year: int.Parse(model.SelectedWeekString[..4]), 1, 1), int.Parse(model.SelectedWeekString.Substring(6, 2)));
+            model.Shifts = _shiftRepo.GetShiftsInRange(model.SelectedWeek.StartOfWeek(), model.SelectedWeek.EndOfWeek().AddHours(23).AddMinutes(59), _employeeRepo.GetUser(User.Identity.Name).Id);
             return View($"../{nameof(EmployeeScheduleController).Replace(nameof(Controller), "")}/{nameof(Index)}", model);
-        }*/
+        }
 
     }
 }
