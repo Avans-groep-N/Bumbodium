@@ -15,29 +15,105 @@
                 {
                     @if (department.Type == Model.SelectedDepartment)
                     {
-                        if(department.PlannedHours < department.NeededHours) {
-                            <option class="text-danger" selected value="@department.Type">
-                                @department.Type - @department.PlannedHours / @department.NeededHours uur gepland
-                            </option>
-                        } else {
-                            <option selected value="@department.Type">
-                                @department.Type - @department.PlannedHours / @department.NeededHours uur gepland
-                            </option>
+                        if (department.PlannedHours < department.NeededHours)
+                        {
+                            @if (department.Type == DepartmentType.Shelves)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vakkenvullen - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+
+                            } else if (department.Type == DepartmentType.Fresh) {
+                                 <option class="text-danger" selected value="@department.Type">
+
+                                    Vers - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            } else if (department.Type == DepartmentType.Checkout) {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Kassa - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+
+                        }
+                        else
+                        {
+                            @if (department.Type == DepartmentType.Shelves)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vakkenvullen - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+
+                            }
+                            else if (department.Type == DepartmentType.Fresh)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vers - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+                            else if (department.Type == DepartmentType.Checkout)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Kassa - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
                         }
                     }
                     else
                     {
                         if (department.PlannedHours < department.NeededHours)
                         {
-                            <option class ="text-danger" value="@department.Type">
-                                @department.Type - @department.PlannedHours / @department.NeededHours uur gepland
-                            </option>
+                            @if (department.Type == DepartmentType.Shelves)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vakkenvullen - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+
+                            }
+                            else if (department.Type == DepartmentType.Fresh)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vers - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+                            else if (department.Type == DepartmentType.Checkout)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Kassa - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
                         }
                         else
                         {
-                            <option value="@department.Type">
-                                @department.Type - @department.PlannedHours / @department.NeededHours uur gepland
-                            </option>
+                            @if (department.Type == DepartmentType.Shelves)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vakkenvullen - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+
+                            }
+                            else if (department.Type == DepartmentType.Fresh)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vers - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+                            else if (department.Type == DepartmentType.Checkout)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Kassa - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
                         }
                     }
                 }

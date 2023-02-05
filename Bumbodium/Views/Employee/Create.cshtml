@@ -54,25 +54,39 @@
                 <span asp-validation-for="Employee.DateInService" class="text-danger"></span>
             </div>
             <div>
-                <label asp-for="Employee.Type">Type *</label>
+                <label asp-for="Employee.Type">Functie *</label>
                 <br />
                 @foreach (TypeStaff type in Enum.GetValues(typeof(TypeStaff)))
                 {
                     @Html.RadioButtonFor(vm => vm.Employee.Type, type)
-                    <label>@type.ToString()</label>
+                  
+                    @if (@type == TypeStaff.Manager) {
+                        <label>Manager</label>
+                    } else {
+                        <label>Werknemer</label>
+                    }
                     <br />
                 }
             </div>
                     <br />
             <div>
-                <label>Afdelingen *</label>
+                <label>Afdeling(en) *</label>
                 <br />
                 @foreach (DepartmentType department in Enum.GetValues(typeof(DepartmentType)))
                 {
 
                     <input type="checkbox" name="Departments" value="@((int)department + 1)" />
 
-                    <label>@department.ToString()</label>
+                    @if (@department == DepartmentType.Shelves)
+                    {
+                        <label>Vakkenvullen</label>
+                    }
+                    else if (@department == DepartmentType.Fresh)
+                    {
+                        <label>Vers</label>
+                    } else if (@department == DepartmentType.Checkout) {
+                        <label>Kassa</label>
+                    }
                     <br />
                 }
                 <span asp-validation-for="Departments" class="text-danger"></span>
