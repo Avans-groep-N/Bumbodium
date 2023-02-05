@@ -115,17 +115,14 @@ namespace Bumbodium.WebApp.Models.Utilities.ForecastValidation
         {
             List<Forecast> forecastsDB = new List<Forecast>();
 
-            //vakkenvullen
             int amountWorkingSecondsShelves = DayClacuShelveSeconds(forecastDay.AmountExpectedColis);
             forecastsDB.Add(
                 MakeNewForecast(forecastDay, date, DepartmentType.Shelves, amountWorkingSecondsShelves));
 
-            //vers
             int amountWorkingSecondsFresh = DayClacuFreshSeconds(forecastDay.AmountExpectedCustomers);
             forecastsDB.Add(
                 MakeNewForecast(forecastDay, date, DepartmentType.Fresh, amountWorkingSecondsFresh));
 
-            //kassa
             int amountWorkingSecondsCheckout = DayCalcuKasiereSeconds(forecastDay.AmountExpectedCustomers);
             forecastsDB.Add(
                 MakeNewForecast(forecastDay, date, DepartmentType.Checkout, amountWorkingSecondsCheckout));

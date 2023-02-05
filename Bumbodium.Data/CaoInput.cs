@@ -1,13 +1,8 @@
 ﻿using Bumbodium.Data.DBModels;
 using Bumbodium.Data.Interfaces;
 using Radzen.Blazor.Rendering;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bumbodium.Data
 {
@@ -118,7 +113,7 @@ namespace Bumbodium.Data
             hoursThisMonth += (_plannedShift.ShiftEndDateTime - _plannedShift.ShiftStartDateTime).TotalHours;
             // hoursThis month divided by the amount of days in the month / 7
             if (hoursThisMonth / (CultureInfo.InvariantCulture.Calendar.GetDaysInMonth(
-                _plannedShift.ShiftStartDateTime.Year, 
+                _plannedShift.ShiftStartDateTime.Year,
                 _plannedShift.ShiftStartDateTime.Month) / 7) > maxHours)
                 return true;
             return false;

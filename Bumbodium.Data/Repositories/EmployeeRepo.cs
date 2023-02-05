@@ -2,12 +2,6 @@
 using Bumbodium.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bumbodium.Data
 {
@@ -33,17 +27,23 @@ namespace Bumbodium.Data
             return _ctx.Employee.Include(e => e.PartOFDepartment).ThenInclude(pod => pod.Department).AsQueryable();
         }
 
-        public IEnumerable<Employee> GetEmployeesList(string? nameFilter, int? departmentFilter, int skip, int take)
+        public List<Employee> GetEmployeesList(string? nameFilter, int? departmentFilter, int skip, int take, bool isInactive)
         {
-            IQueryable<Employee> employees = GetEmployeesFiltered(nameFilter, departmentFilter);
+            IQueryable<Employee> employees = GetEmployeesFiltered(nameFilter, departmentFilter, isInactive);
             return employees.OrderBy(e => e.FirstName)
                 .Skip(skip)
-                .Take(take);
+                .Take(take).ToList();
         }
 
-        public IQueryable<Employee> GetEmployeesFiltered(string? nameFilter, int? departmentFilter)
+        public IQueryable<Employee> GetEmployeesFiltered(string? nameFilter, int? departmentFilter, bool isInactive)
         {
             IQueryable<Employee> employees = GetEmployees();
+            if (isInactive)
+            {
+                employees = employees.Where(e => e.DateOutService.HasValue && e.DateOutService < DateTime.Now);
+                return employees;
+            }
+
             if (!string.IsNullOrEmpty(nameFilter))
             {
                 employees = employees.Where(e => (e.FirstName + " " + e.MiddleName + " " + e.LastName).ToLower().Contains(nameFilter.ToLower()));
@@ -52,7 +52,7 @@ namespace Bumbodium.Data
             {
                 employees = employees.Where(e => e.PartOFDepartment.Any(pod => pod.DepartmentId == departmentFilter));
             }
-            return employees;
+            return employees.Where(e => !e.DateOutService.HasValue || (e.DateOutService.HasValue && e.DateOutService > DateTime.Now));
         }
 
         public void InsertEmployee(Employee employee)
@@ -94,10 +94,10 @@ namespace Bumbodium.Data
             _ctx.SaveChanges();
             AddEmployeeToDepartments(employeeID, departmentIds);
         }
-        
+
         public void AddEmployeeToDepartments(string employeeID, List<int> departmentIds)
         {
-            foreach(int id in departmentIds)
+            foreach (int id in departmentIds)
             {
                 _ctx.DepartmentEmployee.Add(new DepartmentEmployee() { EmployeeId = employeeID, DepartmentId = id });
             }

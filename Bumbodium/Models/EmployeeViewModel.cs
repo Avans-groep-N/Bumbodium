@@ -1,9 +1,7 @@
 ﻿using Bumbodium.Data.DBModels;
 using Bumbodium.WebApp.Models.Utilities.ListValidation;
-using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
 
 namespace Bumbodium.WebApp.Models
 {

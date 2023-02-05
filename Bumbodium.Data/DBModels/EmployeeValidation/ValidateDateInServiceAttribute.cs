@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.Data.DBModels.EmployeeValidation
 {
@@ -20,7 +14,8 @@ namespace Bumbodium.Data.DBModels.EmployeeValidation
             if (dateInService.Year > _minStartingYear)
             {
                 return true;
-            } else
+            }
+            else
             {
                 return false;
             }
