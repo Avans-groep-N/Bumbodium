@@ -1,5 +1,4 @@
 ﻿using Bumbodium.Data.DBModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace Bumbodium.Data.Repositories
 {

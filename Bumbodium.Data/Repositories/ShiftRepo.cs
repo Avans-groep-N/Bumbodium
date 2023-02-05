@@ -48,7 +48,7 @@ namespace Bumbodium.Data
             _ctx.Shift.Remove(shift);
             _ctx.SaveChanges();
         }
-        
+
         public void DeleteShift(int shiftId)
         {
             Shift shift = _ctx.Shift.Where(e => e.ShiftId == shiftId).FirstOrDefault();
@@ -94,7 +94,7 @@ namespace Bumbodium.Data
             ((a.ShiftStartDateTime > start && a.ShiftStartDateTime < end) ||
             (a.ShiftEndDateTime > start && a.ShiftEndDateTime < end) ||
             (a.ShiftStartDateTime < start && a.ShiftEndDateTime > end))
-            ); 
+            );
         }
 
         public double GetPlannedHoursOfDepartmentOnDate(DateTime date, int departmentId)
@@ -103,11 +103,11 @@ namespace Bumbodium.Data
             List<Shift> shifts = _ctx.Shift
                 .Where(f => f.ShiftStartDateTime.Date == date && f.DepartmentId == departmentId)
                 .ToList();
-            if(!shifts.Any())
+            if (!shifts.Any())
             {
                 return 0;
             }
-            foreach(Shift shift in shifts)
+            foreach (Shift shift in shifts)
             {
                 hoursPlanned += CalculateShiftDuration(shift);
             }

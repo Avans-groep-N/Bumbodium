@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp.Models;
-using Bumbodium.Data.DBModels;
-using Bumbodium.Data.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 
 namespace Bumbodium.WebApp.Controllers
@@ -43,7 +42,7 @@ namespace Bumbodium.WebApp.Controllers
             var date = ISOWeek.ToDateTime(Convert.ToInt32(datestring[0]), Convert.ToInt32(datestring[1]), DayOfWeek.Monday);
 
             ForecastViewModel forecastVM = _blForecast.GetForecast(date);
-            
+
             return View(forecastVM);
         }
 

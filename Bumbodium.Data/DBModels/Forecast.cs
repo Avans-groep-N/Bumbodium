@@ -15,10 +15,10 @@ namespace Bumbodium.Data.DBModels
 
         [Required]
         public int AmountExpectedHours { get; set; }
-        
+
         [Required]
         public int AmountExpectedCustomers { get; set; }
-        
+
         [Required]
         public int AmountExpectedColis { get; set; }
     }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace Bumbodium.Data
 {
@@ -254,7 +253,7 @@ namespace Bumbodium.Data
             user.PasswordHash = passwordHasher.HashPassword(user, "HenkStoer");
             users.Add(user);
 
-            foreach(IdentityUser userfromlist in users)
+            foreach (IdentityUser userfromlist in users)
             {
                 userfromlist.NormalizedUserName = userfromlist.UserName.ToUpper();
             }
@@ -387,7 +386,13 @@ namespace Bumbodium.Data
             modelBuilder.Entity<Department>().HasData(
                             new Department() { Id = 1, BranchId = 1, SurfaceAreaInM2 = 50, Name = DepartmentType.Fresh, Description = "Fresh" },
                             new Department() { Id = 2, BranchId = 1, SurfaceAreaInM2 = 140, Name = DepartmentType.Shelves, Description = "Shelves" },
-                            new Department() { Id = 3, BranchId = 1, SurfaceAreaInM2 = 90, Name = DepartmentType.Checkout, Description = "Checkout" 
+                            new Department()
+                            {
+                                Id = 3,
+                                BranchId = 1,
+                                SurfaceAreaInM2 = 90,
+                                Name = DepartmentType.Checkout,
+                                Description = "Checkout"
                             });
         }
         private static void InsertDepartmentEmployeeData(ModelBuilder modelBuilder)

@@ -61,7 +61,7 @@
                             <div class="col d-flex justify-content-start"><h5 class="m-2">Eind tijd :</h5><input type="time" asp-for="ClockingDay[day.Key][i+1].ClockEndTime" /></div>
                             <div class="col d-flex justify-content-start"><h5 class="m-2">Ziek :</h5><input type="checkbox" asp-for="ClockingDay[day.Key][i+1].IsSick" /></div>
                             <div class="col d-flex justify-content-start">
-                                <h5 class="m-2">Delete de uren :</h5>
+                                <h5 class="m-2">Delete :</h5>
                                 <a asp-action="DeleteClocking" asp-route-date="@Model.ClockingDay[day.Key][i+1].Date.Date.Ticks"
                    asp-route-presenceId="@Model.ClockingDay[day.Key][i+1].PresenceId" class="m-auto"><span class="material-icons">delete</span></a>
                             </div>

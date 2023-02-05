@@ -1,15 +1,8 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
-using Bumbodium.Data.Interfaces;
-using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Configuration;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -36,6 +29,7 @@ namespace Bumbodium.WebApp.Controllers
                 }
                 if (User.IsInRole("Employee"))
                 {
+                    //TODO Change to employee schedule once its made.
                     return RedirectToAction("Index", "Availability");
                 }
             }

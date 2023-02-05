@@ -1,5 +1,4 @@
 ﻿using Bumbodium.Data.DBModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.WebApp.Models
@@ -22,7 +21,7 @@ namespace Bumbodium.WebApp.Models
         public string Description { get; set; }
         public string Subject { get; set; }
         public int Value { get; set; }
-        
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Value < 0)

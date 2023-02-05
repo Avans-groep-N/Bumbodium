@@ -18,9 +18,12 @@ namespace Bumbodium.Data.DBModels
 
         [Required]
         public DateTime ShiftEndDateTime { get; set; }
-        public string Text { get
+        public string Text
+        {
+            get
             {
                 return EmployeeId.ToString();
-            } }
+            }
+        }
     }
 }

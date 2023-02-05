@@ -1,8 +1,6 @@
 ﻿using Bumbodium.Data.DBModels;
-using Bumbodium.Data;
-using Radzen.Blazor.Rendering;
-using System.ComponentModel.DataAnnotations;
 using Bumbodium.Data.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.WebApp.Models.Utilities.ShiftValidation
 {
@@ -16,7 +14,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ShiftValidation
             if (shiftDuration <= 0)
                 yield return new ValidationResult("Eind tijd kan niet hetzelfde zijn als start tijd", new[] { "StartTime" });
 
-            if(shiftDuration < 0.25)
+            if (shiftDuration < 0.25)
             {
                 yield return new ValidationResult("Dienst kan niet korter zijn dan 15 minuten");
             }

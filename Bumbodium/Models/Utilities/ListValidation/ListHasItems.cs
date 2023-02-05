@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bumbodium.WebApp.Models.Utilities.ListValidation
 {

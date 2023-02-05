@@ -1,8 +1,6 @@
 ﻿using Bumbodium.WebApp.Models.ExcelExport;
 using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
 using Microsoft.AspNetCore.Mvc;
-using Radzen.Blazor.Rendering;
-using System.Globalization;
 
 namespace Bumbodium.WebApp.Controllers
 {
