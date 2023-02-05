@@ -1,14 +1,8 @@
 ﻿using Bumbodium.Data;
-using Bumbodium.Data.DBModels;
-using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 using Bumbodium.WebApp.Models;
-using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
-using System.Globalization;
-using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
+using Microsoft.AspNetCore.Mvc;
 using Radzen.Blazor.Rendering;
+using System.Globalization;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -28,7 +22,7 @@ namespace Bumbodium.WebApp.Controllers
         {
             int weekNr = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             string selectedWeekString;
-            if(weekNr <10)
+            if (weekNr < 10)
             {
                 selectedWeekString = DateTime.Now.Year.ToString() + "-W0" + CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             }
