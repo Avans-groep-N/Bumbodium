@@ -1,0 +1,47 @@
+﻿@model Bumbodium.WebApp.Models.WeekShiftsViewModel
+@using System.Globalization
+<br />
+
+<form asp-action="Index" method="post">
+    <input type="week" asp-for="SelectedWeekString" onchange="this.form.submit()" value="@Model.SelectedWeekString" />
+</form>
+
+<table class="scheduletable">
+    @if (Model.Shifts != null && Model.Shifts.Any())
+    {
+        <h4 style="margin-bottom: 10px;">Jouw rooster voor deze week:</h4>
+        @foreach (var shift in Model.Shifts)
+        {
+            <tr>
+                <td style="width: 800px;">@shift.ShiftStartDateTime.DayOfWeek @shift.ShiftStartDateTime.ToString("dd/MM"), @shift.ShiftStartDateTime.ToString("HH:mm")-@shift.ShiftEndDateTime.ToString("HH:mm")</td>
+                @{
+                    int empty = Model.GetEmptyStart(shift.ShiftStartDateTime);
+                    int workhours = Model.GetWorkHours(shift.ShiftStartDateTime, shift.ShiftEndDateTime);
+                    int emptyend = ((Model.ClosingTime.Hour - Model.OpenTime.Hour) * 2) - workhours - empty;
+                }
+
+                @for (int i = 0; i < empty; i++)
+                {
+                    <td style="background: lightgray;"></td>
+                }
+
+                @for (int j = 0; j < workhours; j++)
+                {
+                    <td style="background: Green;"></td>
+                }
+
+                @for (int k = 0; k < emptyend; k++)
+                {
+                    <td style="background: lightgray;"></td>
+                }
+            </tr>
+
+        }
+    }
+    else
+    {
+        <div>
+            Geen rooster gevonden voor deze week
+        </div>
+    }
+</table>

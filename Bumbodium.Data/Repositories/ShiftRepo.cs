@@ -34,6 +34,7 @@ namespace Bumbodium.Data
                 .Where(s => s.EmployeeId == employeeId)
                 .Where(s => s.ShiftStartDateTime > start && s.ShiftStartDateTime < end)
                 .Include(s => s.Employee)
+                .OrderBy(s => s.ShiftStartDateTime)
                 .ToList();
         }
 
