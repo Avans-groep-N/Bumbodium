@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace Bumbodium.Data
 {
-    public class CaoInput : ICaoInput
+    public class CaoInput 
     {
         private readonly Employee _employee;
         private readonly ShiftRepo _shiftRepo;
