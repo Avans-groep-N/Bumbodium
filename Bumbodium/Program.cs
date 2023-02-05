@@ -1,17 +1,15 @@
 using Bumbodium.Data;
 using Bumbodium.Data.Interfaces;
 using Bumbodium.Data.Repositories;
-using Radzen;
-using System.Globalization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
 using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
+using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
 using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
 using Bumbodium.WebApp.Models.Utilities.StandardsValidation;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Radzen;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,10 +40,11 @@ builder.Services.AddTransient<IShiftRepo, ShiftRepo>();
 
 builder.Services.AddDbContext<BumbodiumContext>(options =>
                 options.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;")); //TODO: change back to azure db
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>{
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireNonAlphanumeric = false;
-    }).AddEntityFrameworkStores<BumbodiumContext>()
+}).AddEntityFrameworkStores<BumbodiumContext>()
     .AddRoles<IdentityRole>()
     .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
 

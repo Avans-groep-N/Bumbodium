@@ -9,7 +9,6 @@ namespace Bumbodium.WebApp.Controllers
 {
     public class ClockingController : Controller
     {
-
         private BLClocking _blclocking;
         private EmployeeRepo _employeeRepo;
 

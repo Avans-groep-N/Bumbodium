@@ -150,7 +150,7 @@ namespace Bumbodium.WebApp.Models.Utilities.ClockingValidation
                 ClockOutDateTime = employeeClocking.ClockEndTime,
                 AlteredClockOutDateTime = employeeClocking.ClockEndTime,
                 IsSick = employeeClocking.IsSick,
-                Employee = _employeeRepo.GetEmployees().FirstOrDefault(e=> e.FirstName + " " + e.MiddleName + " " + e.LastName == employeeClocking.Name)
+                Employee = _employeeRepo.GetEmployees().FirstOrDefault(e => e.FirstName + " " + e.MiddleName + " " + e.LastName == employeeClocking.Name)
             });
         }
 

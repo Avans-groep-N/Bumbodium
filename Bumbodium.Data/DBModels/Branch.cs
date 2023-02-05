@@ -19,7 +19,7 @@ namespace Bumbodium.Data.DBModels
         [Required]
         [StringLength(64)]
         public string HouseNumber { get; set; }
-        
+
         [Required]
         public Country Country { get; set; }
 

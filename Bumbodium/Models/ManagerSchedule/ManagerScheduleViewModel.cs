@@ -4,7 +4,6 @@ namespace Bumbodium.WebApp.Models.ManagerSchedule
 {
     public class ManagerScheduleViewModel
     {
-        // EmployeeSelectionList
         public List<Employee>? AvailableEmployees { get; set; }
         public string? SelectedEmployeeId { get; set; }
         public DepartmentType SelectedDepartment { get; set; }
@@ -13,7 +12,6 @@ namespace Bumbodium.WebApp.Models.ManagerSchedule
         public DateTime SelectedStartTime { get; set; }
         public DateTime SelectedEndTime { get; set; }
 
-        // Shifts list
         public List<Shift> Shifts;
         public DateTime Day;
         public TimeOnly OpenTime = new(08, 00, 00);

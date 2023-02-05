@@ -8,7 +8,9 @@ namespace Bumbodium.WebApp.Models
         public int EmployeeCount { get; set; }
         public int CurrentPage { get; set; }
         public int EmployeesPerPage { get; set; }
-        public int PageCount { get
+        public int PageCount
+        {
+            get
             {
                 int result = EmployeeCount / EmployeesPerPage;
                 if (EmployeeCount % EmployeesPerPage != 0)
@@ -16,8 +18,9 @@ namespace Bumbodium.WebApp.Models
                     result++;
                 }
                 return result;
-            } }
-            
+            }
+        }
+
 
         public string? NameFilter { get; set; }
         public int DepartmentFilter { get; set; }

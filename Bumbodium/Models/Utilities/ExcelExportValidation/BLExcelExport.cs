@@ -1,9 +1,6 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.Repositories;
 using Bumbodium.WebApp.Models.ExcelExport;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
-using Microsoft.EntityFrameworkCore.Update.Internal;
-using System.Globalization;
 
 namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
 {
@@ -104,7 +101,6 @@ namespace Bumbodium.WebApp.Models.Utilities.ExcelExportValidation
             foreach (var employeeIDkey in hoursDict.Keys)
             {
                 var key = hoursDict[employeeIDkey].EmployeeId;
-                //TODO this has to by the EmployeeRepo
                 string name = _employeeRepo.GetEmployee(key).FullName;
 
                 AddToWorkedHours(workedHours, hoursDict, name, key + $":{Addition0Percent}");

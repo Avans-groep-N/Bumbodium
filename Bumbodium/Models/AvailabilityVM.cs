@@ -31,15 +31,15 @@ namespace Bumbodium.WebApp.Models
 
             //Verify that user cannot have multiple availabilities on the same time and day
             var availabilities = _availabilityRepo.GetAvailabilitiesInRange(StartTime, EndTime);
-            if(availabilities.Count > 0)
+            if (availabilities.Count > 0)
                 yield return new ValidationResult("Cannot have multiple availabilities at the same time", new[] { "StartTime" });
 
             //Verify that user cannot add availability without a 2 week notice
-            if(StartTime.Date.Subtract(DateTime.Now.Date).TotalDays < 14)
+            if (StartTime.Date.Subtract(DateTime.Now.Date).TotalDays < 14)
                 yield return new ValidationResult("Cannot add availability under 2 weeks in advance", new[] { "StartTime" });
 
             //Verify that user cannot add availability in the past
-            if(DateTime.Now.CompareTo(StartTime) > 0)
+            if (DateTime.Now.CompareTo(StartTime) > 0)
                 yield return new ValidationResult("Cannot add availability in the past", new[] { "StartTime" });
         }
     }

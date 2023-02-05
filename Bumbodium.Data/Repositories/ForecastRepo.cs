@@ -1,30 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Text;
-using System.Threading.Tasks;
 using Bumbodium.Data.DBModels;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace Bumbodium.Data.Repositories
 {
     public class ForecastRepo
     {
-        private List<Standards> _standards;
-
-        int[] _amountHoursOpen = new int[] { 14, 14, 14, 14, 14, 14, 8 };
-
         public BumbodiumContext _ctx;
-        private DepartmentRepo _departmentRepo;
-
-        private readonly int Minute = 60;
-        private readonly int Hours = 3600;
 
         public ForecastRepo(BumbodiumContext ctx, DepartmentRepo departmentRepo)
         {
             _ctx = ctx;
-            _departmentRepo = departmentRepo;
         }
 
         public List<Forecast> GetAllInRange(DateTime startDate, DateTime endDate, List<int> departmentIds) => _ctx.Forecast.Where(f => startDate <= f.Date && f.Date >= endDate && departmentIds.Contains(f.DepartmentId)).ToList();
@@ -36,8 +22,8 @@ namespace Bumbodium.Data.Repositories
             int hoursNeeded = 0;
             var forecast = _ctx.Forecast
                 .Where(f => f.Date == date && f.DepartmentId == departmentId)
-                .FirstOrDefault(); 
-            if(forecast != null)
+                .FirstOrDefault();
+            if (forecast != null)
             {
                 hoursNeeded = forecast.AmountExpectedHours;
             }

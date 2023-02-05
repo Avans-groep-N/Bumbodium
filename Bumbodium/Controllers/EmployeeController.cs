@@ -1,13 +1,9 @@
 ﻿using Bumbodium.Data;
 using Bumbodium.Data.DBModels;
 using Bumbodium.WebApp.Models;
-using Bumbodium.WebApp.Models.ExcelExport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Common;
-using System.Data;
 
 namespace Bumbodium.WebApp.Controllers
 {
@@ -27,7 +23,7 @@ namespace Bumbodium.WebApp.Controllers
         {
             int employeesPerPage = 10;
             int employeeCount = _employeeRepo.GetEmployeesFiltered(null, null, false).Count();
-            List<Employee> employees = _employeeRepo.GetEmployeesList(null, null, 0, employeesPerPage,false);
+            List<Employee> employees = _employeeRepo.GetEmployeesList(null, null, 0, employeesPerPage, false);
             return View(new EmployeeListViewModel()
             {
                 CurrentPage = 1,
@@ -45,14 +41,12 @@ namespace Bumbodium.WebApp.Controllers
             return View(viewModel);
         }
 
-        // get create
         public IActionResult Create()
         {
             Employee employee = new();
             return View(new EmployeeCreateViewModel() { Employee = employee });
         }
 
-        // post create
         [HttpPost]
         public async Task<IActionResult> Create(EmployeeCreateViewModel viewModel)
         {
@@ -77,7 +71,6 @@ namespace Bumbodium.WebApp.Controllers
             }
         }
 
-        // get edit
         public IActionResult Edit(string id)
         {
             if (id == null)
@@ -88,7 +81,6 @@ namespace Bumbodium.WebApp.Controllers
             return View(new EmployeeViewModel() { Employee = employee });
         }
 
-        // post edit
         [HttpPost]
         public async Task<IActionResult> Edit(EmployeeViewModel viewModel)
         {
