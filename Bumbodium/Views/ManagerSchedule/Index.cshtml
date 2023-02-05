@@ -1,0 +1,218 @@
+﻿@using Bumbodium.WebApp.Views;
+@using Bumbodium.WebApp.Models.ManagerSchedule;
+@using Bumbodium.Data.DBModels;
+@model ManagerScheduleViewModel;
+
+<!-- Employee selection-->
+<form asp-action="Index" method="post">
+    <div class="row">
+        <div class="roosterbox col-md-4">
+            <h4 style="margin-top: 10px;">Selecteer datum</h4>
+            <input onchange="this.form.submit()" asp-for="SelectedDate" type="date" />
+            <h4 style="margin-top: 10px;">Selecteer afdeling</h4>
+            <select id="SelectedDepartment" asp-for="SelectedDepartment" onchange="this.form.submit()">
+                @foreach (DepartmentSelectionViewModel department in Model.DepartmentViewModels)
+                {
+                    @if (department.Type == Model.SelectedDepartment)
+                    {
+                        if (department.PlannedHours < department.NeededHours)
+                        {
+                            @if (department.Type == DepartmentType.Shelves)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vakkenvullen - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+
+                            } else if (department.Type == DepartmentType.Fresh) {
+                                 <option class="text-danger" selected value="@department.Type">
+
+                                    Vers - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            } else if (department.Type == DepartmentType.Checkout) {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Kassa - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+
+                        }
+                        else
+                        {
+                            @if (department.Type == DepartmentType.Shelves)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vakkenvullen - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+
+                            }
+                            else if (department.Type == DepartmentType.Fresh)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vers - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+                            else if (department.Type == DepartmentType.Checkout)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Kassa - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (department.PlannedHours < department.NeededHours)
+                        {
+                            @if (department.Type == DepartmentType.Shelves)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vakkenvullen - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+
+                            }
+                            else if (department.Type == DepartmentType.Fresh)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vers - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+                            else if (department.Type == DepartmentType.Checkout)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Kassa - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+                        }
+                        else
+                        {
+                            @if (department.Type == DepartmentType.Shelves)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vakkenvullen - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+
+                            }
+                            else if (department.Type == DepartmentType.Fresh)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Vers - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+                            else if (department.Type == DepartmentType.Checkout)
+                            {
+                                <option class="text-danger" selected value="@department.Type">
+
+                                    Kassa - @department.PlannedHours / @department.NeededHours uur gepland
+                                </option>
+                            }
+                        }
+                    }
+                }
+            </select>
+
+            <h4 style="margin-top: 10px;">Selecteer tijd</h4>
+            <div style="display:flex;">
+                <div>
+                    <label>Begintijd</label>
+                    <br />
+                    <input onchange="this.form.submit()" min="@TimeOnly.MinValue" max="@TimeOnly.MaxValue" asp-for="SelectedStartTime" step="900" type="time" value="@Model.SelectedStartTime.ToShortTimeString()" />
+                </div>
+                <div>
+                    <label>Eindtijd</label>
+                    <br />
+                    <input onchange="this.form.submit()" min="@TimeOnly.MinValue" max="@TimeOnly.MaxValue" asp-for="SelectedEndTime" step="900" type="time" value="@Model.SelectedEndTime.ToShortTimeString()" />
+                </div>
+            </div>
+
+            <h4 style="margin-top: 10px;">Selecteer medewerker</h4>
+            <div style="max-height: 500px; overflow:auto; margin-bottom: 10px;">
+                @if (Model.AvailableEmployees == null || !Model.AvailableEmployees.Any())
+                {
+                    <div>
+                        Geen werknemers gevonden die op dit moment in deze afdeling kunnen werken
+                    </div>
+                }
+                else
+                {
+                    foreach (Employee employee in Model.AvailableEmployees)
+                    {
+                        if (employee.EmployeeID == Model.SelectedEmployeeId)
+                        {
+                            <div>
+                                <button class="roosterselbtn-active" type="button">@employee.FullName</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <button asp-action="Index" class="roosterselbtn" asp-route-SelectedEmployeeId="@employee.EmployeeID" type="submit">@employee.FullName</button>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+            <div class="text-danger" asp-validation-summary="All"></div>
+            @if (Model.SelectedEmployeeId != null)
+            {
+                <button asp-action="AddShift" class="roosteraddbtn" asp-route-SelectedEmployeeId="@Model.SelectedEmployeeId" type="submit">Voeg dienst toe</button>
+            }
+        </div>
+
+        <!--Schedule visual-->
+        <div class="col-md-8">
+            <table class="scheduletable">
+                @if (Model.Shifts != null && Model.Shifts.Any())
+                {
+                    <h4 style="margin-bottom: 10px;">Rooster van geselecteerde afdeling op geselecteerde datum</h4>
+                    @foreach (var shift in Model.Shifts)
+                    {
+                        <tr>
+                            <td style="width: 800px;">@shift.Employee.FullName, @shift.ShiftStartDateTime.ToString("HH:mm")-@shift.ShiftEndDateTime.ToString("HH:mm")</td>
+                            @{
+                                int empty = Model.GetEmptyStart(shift.ShiftStartDateTime);
+                                int workhours = Model.GetWorkHours(shift.ShiftStartDateTime, shift.ShiftEndDateTime);
+                                int emptyend = ((Model.ClosingTime.Hour - Model.OpenTime.Hour) * 2) - workhours - empty;
+                            }
+
+                            @for (int i = 0; i < empty; i++)
+                            {
+                                <td style="background: lightgray;"></td>
+                            }
+
+                            @for (int j = 0; j < workhours; j++)
+                            {
+                                <td style="background: Green;"></td>
+                            }
+
+                            @for (int k = 0; k < emptyend; k++)
+                            {
+                                <td style="background: lightgray;"></td>
+                            }
+                            <td style="width: 10px;"><button class="roostertablebtn" type="submit" asp-action="DeleteShift" asp-route-ShiftId="@shift.ShiftId"><span class="material-icons">delete</span></button></td>
+                        </tr>
+
+                    }
+                }
+                else
+                {
+                    <div>
+                        Geen planning gevonden voor deze dag en afdeling
+                    </div>
+                }
+            </table>
+            @* int NotWorkingBefore = (Model.OpenTime - shift.StartTime) * 2 -> make cells white (employee not working)
+            int WorkingHours = (shift.EndTime - shift.StartTime) * 2 -> Color cells based on department (employee working)
+            int NotWorkingHoursAfter (Model.ClosedTime - shift.EndTime) * 2 -> make cells white (employee not working) *@
+
+        </div>
+    </div>
+</form>

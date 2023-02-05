@@ -1,0 +1,37 @@
+﻿@model Bumbodium.WebApp.Models.ClockingView.ManagerClockingItem
+
+<h1>Kloktijd toevoegen - @Model.Date.ToString("dd/MM/yyyy")</h1>
+<br />
+
+
+<form asp-action="AddClockingHour">
+    <div class="container justify-content-center m-3">
+        <div class="row p-2 bg-white">
+            <div class="col d-flex justify-content-start">
+                <input type="hidden" asp-for="Date" />
+                <select asp-for="Name" asp-items="ViewBag.Options" required>
+                    <option selected="selected" value="" disabled>Selecteer</option>
+                </select>
+            </div>
+            <div class="col d-flex justify-content-start"><h5 class="m-2">Begin tijd :</h5><input type="time" asp-for="ClockStartTime" /></div>
+            <div class="col d-flex justify-content-start"><h5 class="m-2">Eind tijd :</h5><input type="time" asp-for="ClockEndTime" /></div>
+            <div class="col d-flex justify-content-start"><h5 class="m-2">Ziek :</h5><input type="checkbox" asp-for="IsSick" /></div>
+        </div>
+        <div class="row p-0 bg-white">
+            <div class="col d-flex justify-content-start">
+                <span asp-validation-for="ClockStartTime" class="text-danger"></span>
+            </div>
+            <div class="col d-flex justify-content-start">
+                <span asp-validation-for="ClockEndTime" class="text-danger"></span>
+            </div>
+            <div class="col-1 d-flex justify-content-start"></div>
+        </div>
+        <br />
+        <div class="row pb-0">
+            <div class="col text-center p-0 ">
+                <button type="submit" class="btn btn-lg btn-primary btn-outline-warning">Toevoegen</button>
+            </div>
+        </div>
+    </div>
+</form>
+<a asp-action="IndexManager" class="btn btn-lg btn-primary btn-outline-danger">Terug naar Kloktijden</a>

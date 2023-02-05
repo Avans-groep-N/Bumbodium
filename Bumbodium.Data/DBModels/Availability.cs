@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Bumbodium.Data.DBModels
 {
     public class Availability
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AvailabilityId { get; set; }
         [Key]
-        public int EmployeeId { get; set; }
+        public int AvailabilityId { get; set; }
+
+        public string EmployeeId { get; set; }
 
         public Employee Employee { get; set; }
 
@@ -24,6 +20,9 @@ namespace Bumbodium.Data.DBModels
 
         [Required]
         public AvailabilityType Type { get; set; }
+
+        [Required]
+        public bool IsConfirmed { get; set; } = false;
 
         [NotMapped]
         public string Text

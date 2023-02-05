@@ -1,0 +1,81 @@
+﻿@model Bumbodium.WebApp.Models.ClockingView.ClockingEmployeeViewModel
+@using System.Globalization;
+
+
+<h1>Kloktijden</h1>
+<br />
+
+<div class="container p-0 justify-content-center">
+    <div class="row m-0 bg-light rounded-3">
+        <div class="col-lg-5 m-auto p-5 text-center">
+            <form asp-action="IndexEmployee" method="post">
+                <input type="month" asp-for="FirstOfTheMonth" onchange="this.form.submit()" required />
+            </form>
+        </div>
+    </div>
+</div>
+
+<br />
+
+@if (Model.ClockingDays.Count == 0)
+{
+    <h1>Je hebt deze maand geen uren gemaakt</h1>
+}
+else
+{
+    <div class="container justify-content-center">
+        @foreach (var day in Model.ClockingDays)
+        {
+            <div class="row bg-black">
+                <h4 class="col-auto p-3 mb-auto text-white">@day.Key.ToString("dd/MM/yyyy")</h4>
+            </div>
+            @for (var i = 0; i < day.Value.Count; i += 2)
+            {
+                <div class="row p-1 bg-white">
+                    <div class="col d-flex justify-content-start">
+                        <h5 class="m-2">Begin tijd : @day.Value[i].ClockStartTime.ToString("HH:mm")</h5>
+                        @if (day.Value[i].IsStartChanged)
+                        {
+                            <h5 class="m-2 text-danger">Veranderd</h5>
+                        }
+                    </div>
+                    <div class="col d-flex justify-content-start">
+                        <h5 class="m-2">Eind tijd : @day.Value[i].ClockEndTime.ToString("HH:mm")</h5>
+                        @if (day.Value[i].IsEndChanged)
+                        {
+                            <h5 class="m-2 text-danger">Veranderd</h5>
+                        }
+                    </div>
+                    <div class="col d-flex justify-content-start">
+                        <h5 class="m-2">werknemer is ziek : </h5>
+                        <input type="checkbox" class="p-3 m-3" asp-for="ClockingDays[day.Key][i].IsSick" disabled />
+                    </div>
+                </div>
+                @if (day.Value.Count > i + 1)
+                {
+                    <div class="row p-1 bg-light">
+                        <div class="col d-flex justify-content-start">
+                            <h5 class="m-2">Begin tijd : @day.Value[i + 1].ClockStartTime.ToString("HH:mm")</h5>@if (day.Value[i].IsStartChanged)
+                            {
+                                <h5 class="m-2 text-danger">Veranderd</h5>
+                            }
+                        </div>
+                        <div class="col d-flex justify-content-start">
+                            <h5 class="m-2">Eind tijd : @day.Value[i + 1].ClockEndTime.ToString("HH:mm")</h5>
+                            @if (day.Value[i].IsEndChanged)
+                            {
+                                <h5 class="m-2 text-danger">Veranderd</h5>
+                            }
+                        </div>
+                        <div class="col d-flex justify-content-start">
+                            <h5 class="m-2">werknemer is ziek : </h5>
+                            <input type="checkbox" class="p-3 m-3" asp-for="ClockingDays[day.Key][i + 1].IsSick" disabled />
+                        </div>
+                    </div>
+                }
+            }
+            <br />
+        }
+    </div>
+
+}

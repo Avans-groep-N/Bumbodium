@@ -1,19 +1,57 @@
 using Bumbodium.Data;
 using Bumbodium.Data.Interfaces;
+using Bumbodium.Data.Repositories;
+using Bumbodium.WebApp;
+using Bumbodium.WebApp.Models.Utilities.ClockingValidation;
+using Bumbodium.WebApp.Models.Utilities.ExcelExportValidation;
+using Bumbodium.WebApp.Models.Utilities.ForecastValidation;
+using Bumbodium.WebApp.Models.Utilities.StandardsValidation;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Radzen;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
-builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
-builder.Services.AddTransient<IAvailablityRepo, AvailabilityRepo>();
+
+builder.Services.AddScoped<ForecastRepo>();
+builder.Services.AddScoped<DepartmentRepo>();
+builder.Services.AddScoped<StandardsRepo>();
+builder.Services.AddScoped<PresenceRepo>();
+builder.Services.AddScoped<EmployeeRepo>();
+builder.Services.AddScoped<AvailabilityRepo>();
+builder.Services.AddScoped<ShiftRepo>();
+
+builder.Services.AddScoped<BLExcelExport>();
+builder.Services.AddScoped<BLStandards>();
+builder.Services.AddScoped<BLForecast>();
+builder.Services.AddScoped<BLClocking>();
+
+builder.Services.AddTransient<IAvailabilityRepo, AvailabilityRepo>();
+builder.Services.AddTransient<IShiftRepo, ShiftRepo>();
+
+builder.Services.AddDbContext<BumbodiumContext>(options =>
+                options.UseSqlServer("Server=localhost;Database=BumbodiumDB;Trusted_Connection=True;")); //TODO: change back to azure db
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireNonAlphanumeric = false;
+}).AddEntityFrameworkStores<BumbodiumContext>()
+    .AddRoles<IdentityRole>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Index";
+});
 
 var app = builder.Build();
 
@@ -34,12 +72,20 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
+var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+using (var scope = scopeFactory.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    // TODO move this to a more appropriate place 
+    UserAndRoleSeeder.SeedData(userManager, roleManager);
+}
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Index}/{id?}");
 app.MapBlazorHub();
 
 app.Run();

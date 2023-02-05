@@ -1,0 +1,103 @@
+﻿@model EmployeeCreateViewModel
+@using Bumbodium.Data.DBModels
+
+<h1>Werknemer aanpassen</h1>
+<h4>Vakken met * zijn verplicht</h4>
+<div class="row">
+    <div class="col-md-4">
+        <form action="/Employee/Create" method="post">
+            <input hidden asp-for="Employee.EmployeeID" value="nieuw" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="col-form-label-lg">
+                <label asp-for="Employee.Email">Email *</label>
+                <input asp-for="Employee.Email" class="form-control" />
+                <span asp-validation-for="Employee.Email" class="text-danger"></span>
+            </div>
+            <div class="col-form-label-lg">
+                <label asp-for="Password">Wachtwoord *</label>
+                <input asp-for="Password" class="form-control" value="" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="col-form-label-lg">
+                <label asp-for="ConfirmPassword">Wachtwoord bevestigen *</label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="col-form-label-lg">
+                <label asp-for="Employee.FirstName">Voornaam *</label>
+                <input asp-for="Employee.FirstName" class="form-control" />
+                <span asp-validation-for="Employee.FirstName" class="text-danger"></span>
+            </div>
+            <div class="col-form-label-lg">
+                <label asp-for="Employee.MiddleName">Tussenvoegsel</label>
+                <input asp-for="Employee.MiddleName" class="form-control" />
+                <span asp-validation-for="Employee.MiddleName" class="text-danger"></span>
+            </div>
+            <div class="col-form-label-lg">
+                <label asp-for="Employee.LastName">Achternaam *</label>
+                <input asp-for="Employee.LastName" class="form-control" />
+                <span asp-validation-for="Employee.LastName" class="text-danger"></span>
+            </div>
+            <div class="col-form-label-lg">
+                <label asp-for="Employee.Birthdate">Geboortedatum *</label>
+                <input asp-for="Employee.Birthdate" type="date" value="null" class="form-control" />
+                <span asp-validation-for="Employee.Birthdate" class="text-danger"></span>
+            </div>
+            <div class="col-form-label-lg">
+                <label asp-for="Employee.PhoneNumber">Telefoonnummer *</label>
+                <input asp-for="Employee.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Employee.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="col-form-label-lg">
+                <label asp-for="Employee.DateInService">Werkt sinds *</label>
+                <input asp-for="Employee.DateInService" type="date" value="null" class="form-control" />
+                <span asp-validation-for="Employee.DateInService" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Employee.Type">Functie *</label>
+                <br />
+                @foreach (TypeStaff type in Enum.GetValues(typeof(TypeStaff)))
+                {
+                    @Html.RadioButtonFor(vm => vm.Employee.Type, type)
+                  
+                    @if (@type == TypeStaff.Manager) {
+                        <label>Manager</label>
+                    } else {
+                        <label>Werknemer</label>
+                    }
+                    <br />
+                }
+            </div>
+                    <br />
+            <div>
+                <label>Afdeling(en) *</label>
+                <br />
+                @foreach (DepartmentType department in Enum.GetValues(typeof(DepartmentType)))
+                {
+
+                    <input type="checkbox" name="Departments" value="@((int)department + 1)" />
+
+                    @if (@department == DepartmentType.Shelves)
+                    {
+                        <label>Vakkenvullen</label>
+                    }
+                    else if (@department == DepartmentType.Fresh)
+                    {
+                        <label>Vers</label>
+                    } else if (@department == DepartmentType.Checkout) {
+                        <label>Kassa</label>
+                    }
+                    <br />
+                }
+                <span asp-validation-for="Departments" class="text-danger"></span>
+            </div>
+            <br/>
+            <button type="submit" class="btn btn-lg btn-primary btn-outline-warning">Aanmaken</button>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

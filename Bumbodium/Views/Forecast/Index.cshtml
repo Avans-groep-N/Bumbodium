@@ -1,0 +1,69 @@
+﻿@model ForecastViewModel
+
+<h1>Prognose</h1>
+<hr>
+
+@{
+
+    string calanderVal = Model.StartOfWeekDate.Year + "-W";
+    if (Model.WeekNr < 10)
+        calanderVal += "0" + Model.WeekNr;
+    else
+        calanderVal += Model.WeekNr;
+}
+@using (Html.BeginForm("SelectWeek", "Forecast", FormMethod.Post))
+{
+    <input type="week" name="weekNumber" value="@calanderVal" onchange="this.form.submit()" required />
+}
+
+<br />
+<div class="container justify-content-center">
+    <div class="row shadow-lg">
+        <div class="col-auto p-0 bg-white">
+            <ul class="list-group-flush p-0">
+                <li class="list-group-item"><h3 class="bg-black text-light p-1"> Jaar: @Model.StartOfWeekDate.Year </h3></li>
+                <li class="list-group-item mb-1"><h3 class="m-2">Verwachte klanten</h3></li>
+                <li class="list-group-item mb-3"><h3 class="m-2">Verwachte colis</h3></li>
+                <li class="list-group-item mb-1"><h3 class="m-2">Totaal verwachte medewerkers</h3></li>
+                <li class="list-group-item mb-1"><h3 class="m-2">Totaal verwachte uren</h3></li>
+            </ul>
+        </div>
+        @foreach (var forecastDay in Model.ForecastWeek)
+        {
+            <div class="col text-center p-0 bg-light ">
+                <ul class="list-group-flush p-0">
+                    <li class="list-group-item"><h3 class="bg-black text-light p-1">@forecastDay.Key.ToString("dd/MM")</h3></li>
+                    <li class="list-group-item mb-1"><h3 class="m-2">@forecastDay.Value.AmountExpectedCustomers</h3></li>
+                    <li class="list-group-item mb-3"><h3 class="m-2">@forecastDay.Value.AmountExpectedColis</h3></li>
+                    <li class="list-group-item mb-1"><h3 class="m-2">@Model.CountTotalEmployeeaPerDay(forecastDay.Key)</h3></li>
+                    <li class="list-group-item mb-1"><h3 class="m-2">@Model.CountTotalHoursPerDay(forecastDay.Key)</h3></li>
+                </ul>
+            </div>
+        }
+        <br />
+    </div>
+    <br />
+    <div class="row pb-5">
+        <div class="col text-center p-0 ">
+            @if (!Model.WeekBeforeNow)
+            {
+                <a asp-action="ChangeInput" class="btn btn-lg btn-primary btn-outline-warning" asp-route-id="@calanderVal">Nieuwe prognose aanmaken</a>
+            }
+            else
+            {
+                <p class="btn btn-lg btn-outline-secondary">Nieuwe prognose aanmaken</p>
+            }
+        </div>
+        <div class="col text-center p-0">
+            @if (!Model.WeekBeforeNow)
+            {
+                <a asp-action="ChangeOutput" class="btn btn-lg btn-primary btn-outline-warning" asp-route-id="@calanderVal">Prognose aanpassen</a>
+            }
+            else
+            {
+                <p class="btn btn-lg btn-outline-secondary">Prognose aanpassen</p>
+            }
+        </div>
+    </div>
+</div>
+<a asp-controller="Standard" asp-action="Index" class="btn btn-lg btn-primary btn-outline-info">Normering bekijken</a>

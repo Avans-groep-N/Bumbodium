@@ -1,0 +1,80 @@
+﻿@model Bumbodium.WebApp.Models.ExcelExport.ExcelExportEmployeesHours
+<h1>Verloning</h1>
+<br />
+
+<div class="container justify-content-center p-0">
+    <div class="row m-0  bg-light rounded-3">
+        <div class="col-lg-5 m-auto p-auto text-center">
+            <form asp-action="Index" method="post">
+                <input type="month" asp-for="FirstDateOfMonth" onchange="this.form.submit()" required />
+            </form>
+        </div>
+        <div class="col-lg-5 m-auto p-auto text-center">
+            <button type="submit" onclick="location.href='@Url.Action("DownloadExcel",Model)'" id="btnsubmit" class="btn btn-lg btn-primary btn-outline-warning m-3 ">Exporteer naar Excel</button>
+        </div>
+    </div>
+</div>
+
+<br />
+
+@if (Model.EmployeeHours.Count > 0)
+{
+    <div class="container justify-content-center p-0">
+        <div class="row shadow-lg m-0">
+            <div class="col-lg-5 m-0 p-0 bg-black ">
+                <h2 class="p-3 text-lg text-light">BID</h2>
+            </div>
+            <div class="col m-0 p-0 bg-black ">
+                <h2 class="p-3 text-lg text-light">Naam</h2>
+            </div>
+            <div class="col m-0 p-0 bg-black ">
+                <h2 class="p-3 text-lg text-light">Uren</h2>
+            </div>
+            <div class="col m-0 p-0 bg-black ">
+                <h2 class="p-3 text-lg text-light">Toeslag</h2>
+            </div>
+        </div>
+        @for (var i = 0; i < Model.EmployeeHours.Count; i += 2)
+        {
+            <div class="row shadow-lg m-0">
+                <div class="col-lg-5 m-0 p-0 bg-white">
+                    <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i].EmployeeId</p>
+                </div>
+                <div class="col m-0 p-0 bg-white">
+                    <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i].EmployeeName</p>
+                </div>
+                <div class="col m-0 p-0 bg-white">
+                    <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i].WorkedHours</p>
+                </div>
+                <div class="col m-0 p-0 bg-white">
+                    <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i].SurchargeRate</p>
+                </div>
+            </div>
+            @if (Model.EmployeeHours.Count > i + 1)
+            {
+
+                <div class="row shadow-lg m-0">
+                    <div class="col-lg-5 m-0 p-0 bg-light">
+                        <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i+1].EmployeeId</p>
+                    </div>
+                    <div class="col m-0 p-0 bg-light">
+                        <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i+1].EmployeeName</p>
+                    </div>
+                    <div class="col m-0 p-0 bg-light">
+                        <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i+1].WorkedHours</p>
+                    </div>
+                    <div class="col m-0 p-0 bg-light">
+                        <p class="p-3 pb-0 text-lg">@Model.EmployeeHours[i+1].SurchargeRate</p>
+                    </div>
+                </div>
+            }
+        }
+
+        <br />
+    </div>
+}
+else
+{
+    <h1 class="text-center m-5">Deze week is niet gewerkt!</h1>
+}
+

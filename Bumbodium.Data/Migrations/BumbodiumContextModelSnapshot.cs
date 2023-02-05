@@ -22,26 +22,6 @@ namespace Bumbodium.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Bumbodium.Data.DBModels.Account", b =>
-                {
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.HasKey("EmployeeId");
-
-                    b.ToTable("Accounts");
-                });
-
             modelBuilder.Entity("Bumbodium.Data.DBModels.Availability", b =>
                 {
                     b.Property<int>("AvailabilityId")
@@ -50,11 +30,15 @@ namespace Bumbodium.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvailabilityId"), 1L, 1);
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("EndDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
@@ -62,7 +46,7 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("AvailabilityId", "EmployeeId");
+                    b.HasKey("AvailabilityId");
 
                     b.HasIndex("EmployeeId");
 
@@ -71,21 +55,19 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Branch", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                    b.Property<int>("Country")
+                        .HasColumnType("int");
 
                     b.Property<string>("HouseNumber")
                         .IsRequired()
@@ -102,9 +84,20 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Branch");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "Den Bosch",
+                            Country = 0,
+                            HouseNumber = "1",
+                            PostalCode = "0000 AA",
+                            Street = "01"
+                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.BranchEmployee", b =>
@@ -112,8 +105,8 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("FiliaalId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("FiliaalId", "EmployeeId");
 
@@ -124,7 +117,13 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
                 {
-                    b.Property<int>("Name")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -132,9 +131,43 @@ namespace Bumbodium.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("Name");
+                    b.Property<int>("Name")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SurfaceAreaInM2")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
 
                     b.ToTable("Department");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BranchId = 1,
+                            Description = "Fresh",
+                            Name = 0,
+                            SurfaceAreaInM2 = 50
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BranchId = 1,
+                            Description = "Shelves",
+                            Name = 1,
+                            SurfaceAreaInM2 = 140
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BranchId = 1,
+                            Description = "Checkout",
+                            Name = 2,
+                            SurfaceAreaInM2 = 90
+                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.DepartmentEmployee", b =>
@@ -142,8 +175,8 @@ namespace Bumbodium.Data.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("WorkFunction")
                         .HasColumnType("int");
@@ -153,15 +186,140 @@ namespace Bumbodium.Data.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("DepartmentEmployee");
+
+                    b.HasData(
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            EmployeeId = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            EmployeeId = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            EmployeeId = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            EmployeeId = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            EmployeeId = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "a20cddd4-9704-439f-94bc-95f4659ce543",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            EmployeeId = "44128c29-b648-431e-89f4-7a105f79b00c",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "a357223e-5d1e-461e-b1ad-3a8592f548dd",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "b74ddd14-6340-4840-95c2-db12554843e5",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            WorkFunction = 0
+                        },
+                        new
+                        {
+                            DepartmentId = 1,
+                            EmployeeId = "bdece4e2-3ed9-4008-8878-65884c142394",
+                            WorkFunction = 0
+                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Employee", b =>
                 {
-                    b.Property<int>("EmployeeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeID"), 1L, 1);
+                    b.Property<string>("EmployeeID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("datetime2");
@@ -202,6 +360,164 @@ namespace Bumbodium.Data.Migrations
                     b.HasKey("EmployeeID");
 
                     b.ToTable("Employee");
+
+                    b.HasData(
+                        new
+                        {
+                            EmployeeID = "b74ddd14-6340-4840-95c2-db12554843e5",
+                            Birthdate = new DateTime(1989, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2006, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "j.vangeest@bumbodium.nl",
+                            FirstName = "Jan",
+                            LastName = "Geest",
+                            MiddleName = "van",
+                            PhoneNumber = "+31 6 56927484",
+                            Type = 0
+                        },
+                        new
+                        {
+                            EmployeeID = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                            Birthdate = new DateTime(1, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2001, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Johnny@vos.nl",
+                            FirstName = "Johnny",
+                            LastName = "Vos",
+                            PhoneNumber = "+31 777777777",
+                            Type = 0
+                        },
+                        new
+                        {
+                            EmployeeID = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            Birthdate = new DateTime(1, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2001, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Martijs@Martijs.Martijs",
+                            FirstName = "Martijs",
+                            LastName = "Martijs",
+                            PhoneNumber = "Martijs",
+                            Type = 0
+                        },
+                        new
+                        {
+                            EmployeeID = "44128c29-b648-431e-89f4-7a105f79b00c",
+                            Birthdate = new DateTime(1975, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2009, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Heinz@vonschmichtelstein.de",
+                            FirstName = "Heinz",
+                            LastName = "Schmichtelstein",
+                            MiddleName = "von",
+                            PhoneNumber = "+49 420 69 7777",
+                            Type = 1
+                        },
+                        new
+                        {
+                            EmployeeID = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            Birthdate = new DateTime(2007, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2009, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Bliksem@martijnshamster.nl",
+                            FirstName = "Bliksem",
+                            LastName = "Snel",
+                            PhoneNumber = "+31 snel",
+                            Type = 1
+                        },
+                        new
+                        {
+                            EmployeeID = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            Birthdate = new DateTime(2005, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2009, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Lobbus@kjell.nl",
+                            FirstName = "Lobbus",
+                            LastName = "Good boy",
+                            PhoneNumber = "+31 1684867685",
+                            Type = 1
+                        },
+                        new
+                        {
+                            EmployeeID = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            Birthdate = new DateTime(1988, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2020, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Paula@campina.nl",
+                            FirstName = "Paula",
+                            LastName = "Campina",
+                            PhoneNumber = "+31 612345678",
+                            Type = 0
+                        },
+                        new
+                        {
+                            EmployeeID = "a20cddd4-9704-439f-94bc-95f4659ce543",
+                            Birthdate = new DateTime(1957, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2019, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Henkie@Wauwzerz.nl",
+                            FirstName = "Henkie",
+                            LastName = "T",
+                            PhoneNumber = "ten minste vijf",
+                            Type = 1
+                        },
+                        new
+                        {
+                            EmployeeID = "a357223e-5d1e-461e-b1ad-3a8592f548dd",
+                            Birthdate = new DateTime(1999, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2014, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Katriene@smedensberg.com",
+                            FirstName = "Katriene",
+                            LastName = "Smedensberg",
+                            PhoneNumber = "+31 99999999",
+                            Type = 0
+                        },
+                        new
+                        {
+                            EmployeeID = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            Birthdate = new DateTime(1900, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2002, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Henk@henk.nl",
+                            FirstName = "Henk",
+                            LastName = "Henk",
+                            PhoneNumber = "+31 6666666666",
+                            Type = 1
+                        },
+                        new
+                        {
+                            EmployeeID = "bdece4e2-3ed9-4008-8878-65884c142394",
+                            Birthdate = new DateTime(1869, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateInService = new DateTime(2002, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Henk@maardanstoer.nl",
+                            FirstName = "Henk",
+                            LastName = "Stoer",
+                            MiddleName = "maar dan",
+                            PhoneNumber = "+31 123123123",
+                            Type = 1
+                        });
+                });
+
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Forecast", b =>
+                {
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmountExpectedColis")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmountExpectedCustomers")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmountExpectedEmployees")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AmountExpectedHours")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StandardsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Date", "DepartmentId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("StandardsId");
+
+                    b.ToTable("Forecast");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Presence", b =>
@@ -212,8 +528,8 @@ namespace Bumbodium.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PresenceId"), 1L, 1);
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("AlteredClockInDateTime")
                         .HasColumnType("datetime2");
@@ -224,8 +540,12 @@ namespace Bumbodium.Data.Migrations
                     b.Property<DateTime>("ClockInDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ClockOutDateTime")
+                    b.Property<DateTime?>("ClockOutDateTime")
+                        .IsRequired()
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsSick")
+                        .HasColumnType("bit");
 
                     b.HasKey("PresenceId", "EmployeeId");
 
@@ -236,14 +556,18 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Shift", b =>
                 {
+                    b.Property<int>("ShiftId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShiftId"), 1L, 1);
+
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShiftId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("ShiftEndDateTime")
                         .HasColumnType("datetime2");
@@ -251,62 +575,494 @@ namespace Bumbodium.Data.Migrations
                     b.Property<DateTime>("ShiftStartDateTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("DepartmentId", "EmployeeId", "ShiftId");
+                    b.HasKey("ShiftId");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Shift");
+
+                    b.HasData(
+                        new
+                        {
+                            ShiftId = 1,
+                            DepartmentId = 1,
+                            EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            ShiftEndDateTime = new DateTime(2023, 2, 4, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            ShiftStartDateTime = new DateTime(2023, 2, 4, 8, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ShiftId = 2,
+                            DepartmentId = 1,
+                            EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            ShiftEndDateTime = new DateTime(2023, 2, 5, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                            ShiftStartDateTime = new DateTime(2023, 2, 5, 13, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ShiftId = 3,
+                            DepartmentId = 1,
+                            EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            ShiftEndDateTime = new DateTime(2023, 2, 7, 21, 0, 0, 0, DateTimeKind.Unspecified),
+                            ShiftStartDateTime = new DateTime(2023, 2, 7, 17, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ShiftId = 4,
+                            DepartmentId = 1,
+                            EmployeeId = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            ShiftEndDateTime = new DateTime(2023, 2, 9, 22, 0, 0, 0, DateTimeKind.Unspecified),
+                            ShiftStartDateTime = new DateTime(2023, 2, 9, 18, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Standards", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Country")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(1048)
                         .HasColumnType("nvarchar(1048)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
 
-                    b.HasKey("Description");
+                    b.HasKey("Id");
 
                     b.ToTable("Standards");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Country = 0,
+                            Description = "aantal minuten per Coli uitladen.",
+                            Subject = "Coli",
+                            Value = 5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Country = 0,
+                            Description = "aantal minuten Vakken vullen per Coli.",
+                            Subject = "StockingShelves",
+                            Value = 30
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Country = 0,
+                            Description = "1 Kassière aantal klanten per uur.",
+                            Subject = "Cashier",
+                            Value = 30
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Country = 0,
+                            Description = "1 medewerker per aantal klanten per uur.",
+                            Subject = "Employee",
+                            Value = 100
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Country = 0,
+                            Description = "aantal seconde per meter.",
+                            Subject = "Mirror",
+                            Value = 30
+                        });
                 });
 
-            modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("AmountExpectedCustomers")
-                        .HasColumnType("int");
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("AmountExpectedEmployees")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.Property<int?>("DepartmentName")
-                        .HasColumnType("int");
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("StandardsDescription")
-                        .HasColumnType("nvarchar(1048)");
+                    b.HasKey("Id");
 
-                    b.HasKey("Date");
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.HasIndex("DepartmentName");
-
-                    b.HasIndex("StandardsDescription");
-
-                    b.ToTable("Forecast");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Bumbodium.Data.DBModels.Account", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Bumbodium.Data.DBModels.Employee", "Employee")
-                        .WithOne("Account")
-                        .HasForeignKey("Bumbodium.Data.DBModels.Account", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Navigation("Employee");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "b74ddd14-6340-4840-95c2-db12554843e5",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f256e471-1f40-474f-ae10-e36652f4c586",
+                            Email = "j.vangeest@bumbodium.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "J.VANGEEST@BUMBODIUM.NL",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAELfRSugLZ1ViSj9PsGECsS17m4/NRi0EUJPyHNKqXgbxw4C6gxrzSKdYBeaDih2bhw==",
+                            PhoneNumber = "+31 6 56927484",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "4ba7d109-45a1-4b91-910d-ba7773e23e48",
+                            TwoFactorEnabled = false,
+                            UserName = "Admin"
+                        },
+                        new
+                        {
+                            Id = "19f7d479-542a-408b-9016-0561e3e70f65",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "72509bea-28b7-4555-a328-2e182d179d20",
+                            Email = "Martijs@Martijs.Martijs",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "MARTIJS@MARTIJS.MARTIJS",
+                            PasswordHash = "AQAAAAEAACcQAAAAEI66/Q0rzfTUSmEE7Jw8VxYblRlDI2MeFiFjZmib/InPxmqjb85jTAI7YDk4SmFIJw==",
+                            PhoneNumber = "Martijs",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "aac124e8-2121-4246-9d15-e7bbc660ea6c",
+                            TwoFactorEnabled = false,
+                            UserName = "Martijs@Martijs.Martijs"
+                        },
+                        new
+                        {
+                            Id = "2e835447-b339-4a55-9a74-c0d8449bca5c",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8541c7bd-161c-48a2-a362-73cddcc955e5",
+                            Email = "Johnny@vos.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "JOHNNY@VOS.NL",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFt1DW8lFjmGuCfwx8PBDj30P2MivJbVfaZ23B/oJS7wdGCMnnmEaPuhy2B/yHAvMA==",
+                            PhoneNumber = "+31 5",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "23e7656e-258b-4ac8-b8c7-acff40d2d5ce",
+                            TwoFactorEnabled = false,
+                            UserName = "Johnny@vos.nl"
+                        },
+                        new
+                        {
+                            Id = "44128c29-b648-431e-89f4-7a105f79b00c",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2167bfc1-f564-43fa-8b49-62d25ccc53e4",
+                            Email = "Heinz@vonschmichtelstein.de",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "HEINZ@VONSCHMICHTELSTEIN.DE",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBWgPhdKjpmmFSuYTx9bv/iM2lUwz1ChwTXR+t76w5OBNFyd8+43wnUAe/eKJeFymQ==",
+                            PhoneNumber = "+49 420 69 7777",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "c3bba766-1800-481c-9512-1ecf8eedb87d",
+                            TwoFactorEnabled = false,
+                            UserName = "Heinz@vonschmichtelstein.de"
+                        },
+                        new
+                        {
+                            Id = "5782d108-8865-40f8-b3b7-ced82309983f",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "53d8f3bb-56b7-496e-aacd-9ecfc94454e2",
+                            Email = "Bliksem@martijnshamster.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "BLIKSEM@MARTIJNSHAMSTER.NL",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMFRS+V9UaLu+qX6CBTaS9RsWGV6IPx6nydktMJbvA4ycGVQIDhb18iVZydBHOTHeA==",
+                            PhoneNumber = "+31 snel",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "cee205c6-4032-4165-9a50-7c26908c2e5a",
+                            TwoFactorEnabled = false,
+                            UserName = "Bliksem@martijnshamster.nl"
+                        },
+                        new
+                        {
+                            Id = "5989a56b-4d00-4213-9b73-34f80701836b",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "23815a5a-93d0-4286-853a-00da6d55e7b5",
+                            Email = "Lobbus@kjell.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "LOBBUS@KJELL.NL",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBqUxBJW8fz6ZG8XsEVvtHhpkyhCSH0JiaFy+2zEZaw+ymFO2iN1O6xm95r3moUAhA==",
+                            PhoneNumber = "+31 6 67215943",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "4a45e388-818e-41af-8892-153c6d91e468",
+                            TwoFactorEnabled = false,
+                            UserName = "Lobbus@kjell.nl"
+                        },
+                        new
+                        {
+                            Id = "5fd33111-a002-4ef1-a301-8c4e4e31e20b",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d4e0d1e7-a044-4fa8-9d60-747578368e3e",
+                            Email = "Paula@campina.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "PAULA@CAMPINA.NL",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPgMtomAc2F0gjIo04WpirHlewLzbkiQ1cAuJ7AwFuqYwysvxQR3hGRTKKNs9mngGA==",
+                            PhoneNumber = "+31 612345678",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "5bb3dc2e-5e59-43c6-8444-3b9ef9ba52ee",
+                            TwoFactorEnabled = false,
+                            UserName = "Paula@campina.nl"
+                        },
+                        new
+                        {
+                            Id = "a20cddd4-9704-439f-94bc-95f4659ce543",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "72b76aba-8a42-4875-ad06-9fd599d8c55a",
+                            Email = "Henkie@Wauwzerz.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "HENKIE@WAUWZERZ.NL",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKzPw4pDl3rU3xaROU+tfrttXQTHzan8qLbGkz9tIaId0q748vpRxhuPmmR36moHiw==",
+                            PhoneNumber = "ten minste vijf",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "6e390d90-ce45-4588-bb4c-7ca0dd2221a7",
+                            TwoFactorEnabled = false,
+                            UserName = "Henkie@Wauwzerz.nl"
+                        },
+                        new
+                        {
+                            Id = "a357223e-5d1e-461e-b1ad-3a8592f548dd",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ebccd760-a7fd-42e9-97bd-fcc2e937b70a",
+                            Email = "Katriene@smedensberg.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "KATRIENE@SMEDENSBERG.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIwqI4rFyAGAK/FGPH/qu57KqPCthpLFlLdAeQ7c50RczKDGdJ+Gb/xKLYKEmHLxuw==",
+                            PhoneNumber = "+31 99999999",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "9b79b993-71c9-4fea-b54e-9d0b18515634",
+                            TwoFactorEnabled = false,
+                            UserName = "Katriene@smedensberg.com"
+                        },
+                        new
+                        {
+                            Id = "b93d704f-a4ae-413f-a587-0b597bbe6a9f",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "89998a1f-15ca-4c0d-bc41-0d24cede9da8",
+                            Email = "Henk@henk.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "HENK@HENK.NL",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEjnWTaA4K7oh9ezcjYvx/+mQR0zEy/qFAOPDaQ6Lrw+cj9Ro8oPQsQsRFTTCxEbpw==",
+                            PhoneNumber = "+31 6666666666",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "87f97ea9-ba56-4a92-954f-432c6ad604f0",
+                            TwoFactorEnabled = false,
+                            UserName = "Henk@henk.nl"
+                        },
+                        new
+                        {
+                            Id = "bdece4e2-3ed9-4008-8878-65884c142394",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e693b1a6-e235-46e7-8ca6-8a9c82ce1d22",
+                            Email = "Henk@maardanstoer.nl",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "HENK@MAARDANSTOER.NL",
+                            PasswordHash = "AQAAAAEAACcQAAAAEICyy2hBvLl6cClmJQcXz4WuM75I6ZdFVFjPwbl9MxPCmCT2cS8IOtggECxmzz5Ocw==",
+                            PhoneNumber = "+31 123123123",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "060e5327-7302-4505-b476-15d7181ef5c5",
+                            TwoFactorEnabled = false,
+                            UserName = "Henk@maardanstoer.nl"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Availability", b =>
@@ -339,6 +1095,17 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Filiaal");
                 });
 
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
+                {
+                    b.HasOne("Bumbodium.Data.DBModels.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
             modelBuilder.Entity("Bumbodium.Data.DBModels.DepartmentEmployee", b =>
                 {
                     b.HasOne("Bumbodium.Data.DBModels.Department", "Department")
@@ -356,6 +1123,32 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Employee", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Account")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("Bumbodium.Data.DBModels.Forecast", b =>
+                {
+                    b.HasOne("Bumbodium.Data.DBModels.Department", "Department")
+                        .WithMany("Forecast")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bumbodium.Data.DBModels.Standards", null)
+                        .WithMany("ForecastId")
+                        .HasForeignKey("StandardsId");
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Presence", b =>
@@ -388,15 +1181,55 @@ namespace Bumbodium.Data.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("Bumbodium.Data.Forecast", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Bumbodium.Data.DBModels.Department", null)
-                        .WithMany("ForecastId")
-                        .HasForeignKey("DepartmentName");
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.HasOne("Bumbodium.Data.DBModels.Standards", null)
-                        .WithMany("ForecastId")
-                        .HasForeignKey("StandardsDescription");
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Branch", b =>
@@ -406,7 +1239,7 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Department", b =>
                 {
-                    b.Navigation("ForecastId");
+                    b.Navigation("Forecast");
 
                     b.Navigation("PartOFEmployee");
 
@@ -415,9 +1248,6 @@ namespace Bumbodium.Data.Migrations
 
             modelBuilder.Entity("Bumbodium.Data.DBModels.Employee", b =>
                 {
-                    b.Navigation("Account")
-                        .IsRequired();
-
                     b.Navigation("Availability");
 
                     b.Navigation("PartOFDepartment");
