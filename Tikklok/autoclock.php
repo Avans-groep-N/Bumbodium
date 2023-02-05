@@ -1,5 +1,5 @@
 <?php
-$dsn = "Driver={ODBC Driver 17 for SQL Server};Server=tcp:bumbodium.database.windows.net,1433;Database=bumbodiumDB;";
+$dsn = "Connection string invoeren.";
 $user = "BumbodiumAdmin";
 $password = "NietBumboAdmin!";
 

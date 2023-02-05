@@ -15,14 +15,7 @@ try:
         query = "SELECT * FROM [BumbodiumDB].[dbo].[Presence] WHERE EmployeeId = '{}' ORDER BY [PresenceId] DESC OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY".format(text)
            
         #Maak een verbinding met de MSSQL-database
-        conn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};'
-                              'SERVER=tcp:bumbodium.database.windows.net,1433;'
-                              'DATABASE=bumbodiumDB;'
-                              'UID=BumbodiumAdmin;'
-                              'PWD=NietBumboAdmin!;'
-                              'ENCRYPT=yes;'
-                              'TrustServerCertificate=no;'
-                              'Connection Timeout=30')
+        conn = pyodbc.connect("""connection string invoeren""")
 
         # Maak een cursor aan
         cursor = conn.cursor()
